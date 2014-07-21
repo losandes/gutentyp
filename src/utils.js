@@ -50,7 +50,7 @@ hilary.register('utils', {
 
         var attachEvent = function (selector, eventHandler) {
             if($.isFunction(eventHandler)) {
-                $('document').on('click', selector, function (event) {
+                $(selector).on('click', function (event) {
                     eventHandler(event);
                 });
             }
