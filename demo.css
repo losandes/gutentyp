@@ -4,8 +4,10 @@ body {
 
 
 .richText {
-    border: 1px solid #C8C8C8;
     padding: 3px;
+    border: 1px solid #C8C8C8;
+    border-radius-bottom-left: 1px;
+    border-radius-bottom-right: 1px;
 }
 .richText:focus {}
 
@@ -14,4 +16,6 @@ body {
     background-color: #F7F7F7;
     border: 1px solid #C8C8C8;
     border-bottom: none;
+    border-radius-top-left: 1px;
+    border-radius-top-right: 1px;
 }
