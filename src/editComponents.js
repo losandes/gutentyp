@@ -42,19 +42,10 @@ hilary.register('editComponents', {
         _components = [];
         _components.push(
             new componentFactory(
-                'Font Size +',
-                'FontSizeIncrease',
+                'Foreground color',
+                'ForegroundColor',
                 function () {
-                    document.execCommand('increaseFontSize', false, null);
-                }
-            )
-        );
-        _components.push(
-            new componentFactory(
-                'Font Size -',
-                'FontSizeDecrease',
-                function () {
-                    document.execCommand('decreaseFontSize', false, null);
+                    document.execCommand('forecolor', false, '#FF0000');
                 }
             )
         );
@@ -69,10 +60,19 @@ hilary.register('editComponents', {
         );
         _components.push(
             new componentFactory(
-                'Foreground color',
-                'ForegroundColor',
+                'Font Size +',
+                'FontSizeIncrease',
                 function () {
-                    document.execCommand('forecolor', false, '#FF0000');
+                    document.execCommand('increaseFontSize', false, null);
+                }
+            )
+        );
+        _components.push(
+            new componentFactory(
+                'Font Size -',
+                'FontSizeDecrease',
+                function () {
+                    document.execCommand('decreaseFontSize', false, null);
                 }
             )
         );
