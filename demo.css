@@ -1,0 +1,17 @@
+body {
+    width: 75%;
+}
+
+
+.richText {
+    border: 1px solid #C8C8C8;
+    padding: 3px;
+}
+.richText:focus {}
+
+
+.richTextToolbar {
+    background-color: #F7F7F7;
+    border: 1px solid #C8C8C8;
+    border-bottom: none;
+}
