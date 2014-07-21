@@ -180,7 +180,7 @@ hilary.register('editComponents', {
                 'Quote',
                 'QuoteBlock',
                 function () {
-                    
+                    //pasteHtmlAtCaret('', false);
                 }
             )
         );
@@ -189,7 +189,7 @@ hilary.register('editComponents', {
                 'Code Block',
                 'CodeBlock',
                 function () {
-                    
+                    //pasteHtmlAtCaret('', false);
                 }
             )
         );
@@ -198,7 +198,7 @@ hilary.register('editComponents', {
                 'Add Link',
                 'AddLink',
                 function () {
-                    
+                    //pasteHtmlAtCaret('', false);
                 }
             )
         );
@@ -207,7 +207,7 @@ hilary.register('editComponents', {
                 'Add Image',
                 'AddImage',
                 function () {
-                    
+                    //pasteHtmlAtCaret('', false);
                 }
             )
         );
@@ -216,7 +216,7 @@ hilary.register('editComponents', {
                 'Add Video',
                 'AddVideo',
                 function () {
-                    
+                    //pasteHtmlAtCaret('', false);
                 }
             )
         );
@@ -226,6 +226,7 @@ hilary.register('editComponents', {
         var pasteHtmlAtCaret = function(html, selectPastedContent) {
             // Helper function because different browsers don't always cleanly implement this feature
             // From http://stackoverflow.com/a/6691294
+
             var sel, range;
             if (window.getSelection) {
                 // IE9 and non-IE

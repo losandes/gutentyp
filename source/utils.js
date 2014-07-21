@@ -40,10 +40,6 @@ hilary.register('utils', {
             $(selector).text(newText);
         };
 
-        //var appendHtmlToElement = function (selector, html) {
-        //    $(selector).append(html);
-        //};
-
         var setContentEditable = function(selector) {
             $(selector).attr('contenteditable', true);
         }
@@ -68,7 +64,6 @@ hilary.register('utils', {
             insertNewElementBefore: insertNewElementBefore,
             insertNewElementInto: insertNewElementInto,
             setText: setText,
-            //appendHtmlToElement: appendHtmlToElement,
             setContentEditable: setContentEditable,
             attachEvent: attachEvent,
             isFunction: isFunction,

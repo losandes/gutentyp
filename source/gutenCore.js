@@ -14,8 +14,7 @@ hilary.register('gutenCore', {
         
 
         return {
-            load: loadGutenCore,
-            components: editComponents
+            load: loadGutenCore
         };
     }
 });
