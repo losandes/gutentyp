@@ -74,8 +74,8 @@ hilary.register('utils', {
             }
         };
 
-        var outputHtmlToNearestTextareaWithClass = function (html, targetElementClass) {
-            //$('li.current_sub').prevAll(targetElementClass + ":first").;
+        var updateTextarea = function(target) {
+            $('textarea#' + $(target).attr('data-for')).html($(target).html())
         };
 
         var isFunction = function (obj) {
@@ -94,7 +94,7 @@ hilary.register('utils', {
             insertNewElementInto: insertNewElementInto,
             setText: setText,
             attachEvent: attachEvent,
-            outputHtmlToNearestTextareaWithClass: outputHtmlToNearestTextareaWithClass,
+            updateTextarea: updateTextarea,
             isFunction: isFunction,
         };
     }

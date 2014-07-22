@@ -7,10 +7,9 @@ hilary.register('gutenCore', {
 
             utils.initializeRichTextAreas();
             
-            // Add an event that updates the textarea on each keypress
-            utils.attachEvent(utils.richTextSelector, 'focusout', function () {
-                // set text for `"textarea#"+this.attr('target')`
-                console.log('focusout!');
+            // Add an event that updates the textarea on each focusout
+            utils.attachEvent(utils.richTextSelector, 'focusout', function (event) {
+                utils.updateTextarea(event.currentTarget);
             });
         };
 
