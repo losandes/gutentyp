@@ -60,19 +60,10 @@ hilary.register('editComponents', {
         );
         _components.push(
             new componentFactory(
-                'Font Size +',
-                'FontSizeIncrease',
+                'Headings',
+                'Headings',
                 function () {
-                    document.execCommand('increaseFontSize', false, null);
-                }
-            )
-        );
-        _components.push(
-            new componentFactory(
-                'Font Size -',
-                'FontSizeDecrease',
-                function () {
-                    document.execCommand('decreaseFontSize', false, null);
+
                 }
             )
         );
