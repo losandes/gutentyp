@@ -1,15 +1,19 @@
 body {
     width: 75%;
 }
+.hidden {
+    display: none;
+    visibility: hidden;
+}
 
 
-.richText {
+.richTextArea {
     padding: 3px;
     border: 1px solid #C8C8C8;
     border-radius-bottom-left: 1px;
     border-radius-bottom-right: 1px;
 }
-.richText:focus {}
+.richTextArea:focus {}
 
 
 .richTextToolbar {

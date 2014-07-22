@@ -3,8 +3,30 @@
 hilary.register('utils', {
     init: function ($) {
 
-        var richTextSelector = '.richText';
+        var richTextInputSelector = '.richText'
+        var richTextSelector = '.richTextArea';
         var richTextToolbarSelector = '.richTextToolbar';
+
+        var initializeRichTextAreas = function () {
+            // For each textarea matching `richTextSelector`
+            $(richTextInputSelector).each(function (index, element) {
+                
+                if(!$(this).attr('id')) {
+                    console.error('Gutentyp requires all textarea' + richTextInputSelector + ' elements to have an ID.');
+                }
+
+                // Insert a new editable div with data-for attribute pointing to id of current textarea
+                var _newElement = $('<div />')
+                    .addClass(richTextSelector[0] == '.' ? richTextSelector.substr(1) : richTextSelector)
+                    .attr('data-for', $(this).attr('id') )
+                    .html( $(this).val() )
+                    .attr('contenteditable', true)
+                    .insertBefore($(this));
+
+                // Hide the original textarea
+                $(this).addClass('hidden');
+            });
+        };
 
         var makeElement = function (newElementType, domClass) {
             var _newElement = $('<' + (newElementType ? newElementType : 'div') + ' />');
@@ -40,32 +62,39 @@ hilary.register('utils', {
             $(selector).text(newText);
         };
 
-        var setContentEditable = function(selector) {
-            $(selector).attr('contenteditable', true);
+        var addAttribute = function (selector, newAttr, newValue) {
+            $(selector).attr(newAttr, newValue);
         }
 
-        var attachEvent = function (selector, eventHandler) {
+        var attachEvent = function (selector, eventType, eventHandler) {
             if($.isFunction(eventHandler)) {
-                $(selector).on('click', function (event) {
+                $(selector).on(eventType, function (event) {
                     eventHandler(event);
                 });
             }
+        };
+
+        var outputHtmlToNearestTextareaWithClass = function (html, targetElementClass) {
+            //$('li.current_sub').prevAll(targetElementClass + ":first").;
         };
 
         var isFunction = function (obj) {
             return $.isFunction(obj);
         };
 
-
         return {
+            // "Constants"
+            richTextInputSelector: richTextInputSelector,
             richTextSelector: richTextSelector,
             richTextToolbarSelector: richTextToolbarSelector,
 
+            // Methods
+            initializeRichTextAreas: initializeRichTextAreas,
             insertNewElementBefore: insertNewElementBefore,
             insertNewElementInto: insertNewElementInto,
             setText: setText,
-            setContentEditable: setContentEditable,
             attachEvent: attachEvent,
+            outputHtmlToNearestTextareaWithClass: outputHtmlToNearestTextareaWithClass,
             isFunction: isFunction,
         };
     }
