@@ -1,37 +1,44 @@
-"use strict";
-
 hilary.register('utils', {
-    init: function ($) {
+    init: function ($, config) {
+        "use strict";
+        
+        var initializeRichTextAreas,
+            makeElement,
+            insertNewElementBefore,
+            insertNewElementInto,
+            setText,
+            addAttribute,
+            attachEvent,
+            updateTextarea,
+            isFunction,
+            getRandomString;
 
-        var richTextInputSelector = '.richText'
-        var richTextSelector = '.richTextArea';
-        var richTextToolbarSelector = '.richTextToolbar';
+        initializeRichTextAreas = function () {
+            // For each textarea matching `config.richTextAreaSelector`
+            $(config.richTextInputSelector).each(function (index, element) {
+                var _this = $(this);
 
-        var initializeRichTextAreas = function () {
-            // For each textarea matching `richTextSelector`
-            $(richTextInputSelector).each(function (index, element) {
-                
-                if(!$(this).attr('id')) {
-                    console.error('Gutentyp requires all textarea' + richTextInputSelector + ' elements to have an ID.');
+                if(!_this.attr('id')) {
+                    _this.attr('id', 'gutentyp_' + getRandomString());
                 }
 
                 // Insert a new editable div with data-for attribute pointing to id of current textarea
                 var _newElement = $('<div />')
-                    .addClass(richTextSelector[0] == '.' ? richTextSelector.substr(1) : richTextSelector)
-                    .attr('data-for', $(this).attr('id') )
-                    .html( $(this).val() )
+                    .addClass(config.richTextAreaSelector[0] == '.' ? config.richTextAreaSelector.substr(1) : config.richTextAreaSelector)
+                    .attr('data-for', _this.attr('id') )
+                    .html( _this.val() )
                     .attr('contenteditable', true)
-                    .insertBefore($(this));
+                    .insertBefore(_this);
 
                 // Hide the original textarea
-                $(this).addClass('hidden');
+                _this.addClass('hidden');
             });
         };
 
-        var makeElement = function (newElementType, domClass) {
+        makeElement = function (newElementType, domClass) {
             var _newElement = $('<' + (newElementType ? newElementType : 'div') + ' />');
 
-            if(domClass != null && domClass != '') {
+            if(domClass != null && domClass !== '') {
                 _newElement.addClass(
                     domClass[0] == '.' ? domClass.substr(1) : domClass
                 );
@@ -40,33 +47,33 @@ hilary.register('utils', {
             return _newElement;
         };
 
-        var insertNewElementBefore = function (newElementType, target, domClass) {
+        insertNewElementBefore = function (newElementType, target, domClass) {
             if(target == null || target == '')
                 return;
 
             var _newElement = makeElement(newElementType, domClass);
 
-            _newElement.insertBefore(target);
+            _newElement.insertBefore($(target));
         };
 
-        var insertNewElementInto = function (newElementType, target, domClass) {
+        insertNewElementInto = function (newElementType, target, domClass) {
             if(target == null || target == '')
                 return;
 
             var _newElement = makeElement(newElementType, domClass);
 
-            _newElement.appendTo(target);
+            _newElement.appendTo($(target));
         };
 
-        var setText = function (selector, newText) {
+        setText = function (selector, newText) {
             $(selector).text(newText);
         };
 
-        var addAttribute = function (selector, newAttr, newValue) {
+        addAttribute = function (selector, newAttr, newValue) {
             $(selector).attr(newAttr, newValue);
         }
 
-        var attachEvent = function (selector, eventType, eventHandler) {
+        attachEvent = function (selector, eventType, eventHandler) {
             if($.isFunction(eventHandler)) {
                 $(selector).on(eventType, function (event) {
                     eventHandler(event);
@@ -74,28 +81,33 @@ hilary.register('utils', {
             }
         };
 
-        var updateTextarea = function(target) {
-            $('textarea#' + $(target).attr('data-for')).html($(target).html())
+        updateTextarea = function (target) {
+            $('textarea#' + $(target).attr('data-for')).html($(target).html());
         };
 
-        var isFunction = function (obj) {
+        isFunction = function (obj) {
             return $.isFunction(obj);
         };
 
-        return {
-            // "Constants"
-            richTextInputSelector: richTextInputSelector,
-            richTextSelector: richTextSelector,
-            richTextToolbarSelector: richTextToolbarSelector,
+        getRandomString = function (length)
+        {
+            var text = '';
+            var possible = 'abcdefghijklmnopqrstuvwxyz';
 
-            // Methods
+            for(var i = 0; i < (length ? length : 5); i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+            return text;
+        }
+
+        return {
             initializeRichTextAreas: initializeRichTextAreas,
             insertNewElementBefore: insertNewElementBefore,
             insertNewElementInto: insertNewElementInto,
             setText: setText,
             attachEvent: attachEvent,
             updateTextarea: updateTextarea,
-            isFunction: isFunction,
+            isFunction: isFunction
         };
     }
 });

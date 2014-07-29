@@ -1,13 +1,15 @@
-"use strict";
-
 hilary.register('componentPipeline', {
     init: function (utils) {
+        "use strict";
 
-        var beforeAny = function () {
+        var beforeAny,
+            afterAny;
+
+        beforeAny = function () {
             // Save the cursor's position
         };
 
-        var afterAny = function () {
+        afterAny = function () {
             // Set the cursor back to the original position
         };
 
