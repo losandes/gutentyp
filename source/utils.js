@@ -16,14 +16,15 @@ hilary.register('utils', {
             addAttribute,
             attachEvent,
             updateTextarea,
-            isFunction;
+            isFunction,
+            getRandomString;
 
         initializeRichTextAreas = function () {
             // For each textarea matching `richTextAreaSelector`
             $(richTextInputSelector).each(function (index, element) {
                 
                 if(!$(this).attr('id')) {
-                    console.error('Gutentyp requires all textarea' + richTextInputSelector + ' elements to have an ID.');
+                    $(this).attr('id', 'gutentyp_' + getRandomString());
                 }
 
                 // Insert a new editable div with data-for attribute pointing to id of current textarea
@@ -92,6 +93,18 @@ hilary.register('utils', {
         isFunction = function (obj) {
             return $.isFunction(obj);
         };
+
+        getRandomString = function (length)
+        {
+            var text = '';
+            var possible = 'abcdefghijklmnopqrstuvwxyz';
+
+
+            for(var i = 0; i < (length ? length : 5); i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+            return text;
+        }
 
         return {
             // "Constants"
