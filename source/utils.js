@@ -1,13 +1,7 @@
 hilary.register('utils', {
-    init: function ($) {
+    init: function ($, config) {
         "use strict";
-
-        // "Constants"
-        var richTextInputSelector = '.richText',
-            richTextAreaSelector = '.richTextArea',
-            richTextToolbarSelector = '.richTextToolbar';
         
-        // Methods
         var initializeRichTextAreas,
             makeElement,
             insertNewElementBefore,
@@ -20,8 +14,8 @@ hilary.register('utils', {
             getRandomString;
 
         initializeRichTextAreas = function () {
-            // For each textarea matching `richTextAreaSelector`
-            $(richTextInputSelector).each(function (index, element) {
+            // For each textarea matching `config.richTextAreaSelector`
+            $(config.richTextInputSelector).each(function (index, element) {
                 
                 if(!$(this).attr('id')) {
                     $(this).attr('id', 'gutentyp_' + getRandomString());
@@ -29,7 +23,7 @@ hilary.register('utils', {
 
                 // Insert a new editable div with data-for attribute pointing to id of current textarea
                 var _newElement = $('<div />')
-                    .addClass(richTextAreaSelector[0] == '.' ? richTextAreaSelector.substr(1) : richTextAreaSelector)
+                    .addClass(config.richTextAreaSelector[0] == '.' ? config.richTextAreaSelector.substr(1) : config.richTextAreaSelector)
                     .attr('data-for', $(this).attr('id') )
                     .html( $(this).val() )
                     .attr('contenteditable', true)
@@ -107,12 +101,6 @@ hilary.register('utils', {
         }
 
         return {
-            // "Constants"
-            richTextInputSelector: richTextInputSelector,
-            richTextAreaSelector: richTextAreaSelector,
-            richTextToolbarSelector: richTextToolbarSelector,
-
-            // Methods
             initializeRichTextAreas: initializeRichTextAreas,
             insertNewElementBefore: insertNewElementBefore,
             insertNewElementInto: insertNewElementInto,
