@@ -1,4 +1,4 @@
-(function (hilary, $) {
+(function (hilary, $, window) {
     "use strict";
 
     hilary.use([hilary, jQuery, window], function(hilarysInnerContainer, hilary, $, window) {
@@ -29,4 +29,4 @@
             }
         };
     });
-})(hilary, jQuery);
+})(hilary, jQuery, window);

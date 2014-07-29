@@ -46,7 +46,7 @@ hilary.register('utils', {
 
             var _newElement = makeElement(newElementType, domClass);
 
-            _newElement.insertBefore(target);
+            _newElement.insertBefore($(target));
         };
 
         var insertNewElementInto = function (newElementType, target, domClass) {
@@ -55,7 +55,7 @@ hilary.register('utils', {
 
             var _newElement = makeElement(newElementType, domClass);
 
-            _newElement.appendTo(target);
+            _newElement.appendTo($(target));
         };
 
         var setText = function (selector, newText) {
@@ -75,7 +75,7 @@ hilary.register('utils', {
         };
 
         var updateTextarea = function(target) {
-            $('textarea#' + $(target).attr('data-for')).html($(target).html())
+            $('textarea#' + $(target).attr('data-for')).html($(target).html());
         };
 
         var isFunction = function (obj) {
