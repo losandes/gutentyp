@@ -38,7 +38,7 @@ hilary.register('utils', {
         makeElement = function (newElementType, domClass) {
             var _newElement = $('<' + (newElementType ? newElementType : 'div') + ' />');
 
-            if(domClass != null && domClass != '') {
+            if(domClass != null && domClass !== '') {
                 _newElement.addClass(
                     domClass[0] == '.' ? domClass.substr(1) : domClass
                 );
