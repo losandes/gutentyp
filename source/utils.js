@@ -1,14 +1,14 @@
+hilary.register('utils', {
 "use strict";
 
-hilary.register('utils', {
     init: function ($) {
 
         var richTextInputSelector = '.richText'
-        var richTextSelector = '.richTextArea';
+        var richTextAreaSelector = '.richTextArea';
         var richTextToolbarSelector = '.richTextToolbar';
 
         var initializeRichTextAreas = function () {
-            // For each textarea matching `richTextSelector`
+            // For each textarea matching `richTextAreaSelector`
             $(richTextInputSelector).each(function (index, element) {
                 
                 if(!$(this).attr('id')) {
@@ -17,7 +17,7 @@ hilary.register('utils', {
 
                 // Insert a new editable div with data-for attribute pointing to id of current textarea
                 var _newElement = $('<div />')
-                    .addClass(richTextSelector[0] == '.' ? richTextSelector.substr(1) : richTextSelector)
+                    .addClass(richTextAreaSelector[0] == '.' ? richTextAreaSelector.substr(1) : richTextAreaSelector)
                     .attr('data-for', $(this).attr('id') )
                     .html( $(this).val() )
                     .attr('contenteditable', true)
@@ -85,7 +85,7 @@ hilary.register('utils', {
         return {
             // "Constants"
             richTextInputSelector: richTextInputSelector,
-            richTextSelector: richTextSelector,
+            richTextAreaSelector: richTextAreaSelector,
             richTextToolbarSelector: richTextToolbarSelector,
 
             // Methods

@@ -1,9 +1,9 @@
+hilary.register('toolbarBuilder', {
 "use strict";
 
-hilary.register('toolbarBuilder', {
-    init: function (utils, editComponents) {
+    Build: function (utils, editComponents) {
 
-        utils.insertNewElementBefore('div', utils.richTextInputSelector, utils.richTextToolbarSelector);
+        utils.insertNewElementBefore('div', utils.richTextAreaSelector, utils.richTextToolbarSelector);
 
         for (var i = 0; i < editComponents.length; i++) {
             var _command = editComponents[i];

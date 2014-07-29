@@ -16,12 +16,11 @@
             .init(_utils, _componentPipeline);
 
         // Build the toolbar and append it to the rich text area
-        hilary.resolve('toolbarBuilder')
-            .init(_utils, _editComponents);
+        var _toobarBuilder = hilary.resolve('toolbarBuilder');
 
         // Initialize the core component
         var _gutenCore = hilary.resolve('gutenCore')
-            .init(_utils, _editComponents);
+            .init(_utils, _editComponents, _toobarBuilder);
 
         window.gutentyp = {
             init: function() {

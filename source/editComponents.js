@@ -1,6 +1,6 @@
+hilary.register('editComponents', {
 "use strict";
 
-hilary.register('editComponents', {
     init: function (utils, componentPipeline) {
         var componentFactory, _components;
 

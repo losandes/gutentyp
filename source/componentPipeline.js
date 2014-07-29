@@ -1,6 +1,6 @@
+hilary.register('componentPipeline', {
 "use strict";
 
-hilary.register('componentPipeline', {
     init: function (utils) {
 
         var beforeAny = function () {
