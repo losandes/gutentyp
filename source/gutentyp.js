@@ -1,3 +1,5 @@
+// Gutentyp - composition root 
+
 (function (hilary, $, window) {
     "use strict";
 

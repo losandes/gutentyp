@@ -2,7 +2,9 @@ hilary.register('editComponents', {
 "use strict";
 
     init: function (utils, componentPipeline) {
-        var componentFactory, _components;
+        var componentFactory,
+            _components,
+            pasteHtmlAtCaret;
 
         componentFactory = function (title, pipelineName, func) {
             var self = {};
@@ -214,7 +216,7 @@ hilary.register('editComponents', {
 
 
 
-        var pasteHtmlAtCaret = function(html, selectPastedContent) {
+        pasteHtmlAtCaret = function(html, selectPastedContent) {
             // Helper function because different browsers don't always cleanly implement this feature
             // From http://stackoverflow.com/a/6691294
 
