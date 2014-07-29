@@ -45,7 +45,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Foreground color',
-                'ForegroundColor',
+                'foregroundColor',
                 function () {
                     document.execCommand('forecolor', false, '#FF0000');
                 }
@@ -54,7 +54,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Background color',
-                'BackgroundColor',
+                'backgroundColor',
                 function () {
                     document.execCommand('backcolor', false, '#FF0000');
                 }
@@ -63,7 +63,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Headings',
-                'Headings',
+                'headings',
                 function () {
 
                 }
@@ -72,7 +72,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Bold',
-                'Bold',
+                'bold',
                 function () {
                     document.execCommand('bold', false, null);
                 }
@@ -81,7 +81,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Italic',
-                'Italic',
+                'italic',
                 function () {
                     document.execCommand('italic', false, null);
                 }
@@ -90,7 +90,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Underline',
-                'Underline',
+                'underline',
                 function () {
                     document.execCommand('underline', false, null);
                 }
@@ -99,7 +99,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Strike-Through',
-                'StrikeThrough',
+                'strikeThrough',
                 function () {
                     document.execCommand('strikeThrough', false, null);
                 }
@@ -108,7 +108,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Left Justification',
-                'LeftJustification',
+                'leftJustification',
                 function () {
                     document.execCommand('justifyLeft', false, null);
                 }
@@ -117,7 +117,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Center Justification',
-                'CenterJustification',
+                'centerJustification',
                 function () {
                     document.execCommand('justifyCenter', false, null);
                 }
@@ -126,7 +126,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Right Justification',
-                'RightJustification',
+                'rightJustification',
                 function () {
                     document.execCommand('justifyRight', false, null);
                 }
@@ -135,7 +135,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Indent Text',
-                'IndentText',
+                'indentText',
                 function () {
                     document.execCommand('indent', false, null);
                 }
@@ -144,7 +144,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Outdent Text',
-                'OutdentText',
+                'outdentText',
                 function () {
                     document.execCommand('outdent', false, null);
                 }
@@ -153,7 +153,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Ordered List',
-                'OrderedList',
+                'orderedList',
                 function () {
                     document.execCommand('insertOrderedList', false, null);
                 }
@@ -162,7 +162,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Unordered List',
-                'UnorderedList',
+                'unorderedList',
                 function () {
                     document.execCommand('insertUnorderedList', false, null);
                 }
@@ -171,7 +171,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Quote',
-                'QuoteBlock',
+                'quoteBlock',
                 function () {
                     //pasteHtmlAtCaret('', false);
                 }
@@ -180,7 +180,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Code Block',
-                'CodeBlock',
+                'codeBlock',
                 function () {
                     //pasteHtmlAtCaret('', false);
                 }
@@ -189,7 +189,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Add Link',
-                'AddLink',
+                'addLink',
                 function () {
                     //pasteHtmlAtCaret('', false);
                 }
@@ -198,7 +198,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Add Image',
-                'AddImage',
+                'addImage',
                 function () {
                     //pasteHtmlAtCaret('', false);
                 }
@@ -207,7 +207,7 @@ hilary.register('editComponents', {
         _components.push(
             new componentFactory(
                 'Add Video',
-                'AddVideo',
+                'addVideo',
                 function () {
                     //pasteHtmlAtCaret('', false);
                 }
