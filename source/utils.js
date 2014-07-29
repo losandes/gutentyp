@@ -80,7 +80,7 @@ hilary.register('utils', {
             }
         };
 
-        updateTextarea = function(target) {
+        updateTextarea = function (target) {
             $('textarea#' + $(target).attr('data-for')).html($(target).html());
         };
 
@@ -92,7 +92,6 @@ hilary.register('utils', {
         {
             var text = '';
             var possible = 'abcdefghijklmnopqrstuvwxyz';
-
 
             for(var i = 0; i < (length ? length : 5); i++)
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -107,7 +106,7 @@ hilary.register('utils', {
             setText: setText,
             attachEvent: attachEvent,
             updateTextarea: updateTextarea,
-            isFunction: isFunction,
+            isFunction: isFunction
         };
     }
 });

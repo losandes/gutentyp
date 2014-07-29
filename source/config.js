@@ -5,7 +5,7 @@ hilary.register('config', {
         return {
             richTextInputSelector: '.richText',
             richTextAreaSelector: '.richTextArea',
-            richTextToolbarSelector: '.richTextToolbar',
+            richTextToolbarSelector: '.richTextToolbar'
         };
     }
 });
