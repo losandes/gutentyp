@@ -16,21 +16,22 @@ hilary.register('utils', {
         initializeRichTextAreas = function () {
             // For each textarea matching `config.richTextAreaSelector`
             $(config.richTextInputSelector).each(function (index, element) {
-                
-                if(!$(this).attr('id')) {
-                    $(this).attr('id', 'gutentyp_' + getRandomString());
+                var _this = $(this);
+
+                if(!_this.attr('id')) {
+                    _this.attr('id', 'gutentyp_' + getRandomString());
                 }
 
                 // Insert a new editable div with data-for attribute pointing to id of current textarea
                 var _newElement = $('<div />')
                     .addClass(config.richTextAreaSelector[0] == '.' ? config.richTextAreaSelector.substr(1) : config.richTextAreaSelector)
-                    .attr('data-for', $(this).attr('id') )
-                    .html( $(this).val() )
+                    .attr('data-for', _this.attr('id') )
+                    .html( _this.val() )
                     .attr('contenteditable', true)
-                    .insertBefore($(this));
+                    .insertBefore(_this);
 
                 // Hide the original textarea
-                $(this).addClass('hidden');
+                _this.addClass('hidden');
             });
         };
 
