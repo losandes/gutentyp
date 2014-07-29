@@ -1,7 +1,7 @@
 hilary.register('editComponents', {
-"use strict";
-
     init: function (utils, componentPipeline) {
+        "use strict";
+
         var componentFactory,
             _components,
             pasteHtmlAtCaret;
@@ -267,6 +267,20 @@ hilary.register('editComponents', {
         };
 
 
-        return _components;
+        return {
+            /*
+             * The default components supported by gutentyp
+             */
+            components: _components,
+
+            /*
+             * Returns a component object that will leverage the component pipeline
+             * @param title (string): the display name of the component
+             * @param pipelineName (string): the name that pipeline handlers would be bound to, with respect to 
+             *     this component (i.e. a pipelineName of 'bold' will be registered as 'before::bold' and 'after::bold')
+             * @param func (function): the callback / function that will be executed when this component is used
+             */
+            makeComponent: componentFactory
+        };
     }
 });

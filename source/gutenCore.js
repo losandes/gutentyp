@@ -1,7 +1,6 @@
 hilary.register('gutenCore', {
-"use strict";
-
     init: function (utils, editComponents, toolbarBuilder) {
+        "use strict";
 
         var loadGutenCore = function (components) {
 

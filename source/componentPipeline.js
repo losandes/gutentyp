@@ -1,7 +1,7 @@
 hilary.register('componentPipeline', {
-"use strict";
-
     init: function (utils) {
+        "use strict";
+
         var beforeAny,
             afterAny;
 

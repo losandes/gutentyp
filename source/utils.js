@@ -1,7 +1,6 @@
 hilary.register('utils', {
-"use strict";
-
     init: function ($) {
+        "use strict";
 
         // "Constants"
         var richTextInputSelector = '.richText',

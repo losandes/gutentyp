@@ -1,9 +1,8 @@
 // Gutentyp - composition root 
 
 (function (hilary, $, window) {
-    "use strict";
-
     hilary.use([hilary, jQuery, window], function(hilarysInnerContainer, hilary, $, window) {
+    "use strict";
 
         // Initialize the base utilities required by this library
         var _utils = hilary.resolve('utils')
