@@ -1,8 +1,15 @@
+/*jslint plusplus: true */
+/*global hilary*/
+
 hilary.register('gutentyp::toolbar', { init: function (config, utils, editComponents) {
     "use strict";
     
     var build = function () {
-        var i, component;
+        var i, component, formatEventSelector;
+        
+        formatEventSelector = function (component) {
+            return config.selectors.toolbar + ' .' + component.cssClass + ':not(' + config.selectors.hasEvents + ')';
+        };
         
         utils.insertNewElementBefore('div', config.selectors.newEditors, config.selectors.toolbar);
 
@@ -10,11 +17,12 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, editCompon
             component = editComponents.components[i];
             
             if (utils.isFunction(component.displayHandler)) {
-                component.displayHandler();
+                utils.insertHtml(config.selectors.newToolbars, component.displayHandler());
+                utils.attachEvent(formatEventSelector(component), 'click', component.execute);
             } else {
                 utils.insertNewElementInto('button', config.selectors.newToolbars, component.cssClass);
-                utils.setText(config.selectors.toolbar + ' .' + component.cssClass, component.title);
-                utils.attachEvent(config.selectors.toolbar + ' .' + component.cssClass, 'click', component.execute);            
+                utils.setText(config.selectors.newToolbars + ' .' + component.cssClass, component.title);
+                utils.attachEvent(formatEventSelector(component), 'click', component.execute);
             }
         }
         

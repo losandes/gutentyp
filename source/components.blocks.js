@@ -1,3 +1,5 @@
+/*global hilary*/
+
 hilary.register('gutentyp::components::blocks', { init: function (components) {
     "use strict";
     
@@ -28,7 +30,7 @@ hilary.register('gutentyp::components::blocks', { init: function (components) {
         func: function (event, text) {
             return '<blockquote>' + text + '</blockquote>';
         }
-    });    
+    });
     
     components.addComponent([code, pre, quote]);
 }});

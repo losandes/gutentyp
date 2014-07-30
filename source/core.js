@@ -1,3 +1,5 @@
+/*global hilary*/
+
 hilary.register('gutentyp::core', {
     init: function (config, utils, components, toolbarBuilder) {
         "use strict";

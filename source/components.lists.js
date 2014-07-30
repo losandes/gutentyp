@@ -1,3 +1,5 @@
+/*global hilary*/
+
 hilary.register('gutentyp::components::lists', { init: function (components) {
     "use strict";
     
@@ -11,7 +13,7 @@ hilary.register('gutentyp::components::lists', { init: function (components) {
             document.execCommand('insertUnorderedList', false, null);
             return false;
         }
-    });    
+    });
     
     numbered = components.makeComponent({
         title: 'Ordered List',
