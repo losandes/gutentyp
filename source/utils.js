@@ -1,4 +1,4 @@
-hilary.register('utils', {
+hilary.register('gutentyp::utils', {
     init: function ($, config) {
         "use strict";
         
@@ -7,78 +7,113 @@ hilary.register('utils', {
             insertNewElementBefore,
             insertNewElementInto,
             setText,
+            insertHtml,
+            addClass,
             addAttribute,
+            getAttribute,
             attachEvent,
             updateTextarea,
             isFunction,
+            getSelectedText,
+            replaceSelectedText,
+            pasteHtmlAtCursor,
             getRandomString;
 
         initializeRichTextAreas = function () {
             // For each textarea matching `config.richTextAreaSelector`
-            $(config.richTextInputSelector).each(function (index, element) {
-                var _this = $(this);
+            $(config.selectors.toGutentypify).each(function (index, element) {
+                var $this = $(this);
 
-                if(!_this.attr('id')) {
-                    _this.attr('id', 'gutentyp_' + getRandomString());
+                if (!$this.attr('id')) {
+                    $this.attr('id', 'gutentyp-' + getRandomString());
                 }
 
                 // Insert a new editable div with data-for attribute pointing to id of current textarea
-                var _newElement = $('<div />')
-                    .addClass(config.richTextAreaSelector[0] == '.' ? config.richTextAreaSelector.substr(1) : config.richTextAreaSelector)
-                    .attr('data-for', _this.attr('id') )
-                    .html( _this.val() )
+                $('<div />')
+                    .addClass(config.cssClasses.editor)
+                    .attr('data-for', $this.attr('id'))
+                    .html($this.val())
                     .attr('contenteditable', true)
-                    .insertBefore(_this);
+                    .insertBefore($this);
 
                 // Hide the original textarea
-                _this.addClass('hidden');
+                $this.removeClass(config.cssClasses.toGutentypify);
+                $this.addClass(config.cssClasses.hidden);
+                $this.addClass(config.cssClasses.gutentypified);
             });
         };
 
         makeElement = function (newElementType, domClass) {
-            var _newElement = $('<' + (newElementType ? newElementType : 'div') + ' />');
+            var newElement = $('<' + (newElementType || 'div') + ' />');
 
-            if(domClass != null && domClass !== '') {
-                _newElement.addClass(
-                    domClass[0] == '.' ? domClass.substr(1) : domClass
+            if (domClass && domClass !== null && domClass !== '') {
+                newElement.addClass(
+                    domClass[0] === '.' ? domClass.substr(1) : domClass
                 );
             }
 
-            return _newElement;
+            return newElement;
         };
 
         insertNewElementBefore = function (newElementType, target, domClass) {
-            if(target == null || target == '')
+            if (!target || target === '') {
                 return;
+            }
 
-            var _newElement = makeElement(newElementType, domClass);
-
-            _newElement.insertBefore($(target));
+            makeElement(newElementType, domClass)
+                .insertBefore($(target));
         };
 
         insertNewElementInto = function (newElementType, target, domClass) {
-            if(target == null || target == '')
+            if (!target || target === '') {
                 return;
+            }
 
-            var _newElement = makeElement(newElementType, domClass);
-
-            _newElement.appendTo($(target));
+            makeElement(newElementType, domClass)
+                .appendTo($(target));
         };
 
         setText = function (selector, newText) {
             $(selector).text(newText);
         };
-
+        
+        insertHtml = function (selector, html) {
+            $(selector).append(html);
+        };        
+        
+        addClass = function (selector, cssClass) {
+            $(selector).addClass(cssClass);
+        };
+        
         addAttribute = function (selector, newAttr, newValue) {
             $(selector).attr(newAttr, newValue);
-        }
+        };
+        
+        getAttribute = function (elemtnContext, attributeName) {
+            return $(elemtnContext).attr(attributeName);
+        };
 
         attachEvent = function (selector, eventType, eventHandler) {
-            if($.isFunction(eventHandler)) {
+            if ($.isFunction(eventHandler)) {
                 $(selector).on(eventType, function (event) {
                     eventHandler(event);
                 });
             }
+            
+//            if (typeof(obj) === 'string') {
+//                obj = $(obj)[0];
+//            } else if (obj instanceof $) {
+//                obj = obj[0];
+//            }
+//            
+//            if ($.isFunction(eventHandler)) {
+//                if (obj.addEventListener) {
+//                    obj.addEventListener(eventType, eventHandler, false);
+//                    return;
+//                }
+//
+//                obj.attachEvent('on' + eventType, eventHandler);
+//            }            
         };
 
         updateTextarea = function (target) {
@@ -88,26 +123,126 @@ hilary.register('utils', {
         isFunction = function (obj) {
             return $.isFunction(obj);
         };
+        
+        getSelectedText = function () {
+            var selected, container, i, len;
+            
+            if (typeof window.getSelection !== 'undefined') {
+                selected = window.getSelection();
+                if (selected.rangeCount) {
+                    container = document.createElement('div');
+                    
+                    for (i = 0, len = selected.rangeCount; i < len; ++i) {
+                        container.appendChild(selected.getRangeAt(i).cloneContents());
+                    }
+                    return container.innerHTML;
+                }
+            } else if (typeof document.selection !== 'undefined') {
+                if (document.selection.type === 'Text') {
+                    return document.selection.createRange().htmlText;
+                }
+            }
+        };
+        
+        replaceSelectedText = function (replacementText) {
+            var range, html, div, frag, child;
+            if (window.getSelection && window.getSelection().getRangeAt) {
+                range = window.getSelection().getRangeAt(0);
+                range.deleteContents();
+                div = document.createElement("div");
+                div.innerHTML = replacementText;
+                frag = document.createDocumentFragment();
+                
+                while ( (child = div.firstChild) ) {
+                    frag.appendChild(child);
+                }
+                
+                range.insertNode(frag);
+            } else if (document.selection && document.selection.createRange) {
+                range = document.selection.createRange();
+                range.pasteHTML(replacementText);
+            }
+        };
+        
+        pasteHtmlAtCursor = function (html, selectPastedContent) {
+            // Helper function because different browsers don't always cleanly implement this feature
+            // From http://stackoverflow.com/a/6691294
 
-        getRandomString = function (length)
-        {
-            var text = '';
-            var possible = 'abcdefghijklmnopqrstuvwxyz';
+            var sel, range, el, frag, node, lastNode, firstNode, originalRange;
+            
+            if (window.getSelection) {
+                // IE9 and non-IE
+                sel = window.getSelection();
+                if (sel.getRangeAt && sel.rangeCount) {
+                    range = sel.getRangeAt(0);
+                    range.deleteContents();
 
-            for(var i = 0; i < (length ? length : 5); i++)
+                    // Range.createContextualFragment() would be useful here but is
+                    // only relatively recently standardized and is not supported in
+                    // some browsers (IE9, for one)
+                    el = document.createElement("div");
+                    el.innerHTML = html;
+                    frag = document.createDocumentFragment();
+                    
+                    while ( (node = el.firstChild) ) {
+                        lastNode = frag.appendChild(node);
+                    }
+                    
+                    firstNode = frag.firstChild;
+                    range.insertNode(frag);
+
+                    // Preserve the selection
+                    if (lastNode) {
+                        range = range.cloneRange();
+                        range.setStartAfter(lastNode);
+                        if (selectPastedContent) {
+                            range.setStartBefore(firstNode);
+                        } else {
+                            range.collapse(true);
+                        }
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }
+                }
+            } else if ( (sel = document.selection) && sel.type !== "Control") {
+                // IE < 9
+                originalRange = sel.createRange();
+                originalRange.collapse(true);
+                sel.createRange().pasteHTML(html);
+                if (selectPastedContent) {
+                    range = sel.createRange();
+                    range.setEndPoint("StartToStart", originalRange);
+                    range.select();
+                }
+            }
+        };
+
+        getRandomString = function (length) {
+            var text = '',
+                possible = 'abcdefghijklmnopqrstuvwxyz',
+                i;
+
+            for (i = 0; i < (length || 5); i++) {
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
 
             return text;
-        }
+        };
 
         return {
             initializeRichTextAreas: initializeRichTextAreas,
             insertNewElementBefore: insertNewElementBefore,
             insertNewElementInto: insertNewElementInto,
             setText: setText,
+            insertHtml: insertHtml,
+            addClass: addClass,
+            getAttribute: getAttribute,
             attachEvent: attachEvent,
             updateTextarea: updateTextarea,
-            isFunction: isFunction
+            isFunction: isFunction,
+            getSelectedText: getSelectedText,
+            replaceSelectedText: replaceSelectedText,
+            pasteHtmlAtCursor: pasteHtmlAtCursor
         };
     }
 });

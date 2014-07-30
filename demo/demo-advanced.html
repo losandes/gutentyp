@@ -2,16 +2,17 @@
 <head>
     <title>Gutentyp Demo</title>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="lib/hilary.js"></script>
-    <link rel="stylesheet" href="demo.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="../lib/hilary.js"></script>
+    <script src="../lib/nicephore.min.js"></script>
+    <link rel="stylesheet" href="demo-advanced.css" />
 </head>
 <body>
 
 
     <h1>Gutentyp</h2>
 
-    <textarea class="richText" id="test">
+    <textarea class="gutentyp-ify" id="test">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet sapien vitae purus ultricies lobortis id ut turpis. Phasellus pellentesque tristique nulla nec blandit. Pellentesque augue massa, fringilla ut erat non, commodo hendrerit augue. Suspendisse aliquam sapien vitae sem semper, at molestie justo pretium. Quisque pellentesque mattis iaculis. Pellentesque fermentum laoreet tincidunt. Maecenas rhoncus porta dui, ut elementum orci tincidunt sit amet.
         Nunc lorem felis, placerat quis malesuada id, ornare a neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur placerat lorem ac velit faucibus congue. Suspendisse ut bibendum eros:
         <ol>
@@ -24,17 +25,50 @@
         Mauris facilisis hendrerit nisi, in vehicula erat tempus sagittis. Sed tempor, ligula ac aliquet vestibulum, metus risus tempus turpis, vel euismod nulla neque ac nibh. Etiam quis varius libero. Cras dapibus pellentesque purus sed semper. Nullam porttitor mattis nisl vitae viverra. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sodales ultricies lorem, ac luctus dolor elementum vel. Nulla facilisi. Pellentesque purus nisi, pellentesque non turpis sit amet, aliquet faucibus quam. Curabitur ullamcorper nisi odio, ut ultrices orci dignissim ullamcorper. Proin ac ultrices enim. Sed porta ultricies elit, id dapibus justo imperdiet vitae. Nullam consectetur velit sed tincidunt gravida. Nunc nec ultricies diam.
         Aenean mollis eleifend volutpat. Integer sollicitudin ultricies arcu, vitae bibendum lacus vulputate eget. Nam et nibh fermentum, congue nunc quis, venenatis massa. Vestibulum porttitor nulla erat, sit amet tempor arcu pellentesque sed. Praesent quis volutpat quam. Nam rutrum condimentum elit, nec lobortis erat condimentum ac. Praesent vitae ultrices dui. Fusce mollis porttitor est. Etiam non luctus quam. Praesent dui nisl, ullamcorper sit amet iaculis at, consequat ac diam. Vestibulum eu tempus enim, in fermentum nisi. Nam dolor elit, rhoncus vel eros ac, vulputate ornare quam. Praesent tincidunt orci ac tempus egestas.
     </textarea>
+    <br />
+    <br />
+    <textarea class="gutentyp-ify" id="test2">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet sapien vitae purus ultricies lobortis id ut turpis. Phasellus pellentesque tristique nulla nec blandit. Pellentesque augue massa, fringilla ut erat non, commodo hendrerit augue. Suspendisse aliquam sapien vitae sem semper, at molestie justo pretium. Quisque pellentesque mattis iaculis. Pellentesque fermentum laoreet tincidunt. Maecenas rhoncus porta dui, ut elementum orci tincidunt sit amet.
+    </textarea>    
 
-    <script src="source/config.js"></script>
-    <script src="source/utils.js"></script>
-    <script src="source/componentPipeline.js"></script>
-    <script src="source/editComponents.js"></script>
-    <script src="source/toolbarBuilder.js"></script>
-    <script src="source/gutenCore.js"></script>
-    <script src="source/gutentyp.js"></script>
+
+    <script src="../source/config.js"></script>
+    <script src="../source/utils.js"></script>
+    <script src="../source/pipeline.js"></script>
+    <script src="../source/components.js"></script>
+    <script src="../source/toolbar.js"></script>
+    <script src="../source/core.js"></script>
+    <script src="../source/components.colors.js"></script>
+    <script src="../source/components.headings.js"></script>
+    <script src="../source/components.emphasis.js"></script>
+    <script src="../source/components.justification.js"></script>
+    <script src="../source/components.lists.js"></script>
+    <script src="../source/components.blocks.js"></script>
+    <script src="../source/components.link.js"></script>
+    <script src="../source/components.image.js"></script>
+    <script src="../source/gutentyp.js"></script>
     
     <script type="text/javascript">
-        gutentyp.init();
+        gutentyp.init()
+        
+        gutentyp.registerComponent({
+            title: 'New Foreground color',
+            cssClass: 'gutentyp-fg-color',
+            pipelineName: 'foregroundColor2',
+            func: function (event, text) {
+                document.execCommand('forecolor', false, '#FF0000');
+                return false;
+            }, 
+            before: function (event) { 
+                console.log('before', event); 
+            }, 
+            after: function (event) { 
+                console.log('after', event); 
+            }
+        });
+        
+        gutentyp.activate();
+        gutentyp.activate();
     </script>
 
 
