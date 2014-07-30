@@ -80,15 +80,24 @@
         
         rts.init();
         
+    </script>
+    
+    <script type="text/javascript">
         // configure an alternate gutentyp instance, then override the toolbar module and
         // initialize the textareas that match this config
         
-        rts2.config.cssClasses.toGutentypify = 'rts2';
-        rts2.config.selectors.toGutentypify = '.rts2';
-        rts2.config.cssClasses.editor = 'rts2editor';
-        rts2.config.selectors.editor = '.rts2editor';
+        // here we are modifying the existing config, so we can override it later
+        var rts2Config = rts2.config;
+        rts2Config.cssClasses.toGutentypify = 'rts2';
+        rts2Config.selectors.toGutentypify = '.rts2';
+        rts2Config.cssClasses.editor = 'rts2editor';
+        rts2Config.selectors.editor = '.rts2editor';
         
-        rts2.overrideModule('gutentyp::toolbar', { init: function (config, utils, components) {
+        // override the existing config with our modifications
+        rts2.overrideConfig({ init: function () { return rts2Config; }});
+        
+        // override the toolbar => we want to create our own!
+        rts2.overrideToolbar({ init: function (config, utils, components) {
             "use strict";
 
             var build = function () {
@@ -103,11 +112,39 @@
 
         }});
         
+        // override an existing component
+        rts2.overrideModule('gutentyp::components::colors', { init: function (components) {
+            "use strict";
+
+            var fgColor, bgColor;
+
+            fgColor = components.makeComponent({
+                title: 'Foreground color',
+                cssClass: 'gutentyp-fg-color',
+                pipelineName: 'foregroundColor',
+                func: function (event, text) {
+                    document.execCommand('forecolor', false, '#FF0000');
+                    return false;
+                }
+            });
+
+            bgColor = components.makeComponent({
+                title: 'Background color',
+                cssClass: 'gutentyp-bg-color',
+                pipelineName: 'backgroundColor',
+                func: function () {
+                    document.execCommand('backcolor', false, '#FF0000');
+                    return false;
+                }
+            });
+
+            components.addComponent([fgColor, bgColor]);
+        }});      
+        
         rts2.init();
         
         // init a second time to verify that we don't re-do anything
-        rts.init();
-        
+        rts.init();    
     </script>
 
 
