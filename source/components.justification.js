@@ -1,3 +1,5 @@
+/*global hilary*/
+
 hilary.register('gutentyp::components::justification', { init: function (components) {
     "use strict";
     

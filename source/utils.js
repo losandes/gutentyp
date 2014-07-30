@@ -1,3 +1,6 @@
+/*jslint plusplus: true */
+/*global hilary*/
+
 hilary.register('gutentyp::utils', {
     init: function ($, config) {
         "use strict";
@@ -79,7 +82,7 @@ hilary.register('gutentyp::utils', {
         
         insertHtml = function (selector, html) {
             $(selector).append(html);
-        };        
+        };
         
         addClass = function (selector, cssClass) {
             $(selector).addClass(cssClass);
@@ -95,9 +98,13 @@ hilary.register('gutentyp::utils', {
 
         attachEvent = function (selector, eventType, eventHandler) {
             if ($.isFunction(eventHandler)) {
-                $(selector).on(eventType, function (event) {
+                var $this = $(selector);
+                
+                $this.on(eventType, function (event) {
                     eventHandler(event);
                 });
+                
+                addClass($this, config.cssClasses.hasEvents);
             }
             
 //            if (typeof(obj) === 'string') {

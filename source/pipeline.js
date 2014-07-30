@@ -1,3 +1,5 @@
+/*global hilary*/
+
 hilary.register('gutentyp::pipeline', {
     init: function (config, utils) {
         "use strict";

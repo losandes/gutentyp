@@ -1,3 +1,5 @@
+/*global hilary*/
+
 hilary.register('gutentyp::components::headings', { init: function (components) {
     "use strict";
     
@@ -55,7 +57,7 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         func: function (event, text) {
             return '<h6>' + text + '</h6>';
         }
-    });    
+    });
     
     components.addComponent([h1, h2, h3, h4, h5, h6]);
 }});

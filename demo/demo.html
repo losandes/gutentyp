@@ -11,7 +11,7 @@
 
     <h1>Gutentyp</h2>
 
-    <textarea class="richText" id="test">
+    <textarea class="gutentyp-ify" id="test">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet sapien vitae purus ultricies lobortis id ut turpis. Phasellus pellentesque tristique nulla nec blandit. Pellentesque augue massa, fringilla ut erat non, commodo hendrerit augue. Suspendisse aliquam sapien vitae sem semper, at molestie justo pretium. Quisque pellentesque mattis iaculis. Pellentesque fermentum laoreet tincidunt. Maecenas rhoncus porta dui, ut elementum orci tincidunt sit amet.
         Nunc lorem felis, placerat quis malesuada id, ornare a neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur placerat lorem ac velit faucibus congue. Suspendisse ut bibendum eros:
         <ol>
@@ -27,14 +27,26 @@
 
     <script src="../source/config.js"></script>
     <script src="../source/utils.js"></script>
-    <script src="../source/componentPipeline.js"></script>
+    <script src="../source/pipeline.js"></script>
     <script src="../source/components.js"></script>
     <script src="../source/toolbar.js"></script>
     <script src="../source/core.js"></script>
+    <script src="../source/components.colors.js"></script>
+    <script src="../source/components.headings.js"></script>
+    <script src="../source/components.emphasis.js"></script>
+    <script src="../source/components.justification.js"></script>
+    <script src="../source/components.lists.js"></script>
+    <script src="../source/components.blocks.js"></script>
+    <script src="../source/components.link.js"></script>
+    <script src="../source/components.image.js"></script>
     <script src="../source/gutentyp.js"></script>
     
     <script type="text/javascript">
-        gutentyp.init();
+        // create 2 instances of gutentyp, for different configurations
+        var rts = gutentyp();
+        
+        // initialize all textareas that match the config
+        rts.init();
     </script>
 
 

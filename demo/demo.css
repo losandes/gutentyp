@@ -1,22 +1,22 @@
 body {
     width: 75%;
 }
-.hidden {
+.gutentyp-hidden {
     display: none;
     visibility: hidden;
 }
 
 
-.richTextArea {
+.gutentyp-editor {
     padding: 3px;
     border: 1px solid #C8C8C8;
     border-radius-bottom-left: 1px;
     border-radius-bottom-right: 1px;
 }
-.richTextArea:focus {}
+.gutentyp-editor:focus {}
 
 
-.richTextToolbar {
+.gutentyp-toolbar {
     background-color: #F7F7F7;
     border: 1px solid #C8C8C8;
     border-bottom: none;

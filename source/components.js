@@ -1,14 +1,21 @@
+/*jslint plusplus: true */
+/*global hilary*/
+
 hilary.register('gutentyp::components', { init: function (config, utils, componentPipeline) {
     "use strict";
 
-    var components = [], 
+    var components = [],
         componentFactory,
         addComponent;
 
     addComponent = function (component) {
         if (component instanceof Array) {
-            for (var i in component) {
-                addComponent(component[i]);
+            var i;
+            
+            for (i in component) {
+                if (component.hasOwnProperty(i)) {
+                    addComponent(component[i]);
+                }
             }
         } else {
             components.push(component);
@@ -24,12 +31,14 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
         self.execute = function (event) {
             var i,
                 beforeThis = config.prefixes.pipeline.beforeComponent + definition.pipelineName,
-                afterThis = config.prefixes.pipeline.afterComponent + definition.pipelineName;
+                afterThis = config.prefixes.pipeline.afterComponent + definition.pipelineName,
+                selected,
+                output;
             
-            for (var i = 0; i < componentPipeline.beforeAny.length; i++) {
+            for (i = 0; i < componentPipeline.beforeAny.length; i++) {
                 if (utils.isFunction(componentPipeline.beforeAny[i])) {
                     componentPipeline.beforeAny[i](event);
-                }            
+                }
             }
 
             if (utils.isFunction(componentPipeline[beforeThis])) {
@@ -37,8 +46,8 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
             }
 
             if (utils.isFunction(definition.func)) {
-                var selected = utils.getSelectedText(), 
-                    output = definition.func(event, selected);
+                selected = utils.getSelectedText();
+                output = definition.func(event, selected);
 
                 if (selected.length > 0 && output) {
                     utils.replaceSelectedText(output);
@@ -47,10 +56,10 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
                 }
             }
 
-            for (var i = 0; i < componentPipeline.afterAny.length; i++) {
+            for (i = 0; i < componentPipeline.afterAny.length; i++) {
                 if (utils.isFunction(componentPipeline.afterAny[i])) {
                     componentPipeline.afterAny[i](event);
-                }            
+                }
             }
 
             if (utils.isFunction(componentPipeline[afterThis])) {
@@ -64,7 +73,7 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
         
         if (definition.after) {
             componentPipeline.registerPipelineEvent.registerAfterComponentHandler(definition.pipelineName, definition.after);
-        }        
+        }
 
         return self;
     };

@@ -5,7 +5,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="../lib/hilary.js"></script>
     <script src="../lib/nicephore.min.js"></script>
-    <link rel="stylesheet" href="demo-advanced.css" />
+    <link rel="stylesheet" href="demo.css" />
 </head>
 <body>
 
@@ -29,6 +29,12 @@
     <br />
     <textarea class="gutentyp-ify" id="test2">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet sapien vitae purus ultricies lobortis id ut turpis. Phasellus pellentesque tristique nulla nec blandit. Pellentesque augue massa, fringilla ut erat non, commodo hendrerit augue. Suspendisse aliquam sapien vitae sem semper, at molestie justo pretium. Quisque pellentesque mattis iaculis. Pellentesque fermentum laoreet tincidunt. Maecenas rhoncus porta dui, ut elementum orci tincidunt sit amet.
+    </textarea> 
+    
+    <br />
+    <br />
+    <textarea class="rts2" id="test3">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet sapien vitae purus ultricies lobortis id ut turpis. Phasellus pellentesque tristique nulla nec blandit. Pellentesque augue massa, fringilla ut erat non, commodo hendrerit augue. Suspendisse aliquam sapien vitae sem semper, at molestie justo pretium. Quisque pellentesque mattis iaculis. Pellentesque fermentum laoreet tincidunt. Maecenas rhoncus porta dui, ut elementum orci tincidunt sit amet.
     </textarea>    
 
 
@@ -49,9 +55,14 @@
     <script src="../source/gutentyp.js"></script>
     
     <script type="text/javascript">
-        gutentyp.init()
+        // create 2 instances of gutentyp, for different configurations
+        var rts = gutentyp(),
+            rts2 = gutentyp();
         
-        gutentyp.registerComponent({
+        // register a custom component to be added to the toolbar and then initialize all textareas 
+        // that match the config
+        
+        rts.registerComponent({
             title: 'New Foreground color',
             cssClass: 'gutentyp-fg-color',
             pipelineName: 'foregroundColor2',
@@ -67,8 +78,36 @@
             }
         });
         
-        gutentyp.activate();
-        gutentyp.activate();
+        rts.init();
+        
+        // configure an alternate gutentyp instance, then override the toolbar module and
+        // initialize the textareas that match this config
+        
+        rts2.config.cssClasses.toGutentypify = 'rts2';
+        rts2.config.selectors.toGutentypify = '.rts2';
+        rts2.config.cssClasses.editor = 'rts2editor';
+        rts2.config.selectors.editor = '.rts2editor';
+        
+        rts2.overrideModule('gutentyp::toolbar', { init: function (config, utils, components) {
+            "use strict";
+
+            var build = function () {
+                $(config.selectors.editor).prepend('<div><strong>Foo Toolbar!</strong></div>');
+
+                return;
+            };
+
+            return {
+                build: build
+            };
+
+        }});
+        
+        rts2.init();
+        
+        // init a second time to verify that we don't re-do anything
+        rts.init();
+        
     </script>
 
 

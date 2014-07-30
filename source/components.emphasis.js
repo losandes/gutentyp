@@ -1,3 +1,5 @@
+/*global hilary*/
+
 hilary.register('gutentyp::components::emphasis', { init: function (components) {
     "use strict";
     

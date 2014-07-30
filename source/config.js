@@ -1,3 +1,5 @@
+/*global hilary*/
+
 hilary.register('gutentyp::config', { init: function () {
     "use strict";
     
@@ -29,7 +31,7 @@ hilary.register('gutentyp::config', { init: function () {
         if (config.cssClasses.hasOwnProperty(i)) {
             config.selectors[i] = '.' + config.cssClasses[i];
         }
-    };
+    }
     
     config.selectors.newEditors = config.selectors.editor + ':not(' + config.selectors.hasToolbar + ')';
     config.selectors.eventlessEditors = config.selectors.editor + ':not(' + config.selectors.hasEvents + ')';
