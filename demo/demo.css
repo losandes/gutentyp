@@ -23,3 +23,7 @@ body {
     border-radius-top-left: 1px;
     border-radius-top-right: 1px;
 }
+
+.hidden {
+    display: none;
+}
