@@ -46,8 +46,9 @@ hilary.register('gutentyp::utils', {
             });
         };
 
-        makeElement = function (newElementType, domClass) {
-            var newElement = $('<' + (newElementType || 'div') + ' />');
+        makeElement = function (newElementType, domClass, attrPairs) {
+            var newElement = $('<' + (newElementType || 'div') + ' />'),
+                i;
 
             if (domClass && domClass !== null && domClass !== '') {
                 newElement.addClass(
@@ -55,24 +56,30 @@ hilary.register('gutentyp::utils', {
                 );
             }
 
+            if (typeof attrPairs !== 'undefined') {
+                for (i = 0; i < attrPairs.length; i++) {
+                    newElement.attr(attrPairs[i].key, attrPairs[i].value);
+                }
+            }
+
             return newElement;
         };
 
-        insertNewElementBefore = function (newElementType, target, domClass) {
+        insertNewElementBefore = function (newElementType, target, domClass, attrPairs) {
             if (!target || target === '') {
                 return;
             }
 
-            makeElement(newElementType, domClass)
+            makeElement(newElementType, domClass, attrPairs)
                 .insertBefore($(target));
         };
 
-        insertNewElementInto = function (newElementType, target, domClass) {
+        insertNewElementInto = function (newElementType, target, domClass, attrPairs) {
             if (!target || target === '') {
                 return;
             }
 
-            makeElement(newElementType, domClass)
+            makeElement(newElementType, domClass, attrPairs)
                 .appendTo($(target));
         };
 
@@ -101,7 +108,7 @@ hilary.register('gutentyp::utils', {
                 var $this = $(selector);
                 
                 $this.on(eventType, function (event) {
-                    eventHandler(event);
+                    eventHandler(event.originalEvent);
                 });
                 
                 addClass($this, config.cssClasses.hasEvents);
@@ -152,7 +159,7 @@ hilary.register('gutentyp::utils', {
         };
         
         replaceSelectedText = function (replacementText) {
-            var range, html, div, frag, child;
+            var range, div, frag, child;
             if (window.getSelection && window.getSelection().getRangeAt) {
                 range = window.getSelection().getRangeAt(0);
                 range.deleteContents();
@@ -249,7 +256,8 @@ hilary.register('gutentyp::utils', {
             isFunction: isFunction,
             getSelectedText: getSelectedText,
             replaceSelectedText: replaceSelectedText,
-            pasteHtmlAtCursor: pasteHtmlAtCursor
+            pasteHtmlAtCursor: pasteHtmlAtCursor,
+            getRandomString: getRandomString
         };
     }
 });

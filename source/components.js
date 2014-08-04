@@ -50,7 +50,7 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
                 selected = utils.getSelectedText();
                 output = definition.func(event, selected);
 
-                if (selected.length > 0 && output) {
+                if (selected && selected.length > 0 && output) {
                     utils.replaceSelectedText(output);
                 } else if (output) {
                     utils.pasteHtmlAtCursor(output);
