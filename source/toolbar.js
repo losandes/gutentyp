@@ -20,7 +20,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, editCompon
                 utils.insertHtml(config.selectors.newToolbars, component.displayHandler());
                 utils.attachEvent(formatEventSelector(component), 'click', component.execute);
             } else {
-                utils.insertNewElementInto('button', config.selectors.newToolbars, component.cssClass);
+                utils.insertNewElementInto('button', config.selectors.newToolbars, component.cssClass, [{key: 'type', value: 'button'}]);
                 utils.setText(config.selectors.newToolbars + ' .' + component.cssClass, component.title);
                 utils.attachEvent(formatEventSelector(component), 'click', component.execute);
             }
