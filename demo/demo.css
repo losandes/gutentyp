@@ -23,3 +23,140 @@ body {
     border-radius-top-left: 1px;
     border-radius-top-right: 1px;
 }
+
+.hidden {
+/*    display: none;*/
+}
+
+/* groups */
+
+.gutentyp-toolbar-arrow-under:after {
+    position: absolute;
+    left: 50%;
+    display: block;
+    margin-left: -8px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    content: "";
+    
+    border-width: 8px 8px 0 8px;
+}
+
+.gutentyp-toolbar-arrow-over:before {
+    position: absolute;
+    left: 50%;
+    display: block;
+    margin-left: -8px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    content: "";
+    
+    top: -8px;
+    border-width: 0 8px 8px 8px;
+}
+
+
+.gutentyp-toolbar-group {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+    visibility: hidden;
+}
+
+.gutentyp-toolbar-group ul {
+    margin: 0;
+    padding: 0;
+}
+
+.gutentyp-toolbar-group ul li {
+    float: left;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.gutentyp-toolbar-group ul li button {
+    display: block;
+    margin: 0;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.33;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.gutentyp-toolbar-group.active {
+    visibility: visible;
+    -webkit-animation: pop-upwards 160ms forwards linear;
+       -moz-animation: pop-upwards 160ms forwards linear;
+        -ms-animation: pop-upwards 160ms forwards linear;
+         -o-animation: pop-upwards 160ms forwards linear;
+            animation: pop-upwards 160ms forwards linear;
+    transition: top .075s ease-out, left .075s ease-out;
+}
+
+/* group theme */
+
+.gutentyp-toolbar-arrow-under:after {
+    top: 50px;
+    border-color: #242424 transparent transparent transparent;
+}
+
+.gutentyp-toolbar-arrow-over:before {
+    top: -8px;
+    border-color: transparent transparent #242424 transparent;
+}
+
+.gutentyp-toolbar-group {
+    border: 1px solid #000;
+    background-color: #242424;
+    background: linear-gradient(bottom, #242424, rgba(#242424, 0.75));
+    border-radius: 5px;
+    box-shadow: 0 0 3px #000;
+    transition: top .075s ease-out, left .075s ease-out;
+}
+
+.gutentyp-toolbar-group li button {
+    min-width: 50px;
+    height: 50px;
+    border: 0;
+    border-right: 1px solid #000;
+    border-left: 1px solid #333;
+    border-left: 1px solid rgba(#fff, .1);
+    background-color: #242424;
+    color: #fff;
+    background: linear-gradient(bottom, #242424, rgba(#242424, 0.89));
+    box-shadow: 0 2px 2px rgba(0,0,0,0.3);
+    transition: background-color .2s ease-in;
+    &:hover {
+        background-color: #000;
+        color: yellow;
+    }
+}
+
+.gutentyp-toolbar-group li .gutentyp-toolbar-button-first {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.gutentyp-toolbar-group li .gutentyp-toolbar-button-last {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.gutentyp-toolbar-group li .gutentyp-toolbar-button-active {
+    background-color: #000;
+    color: #fff;
+    background: linear-gradient(bottom, #242424, rgba(#000, 0.89));
+}
+
+/* color blocks */
+.color-block {
+    display: block;
+    width: 20px;
+    height: 20px;
+}

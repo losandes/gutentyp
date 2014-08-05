@@ -28,6 +28,7 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
         self.title = definition.title;
         self.cssClass = definition.cssClass || definition.pipelineName;
         self.displayHandler = definition.displayHandler;
+        self.group = definition.group || undefined;
         self.execute = function (event) {
             var i,
                 beforeThis = config.prefixes.pipeline.beforeComponent + definition.pipelineName,

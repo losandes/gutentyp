@@ -11,7 +11,8 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         pipelineName: 'h1',
         func: function (event, text) {
             return '<h1>' + text + '</h1>';
-        }
+        },
+        group: { title: 'Headings', name: 'headings', arrow: 'over' }
     });
     
     h2 = components.makeComponent({
@@ -20,7 +21,8 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         pipelineName: 'h2',
         func: function (event, text) {
             return '<h2>' + text + '</h2>';
-        }
+        },
+        group: { title: 'Headings', name: 'headings', arrow: 'over' }
     });
     
     h3 = components.makeComponent({
@@ -29,7 +31,8 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         pipelineName: 'h3',
         func: function (event, text) {
             return '<h3>' + text + '</h3>';
-        }
+        },
+        group: { title: 'Headings', name: 'headings', arrow: 'over' }
     });
     
     h4 = components.makeComponent({
@@ -38,7 +41,8 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         pipelineName: 'h4',
         func: function (event, text) {
             return '<h4>' + text + '</h4>';
-        }
+        },
+        group: { title: 'Headings', name: 'headings', arrow: 'over' }
     });
     
     h5 = components.makeComponent({
@@ -47,7 +51,8 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         pipelineName: 'h5',
         func: function (event, text) {
             return '<h5>' + text + '</h5>';
-        }
+        },
+        group: { title: 'Headings', name: 'headings', arrow: 'over' }
     });
     
     h6 = components.makeComponent({
@@ -56,7 +61,8 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         pipelineName: 'h6',
         func: function (event, text) {
             return '<h6>' + text + '</h6>';
-        }
+        },
+        group: { title: 'Headings', name: 'headings', arrow: 'over' }
     });
     
     components.addComponent([h1, h2, h3, h4, h5, h6]);
