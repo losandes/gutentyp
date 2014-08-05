@@ -1,6 +1,6 @@
 /*global hilary*/
 
-hilary.register('gutentyp::components::lists', { init: function (components) {
+hilary.register('gutentyp::components::lists', { init: function (components, config) {
     "use strict";
     
     var bullet, numbered;
@@ -9,7 +9,7 @@ hilary.register('gutentyp::components::lists', { init: function (components) {
         title: 'Unordered List',
         cssClass: 'gutentyp-list-unordered',
         pipelineName: 'list::unordered',
-        icon: 'fa fa-list-ul',
+        icon: config.icons.unorderedList,
         textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('insertUnorderedList', false, null);
@@ -21,7 +21,7 @@ hilary.register('gutentyp::components::lists', { init: function (components) {
         title: 'Ordered List',
         cssClass: 'gutentyp-list-ordered',
         pipelineName: 'list::ordered',
-        icon: 'fa fa-list-ol',
+        icon: config.icons.orderedList,
         textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('insertOrderedList', false, null);

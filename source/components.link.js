@@ -9,7 +9,7 @@ hilary.register('gutentyp::components::link', { init: function (components, conf
         title: 'Add Link',
         cssClass: 'gutentyp-link',
         pipelineName: 'link',
-        icon: 'fa fa-link',
+        icon: config.icons.link,
         textClass: 'sr-only',
         func: function (event, input) {
             if (!event.fromGutenForm) {

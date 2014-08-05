@@ -1,6 +1,6 @@
 /*global hilary*/
 
-hilary.register('gutentyp::components::emphasis', { init: function (components) {
+hilary.register('gutentyp::components::emphasis', { init: function (components, config) {
     "use strict";
     
     var bold, italic, underline, strike;
@@ -9,7 +9,7 @@ hilary.register('gutentyp::components::emphasis', { init: function (components) 
         title: 'Bold',
         cssClass: 'gutentyp-bold',
         pipelineName: 'bold',
-        icon: 'fa fa-bold',
+        icon: config.icons.bold,
         textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('bold', false, null);
@@ -21,7 +21,7 @@ hilary.register('gutentyp::components::emphasis', { init: function (components) 
         title: 'Italic',
         cssClass: 'gutentyp-italic',
         pipelineName: 'italic',
-        icon: 'fa fa-italic',
+        icon: config.icons.italic,
         textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('italic', false, null);
@@ -33,7 +33,7 @@ hilary.register('gutentyp::components::emphasis', { init: function (components) 
         title: 'Underline',
         cssClass: 'gutentyp-underline',
         pipelineName: 'underline',
-        icon: 'fa fa-underline',
+        icon: config.icons.underline,
         textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('underline', false, null);
@@ -45,7 +45,7 @@ hilary.register('gutentyp::components::emphasis', { init: function (components) 
         title: 'Strike Through',
         cssClass: 'gutentyp-strike',
         pipelineName: 'strike',
-        icon: 'fa fa-strikethrough',
+        icon: config.icons.strikethrough,
         textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('strikeThrough', false, null);

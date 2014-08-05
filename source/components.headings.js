@@ -1,7 +1,7 @@
 /*jslint white: true*/
 /*global hilary*/
 
-hilary.register('gutentyp::components::headings', { init: function (components) {
+hilary.register('gutentyp::components::headings', { init: function (components, config) {
     "use strict";
     
     var h1, h2, h3, h4, h5, h6, group;
@@ -10,7 +10,7 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         title: 'Headings',
         cssClass: 'gutentyp-headings',
         pipelineName: 'headings',
-        icon: 'fa fa-header',
+        icon: config.icons.header,
         textClass: 'sr-only'
     });
     group.name = 'headings';

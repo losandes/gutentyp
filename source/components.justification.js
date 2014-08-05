@@ -1,6 +1,6 @@
 /*global hilary*/
 
-hilary.register('gutentyp::components::justification', { init: function (components) {
+hilary.register('gutentyp::components::justification', { init: function (components, config) {
     "use strict";
     
     var left, center, right, full, indent, outdent, group;
@@ -9,7 +9,7 @@ hilary.register('gutentyp::components::justification', { init: function (compone
         title: 'Alignment',
         cssClass: 'gutentyp-align',
         pipelineName: 'alignment',
-        icon: 'fa fa-align-left',
+        icon: config.icons.alignLeft,
         textClass: 'sr-only'
     });
     group.name = 'alignment';
@@ -19,7 +19,7 @@ hilary.register('gutentyp::components::justification', { init: function (compone
         title: 'Align Left',
         cssClass: 'gutentyp-align-left',
         pipelineName: 'alignLeft',
-        icon: 'fa fa-align-left',
+        icon: config.icons.alignLeft,
         textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('justifyLeft', false, null);
@@ -32,7 +32,7 @@ hilary.register('gutentyp::components::justification', { init: function (compone
         title: 'Align Center',
         cssClass: 'gutentyp-align-center',
         pipelineName: 'alignCenter',
-        icon: 'fa fa-align-center',
+        icon: config.icons.alignCenter,
         textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('justifyCenter', false, null);
@@ -45,7 +45,7 @@ hilary.register('gutentyp::components::justification', { init: function (compone
         title: 'Align Right',
         cssClass: 'gutentyp-align-right',
         pipelineName: 'alignRight',
-        icon: 'fa fa-align-right',
+        icon: config.icons.alignRight,
         textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('justifyRight', false, null);
@@ -58,7 +58,7 @@ hilary.register('gutentyp::components::justification', { init: function (compone
         title: 'Justify',
         cssClass: 'gutentyp-align-justify',
         pipelineName: 'alignJustify',
-        icon: 'fa fa-align-justify',
+        icon: config.icons.alignJustify,
         textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('justifyFull', false, null);
@@ -71,7 +71,7 @@ hilary.register('gutentyp::components::justification', { init: function (compone
         title: 'Indent',
         cssClass: 'gutentyp-indent',
         pipelineName: 'indent',
-        icon: 'fa fa-indent',
+        icon: config.icons.indent,
         textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('indent', false, null);
@@ -84,7 +84,7 @@ hilary.register('gutentyp::components::justification', { init: function (compone
         title: 'Outdent',
         cssClass: 'gutentyp-outdent',
         pipelineName: 'outdent',
-        icon: 'fa fa-outdent',
+        icon: config.icons.outdent,
         textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('outdent', false, null);

@@ -23,6 +23,27 @@ hilary.register('gutentyp::config', { init: function () {
     config.colors.push({ title: 'Blue', name: 'blue', value: '#3c8bc8' });
     config.colors.push({ title: 'Purple', name: 'purple', value: '#a952cd' });
     
+    config.icons = {
+        code: 'fa fa-code',
+        pre: 'fa fa-file-code-o',
+        blockquote: 'fa fa-quote-left',
+        bold: 'fa fa-bold',
+        italic: 'fa fa-italic',
+        underline: 'fa fa-underline',
+        strikethrough: 'fa fa-strikethrough',
+        header: 'fa fa-header',
+        image: 'fa fa-image',
+        alignLeft: 'fa fa-align-left',
+        alignCenter: 'fa fa-align-center',
+        alignRight: 'fa fa-align-right',
+        alignJustify: 'fa fa-align-justify',
+        indent: 'fa fa-indent',
+        outdent: 'fa fa-outdent',
+        link: 'fa fa-link',
+        unorderedList: 'fa fa-list-ul',
+        orderedList: 'fa fa-list-ol'
+    };
+    
     config.cssClasses = {
         toGutentypify: 'gutentyp-ify',
         gutentypified: 'gutentyp-ified',
