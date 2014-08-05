@@ -1,29 +1,39 @@
+/*jslint plusplus: true*/
 /*global hilary*/
 
-hilary.register('gutentyp::components::colors', { init: function (components) {
+hilary.register('gutentyp::components::colors', { init: function (components, config) {
     "use strict";
     
-    var fgColor, bgColor;
+    var addColor, colors = config.colors, i = 0, group;
     
-    fgColor = components.makeComponent({
-        title: 'Foreground color',
-        cssClass: 'gutentyp-fg-color',
-        pipelineName: 'foregroundColor',
-        func: function (event, text) {
-            document.execCommand('forecolor', false, '#FF0000');
-            return false;
-        }
+    group = components.makeComponent({
+        title: 'Colors',
+        cssClass: 'gutentyp-colors',
+        pipelineName: 'colors',
+        icon: 'color-block color-pink',
+        textClass: 'sr-only'
     });
+    group.name = 'colors';
+    group.arrow = 'none'; //'over
     
-    bgColor = components.makeComponent({
-        title: 'Background color',
-        cssClass: 'gutentyp-bg-color',
-        pipelineName: 'backgroundColor',
-        func: function () {
-            document.execCommand('backcolor', false, '#FF0000');
-            return false;
-        }
-    });
+    addColor = function (color) {
+        components.addComponent(components.makeComponent({
+            title: color.title,
+            cssClass: 'gutentyp-' + color.name,
+            pipelineName: 'color' + color.Title,
+            func: function (event, text) {
+                document.execCommand('forecolor', false, color.value);
+                return false;
+            },
+            displayHandler: function (domId) {
+                return '<button class="' + domId + '"><span class="color-block" style="background-color: ' + color.value + '"></span></button>';
+            },
+            group: group
+        }));
+    };
     
-    components.addComponent([fgColor, bgColor]);
+    for (i; i < colors.length; i++) {
+        addColor(colors[i]);
+    }
+    
 }});

@@ -3,7 +3,17 @@
 hilary.register('gutentyp::components::headings', { init: function (components) {
     "use strict";
     
-    var h1, h2, h3, h4, h5, h6;
+    var h1, h2, h3, h4, h5, h6, group;
+    
+    group = components.makeComponent({
+        title: 'Headings',
+        cssClass: 'gutentyp-headings',
+        pipelineName: 'headings',
+        icon: 'fa fa-header',
+        textClass: 'sr-only'
+    });
+    group.name = 'headings';
+    group.arrow = 'none'; //'over'
     
     h1 = components.makeComponent({
         title: 'h1',
@@ -11,7 +21,8 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         pipelineName: 'h1',
         func: function (event, text) {
             return '<h1>' + text + '</h1>';
-        }
+        },
+        group: group
     });
     
     h2 = components.makeComponent({
@@ -20,7 +31,8 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         pipelineName: 'h2',
         func: function (event, text) {
             return '<h2>' + text + '</h2>';
-        }
+        },
+        group: group
     });
     
     h3 = components.makeComponent({
@@ -29,7 +41,8 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         pipelineName: 'h3',
         func: function (event, text) {
             return '<h3>' + text + '</h3>';
-        }
+        },
+        group: group
     });
     
     h4 = components.makeComponent({
@@ -38,7 +51,8 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         pipelineName: 'h4',
         func: function (event, text) {
             return '<h4>' + text + '</h4>';
-        }
+        },
+        group: group
     });
     
     h5 = components.makeComponent({
@@ -47,7 +61,8 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         pipelineName: 'h5',
         func: function (event, text) {
             return '<h5>' + text + '</h5>';
-        }
+        },
+        group: group
     });
     
     h6 = components.makeComponent({
@@ -56,7 +71,8 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         pipelineName: 'h6',
         func: function (event, text) {
             return '<h6>' + text + '</h6>';
-        }
+        },
+        group: group
     });
     
     components.addComponent([h1, h2, h3, h4, h5, h6]);

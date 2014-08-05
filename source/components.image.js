@@ -9,22 +9,37 @@ hilary.register('gutentyp::components::image', { init: function (components, con
         title: 'Add Image',
         cssClass: 'gutentyp-image',
         pipelineName: 'image',
+        icon: 'fa fa-image',
+        textClass: 'sr-only',
         func: function (event, input) {
-            var target = utils.getAttribute(event.target, 'data-src'),
-                alt = utils.getAttribute(event.target, 'data-alt');
-            alt = alt || input.length > 0 ? input : target;
+            var target = event.target, //utils.getClosest(event.target, 'button'),
+                src = utils.getAttribute(target, 'data-src'),
+                alt = utils.getAttribute(target, 'data-alt'),
+                width = utils.getAttribute(target, 'data-width'),
+                height = utils.getAttribute(target, 'data-height'),
+                img;
+            
+            alt = alt || input.length > 0 ? input : src;
 
-            if (!target) {
+            if (!src) {
                 throw new Error('the data-src attribute was not set on the target element.');
             }
 
-            return '<img src="' + target + '" alt="' + alt + '" />';
+            img = '<img src="' + src + '" alt="' + alt + '" '
+                    + (width ? ('width="' + width + '"') : '')
+                    + (height ? ('height="' + height + '"') : '')
+                    + '/>';
+            
+            return img;
         }
     });
     
     image.displayHandler = function () {
         // TODO: add drop form that sets the data-src and data-alt
-        return '<button class="' + image.cssClass + '" data-src="http://thissongissick.com/wp-content/uploads/2013/03/Daft-Punk-Helmets-Columbia-Album-artwork.jpg" data-alt="daft">Add Image</button>';
+        return '<button type="button" class="' + image.cssClass + '" data-src="http://thissongissick.com/wp-content/uploads/2013/03/Daft-Punk-Helmets-Columbia-Album-artwork.jpg" data-alt="daft">'
+                    + '<i class="' + config.cssClasses.toolbarBtnIcon + ' fa fa-image"></i>'
+                    + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">Add Image</span>'
+                + '</button>';
     };
 
     components.addComponent(image);
