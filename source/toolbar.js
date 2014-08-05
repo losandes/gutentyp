@@ -54,7 +54,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
                 utils.setStyle(currentGroup.menuSelector, style);
                 
                 // hide any other toolbars that might be open
-                utils.toggleClass('.gutentyp-toolbar-group.active:not(#' + currentGroup.menuId + ')', 'active');
+                utils.toggleClass('.gutentyp-toolbar-group.active:not(' + currentGroup.menuSelector + ')', 'active');
                 // show or hid this toolbar
                 utils.toggleClass(currentGroup.menuSelector, 'active');
             });
