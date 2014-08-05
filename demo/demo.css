@@ -17,15 +17,72 @@ body {
 
 
 .gutentyp-toolbar {
+    margin-left: 2px;
+    border-radius: 5px;
+    
+/*
+    box-shadow: 0 0 3px #000;
+    border: 1px solid #000;
+    background-color: #242424;
+    background: linear-gradient(bottom, #242424, rgba(#242424, 0.75));
+*/
+    
+/*
     background-color: #F7F7F7;
     border: 1px solid #C8C8C8;
     border-bottom: none;
     border-radius-top-left: 1px;
     border-radius-top-right: 1px;
+*/
+}
+
+.gutentyp-toolbar button {
+    display: block;
+    margin: 0;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.33;
+    text-decoration: none;
+    box-sizing: border-box;
+    float: left;
+}
+
+.gutentyp-toolbar:before,
+.gutentyp-toolbar:after {
+    content: " ";
+    display: table;
+}
+.gutentyp-toolbar:after {
+    clear: both;
 }
 
 .hidden {
     display: none;
+}
+
+/* components */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
+.color-block {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+.color-pink {
+    background-color: #cd52bd;
+    margin-left: 5px;
 }
 
 /* groups */
@@ -120,7 +177,11 @@ body {
     transition: top .075s ease-out, left .075s ease-out;
 }
 
-.gutentyp-toolbar-group li button {
+.gutentyp-toolbar {
+    background-color: #fff;
+}
+
+.gutentyp-toolbar-group li button, .gutentyp-toolbar button  {
     min-width: 50px;
     height: 50px;
     border: 0;
@@ -132,10 +193,25 @@ body {
     background: linear-gradient(bottom, #242424, rgba(#242424, 0.89));
     box-shadow: 0 2px 2px rgba(0,0,0,0.3);
     transition: background-color .2s ease-in;
-    &:hover {
-        background-color: #000;
-        color: yellow;
-    }
+}
+
+.gutentyp-toolbar-group li button:hover {
+    background-color: #000;
+    color: yellow;
+}
+
+.gutentyp-toolbar button {
+    border-top: 1px solid #eee;
+    border-right: 1px solid #eee;
+    border-left: 1px solid #eee;
+    background-color: #fff;
+    color: #242424;
+    background: linear-gradient(bottom, #fff, rgba(#fff, 0.89));
+}
+
+.gutentyp-toolbar button:hover {
+    background-color: #eee;
+    color: #3c8bc8;
 }
 
 .gutentyp-toolbar-group li .gutentyp-toolbar-button-first {
@@ -152,11 +228,4 @@ body {
     background-color: #000;
     color: #fff;
     background: linear-gradient(bottom, #242424, rgba(#000, 0.89));
-}
-
-/* color blocks */
-.color-block {
-    display: block;
-    width: 20px;
-    height: 20px;
 }

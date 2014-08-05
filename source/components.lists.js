@@ -9,6 +9,8 @@ hilary.register('gutentyp::components::lists', { init: function (components) {
         title: 'Unordered List',
         cssClass: 'gutentyp-list-unordered',
         pipelineName: 'list::unordered',
+        icon: 'fa fa-list-ul',
+        textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('insertUnorderedList', false, null);
             return false;
@@ -19,6 +21,8 @@ hilary.register('gutentyp::components::lists', { init: function (components) {
         title: 'Ordered List',
         cssClass: 'gutentyp-list-ordered',
         pipelineName: 'list::ordered',
+        icon: 'fa fa-list-ol',
+        textClass: 'sr-only',
         func: function (event, text) {
             document.execCommand('insertOrderedList', false, null);
             return false;

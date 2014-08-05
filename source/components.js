@@ -27,6 +27,8 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
 
         self.title = definition.title;
         self.cssClass = definition.cssClass || definition.pipelineName;
+        self.icon = definition.icon || undefined;
+        self.textClass = definition.textClass + ' ' + config.cssClasses.toolbarBtnText || config.cssClasses.toolbarBtnText;
         self.displayHandler = definition.displayHandler;
         self.group = definition.group || undefined;
         self.execute = function (event) {

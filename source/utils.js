@@ -15,6 +15,7 @@ hilary.register('gutentyp::utils', {
             toggleClass,
             addAttribute,
             getAttribute,
+            getClosest,
             attachEvent,
             updateTextarea,
             isFunction,
@@ -120,6 +121,10 @@ hilary.register('gutentyp::utils', {
         getAttribute = function (elemtnContext, attributeName) {
             return $(elemtnContext).attr(attributeName);
         };
+        
+        getClosest = function (currentNode, targetSelector) {
+            return $(currentNode).closest(targetSelector);
+        }
 
         attachEvent = function (selector, eventType, eventHandler) {
             if ($.isFunction(eventHandler)) {
@@ -280,6 +285,7 @@ hilary.register('gutentyp::utils', {
             addClass: addClass,
             toggleClass: toggleClass,
             getAttribute: getAttribute,
+            getClosest: getClosest,
             attachEvent: attachEvent,
             updateTextarea: updateTextarea,
             isFunction: isFunction,

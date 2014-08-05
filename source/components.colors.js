@@ -4,7 +4,17 @@
 hilary.register('gutentyp::components::colors', { init: function (components, config) {
     "use strict";
     
-    var addColor, colors = config.colors, i = 0;
+    var addColor, colors = config.colors, i = 0, group;
+    
+    group = components.makeComponent({
+        title: 'Colors',
+        cssClass: 'gutentyp-colors',
+        pipelineName: 'colors',
+        icon: 'color-block color-pink',
+        textClass: 'sr-only'
+    });
+    group.name = 'colors';
+    group.arrow = 'none'; //'over
     
     addColor = function (color) {
         components.addComponent(components.makeComponent({
@@ -18,7 +28,7 @@ hilary.register('gutentyp::components::colors', { init: function (components, co
             displayHandler: function (domId) {
                 return '<button class="' + domId + '"><span class="color-block" style="background-color: ' + color.value + '"></span></button>';
             },
-            group: { title: 'Colors', name: 'colors', arrow: 'none' }
+            group: group
         }));
     };
     
