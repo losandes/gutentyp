@@ -81,7 +81,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
                 }, currentGroup.menuSelector + ' ul');
             } else {
                 utils.insertNewElementInto({
-                    markup: '<li><button type="button" class="' + componentId + component.cssClass + '">' + component.title + '</button></li>'
+                    markup: '<li><button type="button" class="' + componentId + ' ' + component.cssClass + '">' + component.title + '</button></li>'
                 }, currentGroup.menuSelector + ' ul');
             }
 
