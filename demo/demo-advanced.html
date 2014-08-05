@@ -11,43 +11,131 @@
 </head>
 <body>
 
+    <section class="main">
+        <h1>Gutentyp</h1>
+        <br />
 
-    <h1>Gutentyp</h2>
+        <textarea class="gutentyp-ify" id="test">
+            <h2>Why Gutentyp?</h2>
+            <br />
+            <p>
+                We wanted a highly extensible, modular rich text editor that just works. There are a lot 
+                of great rich text editors out there, but each one presented a drawback to us, that led us 
+                to design our own.
+            </p>
+            <p>
+                The result is a simple library that is easy to extend and customize. It supports multi-instance, 
+                not only so you can have multiple rich text editors on the same page, but unique configurations 
+                for them, if you desire.
+            </p>
+            
+            <h2>Getting Started</h2>
+            <p>The super-simple path is to start with a <code>textarea</code></p>
+            
+<pre>
+&lt; textarea id=&quot;id-isnt-required&quot; class=&quot;gutentyp-ify&quot;&gt;
+&lt; /textarea&gt;
+</pre>
+            <br />
+            <p>and then wire it up with JavaScript</p>
+            
+<pre>
+var gutenInstance = gutentyp();
+gutenInstance.init();
+</pre>
+            
+            <br />
+            <p>
+                You can call init as much as you like, and you'll need to after DOM Mutations. If you're using 
+                jQuery for your ajax, you can initialize Gutentyp like this
+            </p>
+            
+<pre>
+var gutenInstance = gutentyp();
 
-    <textarea class="gutentyp-ify" id="test">
-        <h1>Exit Strategy</h1>
-        <p>We just call it a sausage. We just call it a sausage. I don't understand the question, and I won't respond to it.</p>
-        <h2>Forget-Me-Now</h2>
-        <p>First place chick is hot, but has an attitude, doesn't date magicians. Say goodbye to these, because it's the last time! I'm afraid I just blue myself. Across from where? Whoa, this guy's straight? It's called 'taking advantage.' It's what gets you ahead in life.</p>
-        <ul>
-        <li>There's so many poorly chosen words in that sentence.</li>
-        <li>Guy's a pro.</li>
-        <li>No&hellip; but I'd like to be asked!</li>
-        </ul>
-        <h3>Top Banana</h3>
-        <p>I hear the jury's still out on science. I hear the jury's still out on science. Whoa, this guy's straight? But I bought a yearbook ad from you, doesn't that mean anything anymore? Whoa, this guy's straight?</p>
-        <h4>Mr. F</h4>
-        <p>As you may or may not know, Lindsay and I have hit a bit of a rough patch. As you may or may not know, Lindsay and I have hit a bit of a rough patch. I've opened a door here that I regret. Did you enjoy your meal, Mom? You drank it fast enough. Whoa, this guy's straight? No&hellip; but I'd like to be asked!</p>
-        <ol>
-        <li>No, I did not kill Kitty. However, I am going to oblige and answer the nice officer's questions because I am an honest man with no secrets to hide.</li>
-        <li>Michael!</li>
-        <li>He'll want to use your yacht, and I don't want this thing smelling like fish.</li>
-        <li>Whoa, this guy's straight?</li>
-        </ol>
-        <h5>Meat the Veals</h5>
-        <p>No, I did not kill Kitty. However, I am going to oblige and answer the nice officer's questions because I am an honest man with no secrets to hide. Michael! Michael! Michael! No, I did not kill Kitty. However, I am going to oblige and answer the nice officer's questions because I am an honest man with no secrets to hide. That's what it said on 'Ask Jeeves.'</p>
-    </textarea>
-    <br />
-    <br />
-    <textarea class="gutentyp-ify" id="test2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet sapien vitae purus ultricies lobortis id ut turpis. Phasellus pellentesque tristique nulla nec blandit. Pellentesque augue massa, fringilla ut erat non, commodo hendrerit augue. Suspendisse aliquam sapien vitae sem semper, at molestie justo pretium. Quisque pellentesque mattis iaculis. Pellentesque fermentum laoreet tincidunt. Maecenas rhoncus porta dui, ut elementum orci tincidunt sit amet.
-    </textarea>
+...
 
-    <br />
-    <br />
-    <textarea class="rts2" id="test3">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet sapien vitae purus ultricies lobortis id ut turpis. Phasellus pellentesque tristique nulla nec blandit. Pellentesque augue massa, fringilla ut erat non, commodo hendrerit augue. Suspendisse aliquam sapien vitae sem semper, at molestie justo pretium. Quisque pellentesque mattis iaculis. Pellentesque fermentum laoreet tincidunt. Maecenas rhoncus porta dui, ut elementum orci tincidunt sit amet.
-    </textarea>
+$(document).ajaxComplete(function () {
+    gutenInstance.init();
+});
+</pre>
+            
+            <h2>Gutentyp is Modular and Highly Extensible</h2>
+            <br />
+            
+            <p>
+                Gutentyp is built so you can extend it easily, and replace modules with custom modules, if you like. 
+                Modules include the core components that make up Gutentyp, as well as the components that are 
+                available in the toolbar.
+            </p>
+            <p>
+                To add components, you register them on the instance prior to initialization.
+            </p>
+<pre>
+var gutenInstance = gutentyp();
+
+gutenInstance.registerComponent({
+    title: 'Custom Foreground color',                   // The text that will be displayed or read by a screen reader
+    cssClass: 'gutentyp-fg-color',                      // A css class is added to the button, so you can style with CSS/LESS/SASS
+    pipelineName: 'foregroundColor2',                   // This is a unique name that the component will be registered as
+    icon: 'fa fa-edit',                                 // CSS Classes for your icon
+    textCss: 'sr-only'                                  // CSS Classes for the text (sr-only means it won't be displayed, but will be read by screen readers)
+    // @param event: the original event
+    // @param text: the text that is selected, if any
+    func: function (event, text) {                      // The handler that is executed on button click
+        document.execCommand('forecolor', false, '#FF0000');
+        return false;
+    },
+    // @param event: the original event
+    before: function (event) {                          // You can register before
+        console.log('before', event);
+    },
+    // @param event: the original event
+    after: function (event) {                           // and after handlers inline, as well as exclusively
+        console.log('after', event);
+    }
+});
+
+gutenInstance.init();                                   // Once init is called, the toolbar will not change
+</pre>            
+
+        </textarea>
+        <br />
+        <br />
+        <h2>A second instance with the same configuration</h2>
+        <br />
+        <textarea class="gutentyp-ify" id="test2">
+            <h1>Exit Strategy</h1>
+            <p>We just call it a sausage. We just call it a sausage. I don't understand the question, and I won't respond to it.</p>
+            <h2>Forget-Me-Now</h2>
+            <p>First place chick is hot, but has an attitude, doesn't date magicians. Say goodbye to these, because it's the last time! I'm afraid I just blue myself. Across from where? Whoa, this guy's straight? It's called 'taking advantage.' It's what gets you ahead in life.</p>
+            <ul>
+            <li>There's so many poorly chosen words in that sentence.</li>
+            <li>Guy's a pro.</li>
+            <li>No&hellip; but I'd like to be asked!</li>
+            </ul>
+            <h3>Top Banana</h3>
+            <p>I hear the jury's still out on science. I hear the jury's still out on science. Whoa, this guy's straight? But I bought a yearbook ad from you, doesn't that mean anything anymore? Whoa, this guy's straight?</p>
+            <h4>Mr. F</h4>
+            <p>As you may or may not know, Lindsay and I have hit a bit of a rough patch. As you may or may not know, Lindsay and I have hit a bit of a rough patch. I've opened a door here that I regret. Did you enjoy your meal, Mom? You drank it fast enough. Whoa, this guy's straight? No&hellip; but I'd like to be asked!</p>
+            <ol>
+            <li>No, I did not kill Kitty. However, I am going to oblige and answer the nice officer's questions because I am an honest man with no secrets to hide.</li>
+            <li>Michael!</li>
+            <li>He'll want to use your yacht, and I don't want this thing smelling like fish.</li>
+            <li>Whoa, this guy's straight?</li>
+            </ol>
+            <h5>Meat the Veals</h5>
+            <p>No, I did not kill Kitty. However, I am going to oblige and answer the nice officer's questions because I am an honest man with no secrets to hide. Michael! Michael! Michael! No, I did not kill Kitty. However, I am going to oblige and answer the nice officer's questions because I am an honest man with no secrets to hide. That's what it said on 'Ask Jeeves.'</p>
+        </textarea>
+
+        <br />
+        <br />
+        <h2>A third instance with unique configuration</h2>
+        <br />
+        <textarea class="rts2" id="test3">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet sapien vitae purus ultricies lobortis id ut turpis. Phasellus pellentesque tristique nulla nec blandit. Pellentesque augue massa, fringilla ut erat non, commodo hendrerit augue. Suspendisse aliquam sapien vitae sem semper, at molestie justo pretium. Quisque pellentesque mattis iaculis. Pellentesque fermentum laoreet tincidunt. Maecenas rhoncus porta dui, ut elementum orci tincidunt sit amet.
+        </textarea>
+    </section>
 
 
     <script src="../source/config.js"></script>

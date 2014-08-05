@@ -1,6 +1,18 @@
 body {
-    width: 75%;
+    
 }
+
+pre {
+  overflow: auto;
+  word-wrap: normal;
+  white-space: pre;
+}
+
+.main {
+    margin: auto;
+    width: 888px;
+}
+
 .gutentyp-hidden {
     display: none;
     visibility: hidden;
@@ -12,12 +24,12 @@ body {
     border: 1px solid #C8C8C8;
     border-radius-bottom-left: 1px;
     border-radius-bottom-right: 1px;
+    max-width: 885px;
 }
 .gutentyp-editor:focus {}
 
 
 .gutentyp-toolbar {
-    margin-left: 2px;
     border-radius: 5px;
     
 /*
