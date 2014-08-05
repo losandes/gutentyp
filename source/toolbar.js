@@ -74,18 +74,18 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
                 primarySelector: currentGroup.toggleSelector,
                 eventType: 'click',
                 eventHandler: function (event) {
-                    var btnCoords = utils.getCoordinates(event.target),
-                        style;
-
-                    // set the coordinates
-                    style = 'left: ' + ((btnCoords.left + (btnCoords.width / 2)) / 2);
-                    style += '; top: ' + (btnCoords.offset.top + btnCoords.height + 6);
-                    utils.setStyle(currentGroup.menuSelector, style);
-
-                    // hide any other toolbars that might be open
-                    utils.toggleClass('.gutentyp-toolbar-group.active:not(' + currentGroup.menuSelector + ')', 'active');
-                    // show or hid this toolbar
-                    utils.toggleClass(currentGroup.menuSelector, 'active');
+	                var btnCoords = utils.getCoordinates(event.target),
+	                    style;
+	                
+	                // set the coordinates
+	                style = 'left: ' + (btnCoords.left + (btnCoords.width / 2) - (utils.getCoordinates(currentGroup.menuSelector).width / 2));
+	                style += '; top: ' + (btnCoords.offset.top + btnCoords.height + 6);
+	                utils.setStyle(currentGroup.menuSelector, style);
+	                
+	                // hide any other toolbars that might be open
+	                utils.toggleClass('.gutentyp-toolbar-group.active:not(' + currentGroup.menuSelector + ')', 'active');
+	                // show or hid this toolbar
+	                utils.toggleClass(currentGroup.menuSelector, 'active');
                 }
             });
             
