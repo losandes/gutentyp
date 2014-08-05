@@ -154,33 +154,6 @@ body {
     background: linear-gradient(bottom, #242424, rgba(#000, 0.89));
 }
 
-.gutentyp-toolbar-form-anchor {
-    background: #242424;
-    color: #999;
-    border-radius: 5px;
-}
-
-.gutentyp-toolbar-form-anchor input {
-    height: 50px;
-    background: #242424;
-    color: #ccc;
-    box-sizing: border-box;
-}
-
-.gutentyp-toolbar-form-anchor a {
-    color: #fff;
-}
-
-.gutentyp-toolbar-anchor-preview {
-    background: #242424;
-    color: #fff;
-    border-radius: 5px;
-}
-
-.gutentyp-toolbar-placeholder:after {
-    color: #b3b3b1;
-}
-
 /* color blocks */
 .color-block {
     display: block;
