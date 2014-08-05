@@ -20,7 +20,7 @@ hilary.register('gutentyp::components::link', { init: function (components, conf
             var form = utils.getClosest(event.target, '.gutentyp-toolbar-group'),
                 target = utils.getPrevious(form, 'button'),
                 hrefInput = utils.getClosestAdjacent(event.target, 'input'),
-                gutenArea = utils.getClosestAdjacent(event.target, config.selectors.gutentypified),
+                gutenArea = utils.getClosestAdjacent(utils.getClosest(event.target, config.selectors.toolbar), config.selectors.editor).first(),
                 href = utils.getOrSetValue(hrefInput),
                 alert = utils.getClosestAdjacent(event.target, '.alert.link-url'),
                 text,
