@@ -32,6 +32,9 @@ hilary.register('gutentyp::config', { init: function () {
         editor: 'gutentyp-editor',
         textarea: 'gutentyp-textarea',
         toolbar: 'gutentyp-toolbar',
+        toolbarBtn: 'gutentyp-toolbar-btn',
+        toolbarBtnText: 'gutentyp-toolbar-btn-text',
+        toolbarBtnIcon: 'gutentyp-toolbar-btn-icon',
         hidden: 'gutentyp-hidden'
     };
     

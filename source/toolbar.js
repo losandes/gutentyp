@@ -8,6 +8,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
         var components = componentCollection.components,
             i,
             formatEventSelector,
+            buttonTemplate,
             groups = {},
             addWithDisplayHandler,
             addWithGroup,
@@ -18,9 +19,26 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
             return config.selectors.toolbar + ' .' + component.cssClass + ':not(' + config.selectors.hasEvents + ')';
         };
         
+        buttonTemplate = function (component, componentId) {
+            var buttonClass, template;
+            
+            buttonClass = 'gutentyp-component ' + component.cssClass;
+            
+            if(componentId) {
+                buttonClass += ' ' + componentId;
+            }
+            
+            template = '<button type="button" class="' + buttonClass + '">'
+                                + '<i class="' + config.cssClasses.toolbarBtnIcon + ' ' + component.icon + '"></i>'
+                                + '<span class="' + component.textClass + '">' + component.title + '</span>'
+                            + '</button>';            
+            return template;
+        };
+        
         add = function (component) {
-            utils.insertNewElementInto('button', config.selectors.newToolbars, component.cssClass, [{key: 'type', value: 'button'}]);
-            utils.setText(config.selectors.newToolbars + ' .' + component.cssClass, component.title);
+            utils.insertNewElementInto({
+                markup: buttonTemplate(component)
+            }, config.selectors.newToolbars);
             utils.attachEvent(formatEventSelector(component), 'click', component.execute);
         };
         
@@ -37,7 +55,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
             currentGroup.menuSelector = '.' + currentGroup.menuId;
 
             utils.insertNewElementInto({
-                markup: '<button type="button" class="' + currentGroup.toggleId + '">' + component.group.title + '</button>'
+                markup: buttonTemplate(component.group, currentGroup.toggleId)
             }, config.selectors.newToolbars);
             utils.insertNewElementInto({
                 markup: '<div class="' + currentGroup.menuId + ' gutentyp-toolbar-group gutentyp-toolbar-arrow-' + (component.group.arrow || 'over') + '"><ul></ul></div>'
@@ -81,7 +99,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
                 }, currentGroup.menuSelector + ' ul');
             } else {
                 utils.insertNewElementInto({
-                    markup: '<li><button type="button" class="' + componentId + ' ' + component.cssClass + '">' + component.title + '</button></li>'
+                    markup: '<li>' + buttonTemplate(component, componentId) + '</li>'
                 }, currentGroup.menuSelector + ' ul');
             }
 
