@@ -48,6 +48,15 @@ pre {
 */
 }
 
+.gutentyp-toolbar:before,
+.gutentyp-toolbar:after {
+    content: " ";
+    display: table;
+}
+.gutentyp-toolbar:after {
+    clear: both;
+}
+
 .gutentyp-toolbar button {
     display: block;
     margin: 0;
@@ -60,13 +69,8 @@ pre {
     float: left;
 }
 
-.gutentyp-toolbar:before,
-.gutentyp-toolbar:after {
-    content: " ";
-    display: table;
-}
-.gutentyp-toolbar:after {
-    clear: both;
+.gutentyp-toolbar form {
+    margin: 5px;
 }
 
 .hidden {

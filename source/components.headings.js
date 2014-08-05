@@ -1,3 +1,4 @@
+/*jslint white: true*/
 /*global hilary*/
 
 hilary.register('gutentyp::components::headings', { init: function (components) {

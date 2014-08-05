@@ -24,14 +24,14 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
             
             buttonClass = 'gutentyp-component ' + component.cssClass;
             
-            if(componentId) {
+            if (componentId) {
                 buttonClass += ' ' + componentId;
             }
             
             template = '<button type="button" class="' + buttonClass + '">'
                                 + '<i class="' + config.cssClasses.toolbarBtnIcon + ' ' + component.icon + '"></i>'
                                 + '<span class="' + component.textClass + '">' + component.title + '</span>'
-                            + '</button>';            
+                            + '</button>';
             return template;
         };
         
@@ -39,12 +39,20 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
             utils.insertNewElementInto({
                 markup: buttonTemplate(component)
             }, config.selectors.newToolbars);
-            utils.attachEvent(formatEventSelector(component), 'click', component.execute);
+            utils.attachEvent({
+                primarySelector: formatEventSelector(component),
+                eventType: 'click',
+                eventHandler: component.execute
+            });
         };
         
         addWithDisplayHandler = function (component) {
             utils.insertHtml(config.selectors.newToolbars, component.displayHandler());
-            utils.attachEvent(formatEventSelector(component), 'click', component.execute);
+            utils.attachEvent({
+                primarySelector: formatEventSelector(component),
+                eventType: 'click',
+                eventHandler: component.execute
+            });
         };
         
         addGroup = function (component) {
@@ -62,19 +70,23 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
             }, config.selectors.newToolbars);
 
             // toggle hidden
-            utils.attachEvent(currentGroup.toggleSelector, 'click', function (event) {
-                var btnCoords = utils.getCoordinates(event.target),
-                    style;
-                
-                // set the coordinates
-                style = 'left: ' + ((btnCoords.left + (btnCoords.width / 2)) / 2);
-                style += '; top: ' + (btnCoords.offset.top + btnCoords.height + 6);
-                utils.setStyle(currentGroup.menuSelector, style);
-                
-                // hide any other toolbars that might be open
-                utils.toggleClass('.gutentyp-toolbar-group.active:not(' + currentGroup.menuSelector + ')', 'active');
-                // show or hid this toolbar
-                utils.toggleClass(currentGroup.menuSelector, 'active');
+            utils.attachEvent({
+                primarySelector: currentGroup.toggleSelector,
+                eventType: 'click',
+                eventHandler: function (event) {
+                    var btnCoords = utils.getCoordinates(event.target),
+                        style;
+
+                    // set the coordinates
+                    style = 'left: ' + ((btnCoords.left + (btnCoords.width / 2)) / 2);
+                    style += '; top: ' + (btnCoords.offset.top + btnCoords.height + 6);
+                    utils.setStyle(currentGroup.menuSelector, style);
+
+                    // hide any other toolbars that might be open
+                    utils.toggleClass('.gutentyp-toolbar-group.active:not(' + currentGroup.menuSelector + ')', 'active');
+                    // show or hid this toolbar
+                    utils.toggleClass(currentGroup.menuSelector, 'active');
+                }
             });
             
             return currentGroup;
@@ -108,7 +120,11 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
                 utils.toggleClass(currentGroup.menuSelector, 'active');
             };
 
-            utils.attachEvent(componentSelector, 'click', execWrapper);
+            utils.attachEvent({
+                primarySelector: componentSelector,
+                eventType: 'click',
+                eventHandler: execWrapper
+            });
         };
         
         utils.insertNewElementBefore('div', config.selectors.newEditors, config.selectors.toolbar);

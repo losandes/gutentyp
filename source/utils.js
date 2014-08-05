@@ -16,6 +16,7 @@ hilary.register('gutentyp::utils', {
             addAttribute,
             getAttribute,
             getClosest,
+            getNext,
             attachEvent,
             updateTextarea,
             isFunction,
@@ -124,33 +125,30 @@ hilary.register('gutentyp::utils', {
         
         getClosest = function (currentNode, targetSelector) {
             return $(currentNode).closest(targetSelector);
-        }
+        };
+        
+        getNext = function (currentNode, targetSelector) {
+            return $(currentNode).next(targetSelector);
+        };        
 
-        attachEvent = function (selector, eventType, eventHandler) {
-            if ($.isFunction(eventHandler)) {
-                var $this = $(selector);
-                
-                $this.on(eventType, function (event) {
-                    eventHandler(event.originalEvent);
-                });
-                
-                addClass($this, config.cssClasses.hasEvents);
+        attachEvent = function (options) {
+            if (!options || $.isFunction(options.eventHandler) === false) {
+                return false;
             }
             
-//            if (typeof(obj) === 'string') {
-//                obj = $(obj)[0];
-//            } else if (obj instanceof $) {
-//                obj = obj[0];
-//            }
-//            
-//            if ($.isFunction(eventHandler)) {
-//                if (obj.addEventListener) {
-//                    obj.addEventListener(eventType, eventHandler, false);
-//                    return;
-//                }
-//
-//                obj.attachEvent('on' + eventType, eventHandler);
-//            }            
+            var $this = $(options.primarySelector);
+            
+            if(options.secondarySelector) {
+                $this.on(options.eventType, options.secondarySelector, function (event) {
+                    options.eventHandler(event.originalEvent);
+                });                
+            } else {
+                $this.on(options.eventType, function (event) {
+                    options.eventHandler(event.originalEvent);
+                });            
+            }
+    
+            addClass($this, config.cssClasses.hasEvents);
         };
 
         updateTextarea = function (target) {
@@ -286,6 +284,7 @@ hilary.register('gutentyp::utils', {
             toggleClass: toggleClass,
             getAttribute: getAttribute,
             getClosest: getClosest,
+            getNext: getNext,
             attachEvent: attachEvent,
             updateTextarea: updateTextarea,
             isFunction: isFunction,

@@ -12,8 +12,12 @@ hilary.register('gutentyp::core', {
             toolbarBuilder.build();
 
             // Add an event that updates the textarea on each focusout
-            utils.attachEvent(config.selectors.eventlessEditors, 'focusout', function (event) {
-                utils.updateTextarea(event.currentTarget);
+            utils.attachEvent({
+                primarySelector: config.selectors.eventlessEditors,
+                eventType: 'focusout',
+                eventHandler: function (event) {
+                    utils.updateTextarea(event.currentTarget);
+                }
             });
             
             utils.addClass(config.selectors.editor, config.cssClasses.hasEvents);
