@@ -21,9 +21,13 @@ hilary.register('gutentyp::utils', {
             getSelectedText,
             replaceSelectedText,
             pasteHtmlAtCursor,
-            getRandomString;
+            getRandomString,
+            getCoordinates,
+            setStyle;
 
         initializeRichTextAreas = function () {
+            var allAreas = [];
+            
             // For each textarea matching `config.richTextAreaSelector`
             $(config.selectors.toGutentypify).each(function (index, element) {
                 var $this = $(this);
@@ -44,7 +48,10 @@ hilary.register('gutentyp::utils', {
                 $this.removeClass(config.cssClasses.toGutentypify);
                 $this.addClass(config.cssClasses.hidden);
                 $this.addClass(config.cssClasses.gutentypified);
+                allAreas.push($this.attr('id'));
             });
+            
+            return allAreas;
         };
 
         makeElement = function (newElementType, domClass, attrPairs) {
@@ -80,13 +87,13 @@ hilary.register('gutentyp::utils', {
                 return;
             }
             
-            if (typeof(newElementType) !== 'string' && newElementType.markup) {
+            if (typeof (newElementType) !== 'string' && newElementType.markup) {
                 var markup = newElementType.markup;
                 
                 $(markup).appendTo($(target));
             } else {
                 makeElement(newElementType, domClass, attrPairs)
-                    .appendTo($(target));            
+                    .appendTo($(target));
             }
         };
 
@@ -253,6 +260,16 @@ hilary.register('gutentyp::utils', {
 
             return text;
         };
+        
+        getCoordinates = function (selector) {
+            var result = $(selector)[0].getBoundingClientRect();
+            result.offset = $(selector).offset();
+            return result;
+        };
+        
+        setStyle = function (selector, style) {
+            return $(selector).attr('style', style);
+        };
 
         return {
             initializeRichTextAreas: initializeRichTextAreas,
@@ -270,17 +287,8 @@ hilary.register('gutentyp::utils', {
             replaceSelectedText: replaceSelectedText,
             pasteHtmlAtCursor: pasteHtmlAtCursor,
             getRandomString: getRandomString,
-            getCoordinates: function (selector) {
-                var result = $(selector)[0].getBoundingClientRect();
-                result.offset = $(selector).offset();
-                return result;
-            },
-            getWidth: function (selector) {
-                return $(selector).width();
-            },
-            setStyle: function (selector, style) {
-                return $(selector).attr('style', style);
-            }
+            getCoordinates: getCoordinates,
+            setStyle: setStyle
         };
     }
 });

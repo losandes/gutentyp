@@ -29,10 +29,10 @@ hilary.register('gutentyp::config', { init: function () {
         hasEvents: 'has-events',
         hasToolbar: 'has-toolbar',
         hasComponents: 'has-components',
-        editor: 'guten-editor',
-        textarea: 'guten-textarea',
-        toolbar: 'guten-toolbar',
-        hidden: 'guten-hidden'
+        editor: 'gutentyp-editor',
+        textarea: 'gutentyp-textarea',
+        toolbar: 'gutentyp-toolbar',
+        hidden: 'gutentyp-hidden'
     };
     
     

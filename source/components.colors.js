@@ -16,7 +16,7 @@ hilary.register('gutentyp::components::colors', { init: function (components, co
                 return false;
             },
             displayHandler: function (domId) {
-                return '<button id="' + domId + '"><span class="color-block" style="background-color: ' + color.value + '"></span></button>';
+                return '<button class="' + domId + '"><span class="color-block" style="background-color: ' + color.value + '"></span></button>';
             },
             group: { title: 'Colors', name: 'colors', arrow: 'none' }
         }));

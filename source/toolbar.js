@@ -31,30 +31,32 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
         
         addGroup = function (component) {
             var currentGroup = groups[component.group.name] = { components: [component] };
-            currentGroup.toggleId = utils.getRandomString();
-            currentGroup.menuId = utils.getRandomString();
+            currentGroup.toggleId = utils.getRandomString();// component.group.name + 'toggle';
+            currentGroup.menuId = utils.getRandomString(); // component.group.name + 'menu';//utils.getRandomString();
+            currentGroup.toggleSelector = '.' + currentGroup.toggleId;
+            currentGroup.menuSelector = '.' + currentGroup.menuId;
 
             utils.insertNewElementInto({
-                markup: '<button type="button" id="' + currentGroup.toggleId + '">' + component.group.title + '</button>'
+                markup: '<button type="button" class="' + currentGroup.toggleId + '">' + component.group.title + '</button>'
             }, config.selectors.newToolbars);
             utils.insertNewElementInto({
-                markup: '<div id="' + currentGroup.menuId + '" class="gutentyp-toolbar-group gutentyp-toolbar-arrow-' + (component.group.arrow || 'over') + '"><ul></ul></div>'
+                markup: '<div class="' + currentGroup.menuId + ' gutentyp-toolbar-group gutentyp-toolbar-arrow-' + (component.group.arrow || 'over') + '"><ul></ul></div>'
             }, config.selectors.newToolbars);
 
             // toggle hidden
-            utils.attachEvent('#' + currentGroup.toggleId, 'click', function (event) {
-                var btnCoords = utils.getCoordinates('#' + currentGroup.toggleId),
+            utils.attachEvent(currentGroup.toggleSelector, 'click', function (event) {
+                var btnCoords = utils.getCoordinates(event.target),
                     style;
                 
                 // set the coordinates
                 style = 'left: ' + ((btnCoords.left + (btnCoords.width / 2)) / 2);
                 style += '; top: ' + (btnCoords.offset.top + btnCoords.height + 6);
-                utils.setStyle('#' + currentGroup.menuId, style);
+                utils.setStyle(currentGroup.menuSelector, style);
                 
                 // hide any other toolbars that might be open
                 utils.toggleClass('.gutentyp-toolbar-group.active:not(#' + currentGroup.menuId + ')', 'active');
                 // show or hid this toolbar
-                utils.toggleClass('#' + currentGroup.menuId, 'active');
+                utils.toggleClass(currentGroup.menuSelector, 'active');
             });
             
             return currentGroup;
@@ -62,6 +64,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
         
         addWithGroup = function (component) {
             var componentId = utils.getRandomString(),
+                componentSelector = '.' + componentId,
                 currentGroup,
                 execWrapper;
                 
@@ -75,19 +78,19 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
             if (component.displayHandler) {
                 utils.insertNewElementInto({
                     markup: '<li>' + component.displayHandler(componentId) + '</li>'
-                }, '#' + currentGroup.menuId + ' ul');
+                }, currentGroup.menuSelector + ' ul');
             } else {
                 utils.insertNewElementInto({
-                    markup: '<li><button id="' + componentId + '" type="button" class="' + component.cssClass + '">' + component.title + '</button></li>'
-                }, '#' + currentGroup.menuId + ' ul');
+                    markup: '<li><button type="button" class="' + componentId + component.cssClass + '">' + component.title + '</button></li>'
+                }, currentGroup.menuSelector + ' ul');
             }
 
             execWrapper = function (event, input) {
                 component.execute(event, input);
-                utils.toggleClass('#' + currentGroup.menuId, 'active');
+                utils.toggleClass(currentGroup.menuSelector, 'active');
             };
 
-            utils.attachEvent('#' + componentId, 'click', execWrapper);
+            utils.attachEvent(componentSelector, 'click', execWrapper);
         };
         
         utils.insertNewElementBefore('div', config.selectors.newEditors, config.selectors.toolbar);
@@ -113,18 +116,3 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
     };
     
 }});
-
-
-//headings.displayHandler = function () {
-//        return '<button type="button" class="' + headings.cssClass + ' popover_btn" data-popover-selector="#heading-popover-' + random + '" data-placement="bottom">' + headings.title + '</button>'
-//            + '<div id="heading-popover-' + random + '" class="hidden">'
-//                + '<div class="' + headings.cssClass + '-popover">'
-//                    + '<button type="button" data-gutentyp-command="heading1">Heading 1</button>'
-//                    + '<button type="button" data-gutentyp-command="heading2">Heading 2</button>'
-//                    + '<button type="button" data-gutentyp-command="heading3">Heading 3</button>'
-//                    + '<button type="button" data-gutentyp-command="heading4">Heading 4</button>'
-//                    + '<button type="button" data-gutentyp-command="heading5">Heading 5</button>'
-//                    + '<button type="button" data-gutentyp-command="heading6">Heading 6</button>'
-//                + '</div>'
-//            + '</div>';
-//    };
