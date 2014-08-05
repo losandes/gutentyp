@@ -6,7 +6,7 @@ hilary.register('gutentyp::core', {
 
         var loadGutenCore = function () {
 
-            utils.initializeRichTextAreas();
+            var areaIds = utils.initializeRichTextAreas();
             
             // Append toolbars to rich text areas
             toolbarBuilder.build();
