@@ -13,7 +13,7 @@ hilary.register('gutentyp::components::justification', { init: function (compone
         textClass: 'sr-only'
     });
     group.name = 'alignment';
-    group.arrow = 'none'; //'over'
+    group.arrow = 'over'; //'over'
     
     left = components.makeComponent({
         title: 'Align Left',

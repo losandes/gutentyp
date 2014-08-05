@@ -6,7 +6,12 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
 
     var components = [],
         componentFactory,
-        addComponent;
+        makeComponentForm,
+        attachToBtn,
+        attachToForm,
+        attachToCancel,
+        addComponent,
+        events = {};
 
     addComponent = function (component) {
         if (component instanceof Array) {
@@ -50,12 +55,25 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
 
             if (utils.isFunction(definition.func)) {
                 selected = utils.getSelectedText();
+                event.gutenSelection = utils.getCursorCoordinates();
+                event.gutenSelection.text = selected;
                 output = definition.func(event, selected);
-
-                if (selected && selected.length > 0 && output) {
-                    utils.replaceSelectedText(output);
-                } else if (output) {
-                    utils.pasteHtmlAtCursor(output);
+                
+                if (utils.isObject(output)) {
+                    if (selected && selected.length > 0 && output) {
+                        utils.replaceSelectedText(output.markup);
+                    } else if (output.selectionCoordinates) {
+                        utils.pasteHtml(output.selectionCoordinates, output.markup);
+                    } else {
+                        // we lost the cursor, append the text area
+                        utils.insertHtml(output.gutenArea, output.markup);
+                    }
+                } else {
+                    if (selected && selected.length > 0 && output) {
+                        utils.replaceSelectedText(output);
+                    } else if (output) {
+                        utils.pasteHtmlAtCursor(output);
+                    }
                 }
             }
 
@@ -80,6 +98,85 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
 
         return self;
     };
+    
+    attachToBtn = function (component) {
+        utils.attachEvent({
+            primarySelector: document,
+            secondarySelector: '.' + component.cssClass,
+            eventType: 'click',
+            eventHandler: function (event) {
+                var btn = utils.getClosest(event.target, 'button'),
+                    target = utils.getNext(btn, '.gutentyp-toolbar-group'),
+                    btnCoords = utils.getCoordinates(event.target, target),
+                    style;
+
+                // set the coordinates
+                style = 'left: ' + btnCoords.moveLeft;
+                style += '; top: ' + btnCoords.moveTop;
+                utils.setStyle(target, style);
+
+                // show or hid this toolbar
+                utils.toggleClass(target, 'active');
+            }
+        });
+    };
+    
+    attachToForm = function (component, validate) {
+        utils.attachEvent({
+            primarySelector: document,
+            secondarySelector: '.' + component.cssClass + '-form .btn-success',
+            eventType: 'click',
+            eventHandler: function (event) {
+                
+                if (utils.isFunction(validate)) {
+                    if (!validate(event)) {
+                        return false;
+                    }
+                }
+                
+                var target = utils.getClosest(event.target, '.gutentyp-toolbar-group');
+                // show or hide this toolbar
+                utils.toggleClass(target, 'active');
+                event.fromGutenForm = true;
+                component.execute(event);
+            }
+        });
+    };
+    
+    attachToCancel = function (component) {
+        utils.attachEvent({
+            primarySelector: document,
+            secondarySelector: '.' + component.cssClass + '-form .btn-cancel',
+            eventType: 'click',
+            eventHandler: function (event) {
+                var target = utils.getClosest(event.target, '.gutentyp-toolbar-group'),
+                    alerts = utils.getClosestAdjacent(event.target, '.alert');
+                // show or hide this toolbar
+                utils.toggleClass(target, 'active');
+                utils.clearForm(target);
+                utils.addClass(alerts, 'hidden');
+            }
+        });
+    };
+    
+    makeComponentForm = function (component, formMarkup, validation) {
+        if (!events[component.pipelineName]) {
+            attachToBtn(component);
+            attachToForm(component, validation && validation.validate);
+            attachToCancel(component);
+            events[component.pipelineName] = true;
+        }
+        
+        return '<button type="button" class="' + component.cssClass + '">'
+                    + '<i class="' + config.cssClasses.toolbarBtnIcon + ' ' + component.icon + '"></i>'
+                    + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">' + component.title + '</span>'
+                + '</button>'
+                + '<div class="gutentyp-toolbar-group gutentyp-toolbar-arrow-over ' + component.cssClass + '-form"><form>'
+                    + formMarkup
+                    + '<button class="btn btn-success" type="button">Add</button>'
+                    + '<button class="btn btn-cancel" type="button">Cancel</button>'
+                + '</form></div>';
+    };
 
     return {
         /*
@@ -95,6 +192,8 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
          * @param func (function): the callback / function that will be executed when this component is used
          */
         makeComponent: componentFactory,
+        
+        makeComponentForm: makeComponentForm,
 
         /*
         * Adds a component (the result of makeComponent) to the components collection

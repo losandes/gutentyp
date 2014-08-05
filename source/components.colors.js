@@ -14,7 +14,7 @@ hilary.register('gutentyp::components::colors', { init: function (components, co
         textClass: 'sr-only'
     });
     group.name = 'colors';
-    group.arrow = 'none'; //'over
+    group.arrow = 'over'; //'over
     
     addColor = function (color) {
         components.addComponent(components.makeComponent({

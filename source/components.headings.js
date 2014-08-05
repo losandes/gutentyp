@@ -14,7 +14,7 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         textClass: 'sr-only'
     });
     group.name = 'headings';
-    group.arrow = 'none'; //'over'
+    group.arrow = 'over'; //'over'
     
     h1 = components.makeComponent({
         title: 'h1',

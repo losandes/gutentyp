@@ -3,7 +3,7 @@
 hilary.register('gutentyp::components::link', { init: function (components, config, utils) {
     "use strict";
     
-    var link, hasEvent;
+    var link, selected;
     
     link = components.makeComponent({
         title: 'Add Link',
@@ -12,56 +12,63 @@ hilary.register('gutentyp::components::link', { init: function (components, conf
         icon: 'fa fa-link',
         textClass: 'sr-only',
         func: function (event, input) {
-            //console.log(event, input);
-//            var target = utils.getClosest(event.target, 'button'),
-//                text,
-//                href = utils.getAttribute(target, 'data-location');
-//
-//            if (!href) {
-//                throw new Error('the data-location attribute was not set on the target element.');
-//            }
-//            
-//            text = input && input.length > 0 ? input : href;
-//            return '<a href="' + href + '" target="_blank">' + text + '</a>';
+            if (!event.fromGutenForm) {
+                selected = event.gutenSelection;
+                return false;
+            }
+            
+            var form = utils.getClosest(event.target, '.gutentyp-toolbar-group'),
+                target = utils.getPrevious(form, 'button'),
+                hrefInput = utils.getClosestAdjacent(event.target, 'input'),
+                gutenArea = utils.getClosestAdjacent(event.target, config.selectors.gutentypified),
+                href = utils.getOrSetValue(hrefInput),
+                alert = utils.getClosestAdjacent(event.target, '.alert.link-url'),
+                text,
+                markup;
+            
+            if (!href) {
+                return false;
+            }
+            
+            if (input && input.length > 0) {
+                text = input;
+            } else if (selected && selected.text && selected.text.length > 0) {
+                text = selected.text;
+            } else {
+                text = href;
+            }
+            
+            markup = '<a href="' + href + '" target="_blank">' + text + '</a>';
+            utils.clearForm(form);
+            utils.addClass(alert, 'hidden');
+            
+            return {
+                markup: markup,
+                selectionCoordinates: selected,
+                gutenArea: gutenArea
+            };
         }
     });
     
     link.displayHandler = function () {
-        var hrefDomId = utils.getRandomString();
-        
-        if (!hasEvent) {
-            utils.attachEvent({
-                primarySelector: document,
-                secondarySelector: '.' + link.cssClass,
-                eventType: 'click',
-                eventHandler: function (event) {
-                    var btn = utils.getClosest(event.target, 'button'),
-                        target = utils.getNext(btn, '.gutentyp-toolbar-group'),
-                        btnCoords = utils.getCoordinates(event.target),
-                        style;
-
-                    // set the coordinates
-                    style = 'left: ' + ((btnCoords.left + (btnCoords.width / 2)) / 2);
-                    style += '; top: ' + (btnCoords.offset.top + btnCoords.height + 6);
-                    utils.setStyle(target, style);
-
-                    // show or hid this toolbar
-                    utils.toggleClass(target, 'active');
+        var validation, markup = '<div class="link-url alert hidden">Please enter a valid Url.</div><label>Url</label><input type="text" /><br />';
+        validation = {
+            validate: function (event) {
+                var hrefInput = utils.getClosestAdjacent(event.target, 'input'),
+                    href = utils.getOrSetValue(hrefInput),
+                    alert;
+                
+                if (href && href.indexOf('://') < 0) {
+                    alert = utils.getClosestAdjacent(event.target, '.alert.link-url');
+                    alert.removeClass('hidden');
+                    return false;
                 }
-            });
-            
-            hasEvent = true;
-        }
-        
-        return '<button type="button" class="' + link.cssClass + '">'
-                    + '<i class="' + config.cssClasses.toolbarBtnIcon + ' fa fa-link"></i>'
-                    + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">Add Link</span>'
-                + '</button>'
-                + '<div class="gutentyp-toolbar-group gutentyp-toolbar-arrow-none"><form>'
-                    + '<label for="' + hrefDomId + '">Url</label>'
-                    + '<input id="' + hrefDomId + '" type="text" />'
-                + '</form></div>';
+                
+                return true;
+            }
+        };
+        return components.makeComponentForm(link, markup, validation);
     };
-
+    
     components.addComponent(link);
 }});
