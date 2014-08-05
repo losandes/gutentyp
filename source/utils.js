@@ -12,6 +12,7 @@ hilary.register('gutentyp::utils', {
             setText,
             insertHtml,
             addClass,
+            toggleClass,
             addAttribute,
             getAttribute,
             attachEvent,
@@ -78,9 +79,15 @@ hilary.register('gutentyp::utils', {
             if (!target || target === '') {
                 return;
             }
-
-            makeElement(newElementType, domClass, attrPairs)
-                .appendTo($(target));
+            
+            if (typeof(newElementType) !== 'string' && newElementType.markup) {
+                var markup = newElementType.markup;
+                
+                $(markup).appendTo($(target));
+            } else {
+                makeElement(newElementType, domClass, attrPairs)
+                    .appendTo($(target));            
+            }
         };
 
         setText = function (selector, newText) {
@@ -93,6 +100,10 @@ hilary.register('gutentyp::utils', {
         
         addClass = function (selector, cssClass) {
             $(selector).addClass(cssClass);
+        };
+        
+        toggleClass = function (selector, cssClass) {
+            $(selector).toggleClass(cssClass);
         };
         
         addAttribute = function (selector, newAttr, newValue) {
@@ -250,6 +261,7 @@ hilary.register('gutentyp::utils', {
             setText: setText,
             insertHtml: insertHtml,
             addClass: addClass,
+            toggleClass: toggleClass,
             getAttribute: getAttribute,
             attachEvent: attachEvent,
             updateTextarea: updateTextarea,
@@ -257,7 +269,18 @@ hilary.register('gutentyp::utils', {
             getSelectedText: getSelectedText,
             replaceSelectedText: replaceSelectedText,
             pasteHtmlAtCursor: pasteHtmlAtCursor,
-            getRandomString: getRandomString
+            getRandomString: getRandomString,
+            getCoordinates: function (selector) {
+                var result = $(selector)[0].getBoundingClientRect();
+                result.offset = $(selector).offset();
+                return result;
+            },
+            getWidth: function (selector) {
+                return $(selector).width();
+            },
+            setStyle: function (selector, style) {
+                return $(selector).attr('style', style);
+            }
         };
     }
 });

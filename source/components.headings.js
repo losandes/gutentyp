@@ -12,7 +12,7 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         func: function (event, text) {
             return '<h1>' + text + '</h1>';
         },
-        group: 'Headings'
+        group: { title: 'Headings', name: 'headings', arrow: 'over' }
     });
     
     h2 = components.makeComponent({
@@ -22,7 +22,7 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         func: function (event, text) {
             return '<h2>' + text + '</h2>';
         },
-        group: 'Headings'
+        group: { title: 'Headings', name: 'headings', arrow: 'over' }
     });
     
     h3 = components.makeComponent({
@@ -32,7 +32,7 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         func: function (event, text) {
             return '<h3>' + text + '</h3>';
         },
-        group: 'Headings'
+        group: { title: 'Headings', name: 'headings', arrow: 'over' }
     });
     
     h4 = components.makeComponent({
@@ -42,7 +42,7 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         func: function (event, text) {
             return '<h4>' + text + '</h4>';
         },
-        group: 'Headings'
+        group: { title: 'Headings', name: 'headings', arrow: 'over' }
     });
     
     h5 = components.makeComponent({
@@ -52,7 +52,7 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         func: function (event, text) {
             return '<h5>' + text + '</h5>';
         },
-        group: 'Headings'
+        group: { title: 'Headings', name: 'headings', arrow: 'over' }
     });
     
     h6 = components.makeComponent({
@@ -62,7 +62,7 @@ hilary.register('gutentyp::components::headings', { init: function (components) 
         func: function (event, text) {
             return '<h6>' + text + '</h6>';
         },
-        group: 'Headings'
+        group: { title: 'Headings', name: 'headings', arrow: 'over' }
     });
     
     components.addComponent([h1, h2, h3, h4, h5, h6]);

@@ -49,9 +49,9 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
                 .init(config, utils, pipeline);
 
             // resolve components
+            tryResolveComponent('gutentyp::components::emphasis');
             tryResolveComponent('gutentyp::components::colors');
             tryResolveComponent('gutentyp::components::headings');
-            tryResolveComponent('gutentyp::components::emphasis');
             tryResolveComponent('gutentyp::components::justification');
             tryResolveComponent('gutentyp::components::lists');
             tryResolveComponent('gutentyp::components::blocks');
