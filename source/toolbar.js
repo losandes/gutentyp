@@ -67,7 +67,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
                     style;
                 
                 // set the coordinates
-                style = 'left: ' + ((btnCoords.left + (btnCoords.width / 2)) / 2);
+                style = 'left: ' + (btnCoords.left + (btnCoords.width / 2) - (utils.getCoordinates(currentGroup.menuSelector).width / 2));
                 style += '; top: ' + (btnCoords.offset.top + btnCoords.height + 6);
                 utils.setStyle(currentGroup.menuSelector, style);
                 
