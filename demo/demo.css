@@ -28,6 +28,9 @@ pre {
 }
 .gutentyp-editor:focus {}
 
+.gutentyp-editor div {
+    margin-bottom: 10px;
+}
 
 .gutentyp-toolbar {
     border-radius: 5px;

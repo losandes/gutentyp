@@ -16,28 +16,28 @@
         <br />
 
         <textarea class="gutentyp-ify" id="test">
-            <h2>Why Gutentyp?</h2>
+<h2>Why Gutentyp?</h2>
             <br />
-            <p>
+            <div>
                 We wanted a highly extensible, modular rich text editor that just works. There are a lot 
                 of great rich text editors out there, but each one presented a drawback to us, that led us 
                 to design our own.
-            </p>
-            <p>
+            </div>
+            <div>
                 The result is a simple library that is easy to extend and customize. It supports multi-instance, 
                 not only so you can have multiple rich text editors on the same page, but unique configurations 
                 for them, if you desire.
-            </p>
+            </div>
             
             <h2>Getting Started</h2>
-            <p>The super-simple path is to start with a <code>textarea</code></p>
+            <div>The super-simple path is to start with a <code>textarea</code></div>
             
 <pre>
 &lt; textarea id=&quot;id-isnt-required&quot; class=&quot;gutentyp-ify&quot;&gt;
 &lt; /textarea&gt;
 </pre>
             <br />
-            <p>and then wire it up with JavaScript</p>
+            <div>and then wire it up with JavaScript</div>
             
 <pre>
 var gutenInstance = gutentyp();
@@ -45,10 +45,10 @@ gutenInstance.init();
 </pre>
             
             <br />
-            <p>
+            <div>
                 You can call init as much as you like, and you'll need to after DOM Mutations. If you're using 
                 jQuery for your ajax, you can initialize Gutentyp like this
-            </p>
+            </div>
             
 <pre>
 var gutenInstance = gutentyp();
@@ -63,14 +63,14 @@ $(document).ajaxComplete(function () {
             <h2>Gutentyp is Modular and Highly Extensible</h2>
             <br />
             
-            <p>
+            <div>
                 Gutentyp is built so you can extend it easily, and replace modules with custom modules, if you like. 
                 Modules include the core components that make up Gutentyp, as well as the components that are 
                 available in the toolbar.
-            </p>
-            <p>
+            </div>
+            <div>
                 To add components, you register them on the instance prior to initialization.
-            </p>
+            </div>
 <pre>
 var gutenInstance = gutentyp();
 
@@ -101,7 +101,7 @@ gutenInstance.init();                                   // Once init is called, 
 
             <br />
             <h3>Registering and Overriding Modules</h3>
-            <p>There are six core modules that are composed by a seventh module, any of which can be replaced easily.</p>
+            <div>There are six core modules that are composed by a seventh module, any of which can be replaced easily.</div>            
         </textarea>
         <br />
         <br />
