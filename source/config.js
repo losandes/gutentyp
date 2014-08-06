@@ -3,7 +3,7 @@
 hilary.register('gutentyp::config', { init: function () {
     "use strict";
     
-    var config = {}, autoCreateSelectors;
+    var config = {};
     
     config.prefixes = {
         pipeline: {
@@ -67,7 +67,7 @@ hilary.register('gutentyp::config', { init: function () {
     };
     
     
-    autoCreateSelectors = function () {
+    config.autoCreateSelectors = function () {
         var i;
         
         config.selectors = {};
@@ -83,7 +83,7 @@ hilary.register('gutentyp::config', { init: function () {
         config.selectors.newToolbars = config.selectors.toolbar + ':not(' + config.selectors.hasComponents + ')';
     };
     
-    autoCreateSelectors();
+    config.autoCreateSelectors();
     
     return config;
 
