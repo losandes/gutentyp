@@ -184,7 +184,7 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
         * scrolling across the screen, and you just like to customize everything: here's the engine.
         * add lift suspensions and spinners to your delight. ;)
         */
-        self.ifYouReallyKnowWhatYourDoing = {
+        self.ifYouReallyKnowWhatYoureDoing = {
             /*
             * access to the IoC container where the modules are registered
             * if you make any changes here, you need to run prep!

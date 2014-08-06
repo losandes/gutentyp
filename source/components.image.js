@@ -1,4 +1,4 @@
-/*global hilary*/
+/*global hilary,isNaN*/
 
 hilary.register('gutentyp::components::image', { init: function (components, config, utils) {
     "use strict";
@@ -11,19 +11,16 @@ hilary.register('gutentyp::components::image', { init: function (components, con
         pipelineName: 'image',
         icon: config.icons.image,
         textClass: 'sr-only',
-        func: function (event, input) {
-            var target = event.target, //utils.getClosest(event.target, 'button'),
-                src = utils.getAttribute(target, 'data-src'),
-                alt = utils.getAttribute(target, 'data-alt'),
-                width = utils.getAttribute(target, 'data-width'),
-                height = utils.getAttribute(target, 'data-height'),
-                img;
-            
-            alt = alt || input.length > 0 ? input : src;
-
-            if (!src) {
-                throw new Error('the data-src attribute was not set on the target element.');
+        func: function (event, selectedText, formData) {
+            if (!formData) {
+                throw 'No form data is present, so we can\'t write an anchor element.';
             }
+            
+            var src = formData.src,
+                alt = formData.alt || formData.src,
+                width = formData.width,
+                height = formData.height,
+                img;
 
             img = '<img src="' + src + '" alt="' + alt + '" '
                     + (width ? ('width="' + width + '"') : '')
@@ -31,16 +28,82 @@ hilary.register('gutentyp::components::image', { init: function (components, con
                     + '/>';
             
             return img;
+        },
+        form: {
+            fields: [
+                {
+                    name: 'src',
+                    label: 'Url',
+                    elementType: 'input',
+                    type: 'text',
+                    validation: {
+                        message: 'Please enter a valid Url.',
+                        cssClass: 'link-src',
+                        validate: function (event, formData) {
+                            if (!formData || !formData.src || formData.src.indexOf('://') < 0) {
+                                return false;
+                            }
+
+                            return true;
+                        }
+                    }
+                },
+                {
+                    name: 'alt',
+                    label: 'Description',
+                    elementType: 'input',
+                    type: 'text',
+                    validation: {
+                        message: 'Please enter a description. It\'s used by screen readers for accessibility.',
+                        cssClass: 'link-alt',
+                        validate: function (event, formData) {
+                            if (!formData || !formData.alt) {
+                                return false;
+                            }
+
+                            return true;
+                        }
+                    }
+                },
+                {
+                    name: 'width',
+                    label: 'Width',
+                    elementType: 'input',
+                    type: 'text',
+                    validation: {
+                        message: 'Width is not required, but it has to be a number',
+                        cssClass: 'link-width',
+                        validate: function (event, formData) {
+                            if (formData && formData.width && isNaN(formData.width)) {
+                                return false;
+                            }
+
+                            return true;
+                        }
+                    }
+                },
+                {
+                    name: 'height',
+                    label: 'Height',
+                    elementType: 'input',
+                    type: 'text',
+                    validation: {
+                        message: 'Height is not required, but it has to be a number',
+                        cssClass: 'link-height',
+                        validate: function (event, formData) {
+                            if (formData && formData.height && isNaN(formData.height)) {
+                                return false;
+                            }
+
+                            return true;
+                        }
+                    }
+                }]
+        },
+        after: function (event) {
+            utils.clearForm(event.target);
         }
     });
-    
-    image.displayHandler = function () {
-        // TODO: add drop form that sets the data-src and data-alt
-        return '<button type="button" class="' + image.cssClass + '" data-src="http://thissongissick.com/wp-content/uploads/2013/03/Daft-Punk-Helmets-Columbia-Album-artwork.jpg" data-alt="daft">'
-                    + '<i class="' + config.cssClasses.toolbarBtnIcon + ' fa fa-image"></i>'
-                    + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">Add Image</span>'
-                + '</button>';
-    };
 
     components.addComponent(image);
 }});

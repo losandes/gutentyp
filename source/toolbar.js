@@ -78,8 +78,8 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
 	                    style;
 	                
 	                // set the coordinates
-	                style = 'left: ' + btnCoords.moveLeft;
-	                style += '; top: ' + btnCoords.moveTop;
+	                style = 'left: ' + btnCoords.moveLeft + 'px';
+	                style += '; top: ' + btnCoords.moveTop + 'px';
 	                utils.setStyle(currentGroup.menuSelector, style);
 	                
 	                // hide any other toolbars that might be open

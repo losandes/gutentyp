@@ -7,7 +7,6 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
     var components = [],
         componentFactory,
         makeForm,
-        appendForm,
         appendMarkup,
         appendValidators,
         makeValidateFunc,
@@ -16,7 +15,8 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
         attachToForm,
         attachToCancel,
         addComponent,
-        events = {};
+        events = {},
+        selectionCoordinates;
 
     addComponent = function (component) {
         if (component instanceof Array) {
@@ -37,6 +37,7 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
 
         self.title = definition.title;
         self.cssClass = definition.cssClass || definition.pipelineName;
+        self.pipelineName = definition.pipelineName;
         self.icon = definition.icon || undefined;
         self.textClass = definition.textClass + ' ' + config.cssClasses.toolbarBtnText || config.cssClasses.toolbarBtnText;
         self.displayHandler = definition.displayHandler;
@@ -46,10 +47,19 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
                 beforeThis = config.prefixes.pipeline.beforeComponent + definition.pipelineName,
                 afterThis = config.prefixes.pipeline.afterComponent + definition.pipelineName,
                 selected = utils.getSelectedText(),
-                output;
-
-            event.gutenSelection = utils.getCursorCoordinates();
-            event.gutenSelection.text = selected;
+                output,
+                gutenArea;
+            
+            // if the event is a form button click, capture the selected text (if any) and 
+            // do not continue
+            if (utils.getAttribute(utils.getClosest(event.target, 'button'), config.attributes.formBtn.key)) {
+                selectionCoordinates = utils.getCursorCoordinates();
+                selectionCoordinates.text = selected;
+                selectionCoordinates.isInEditor = utils.selectionIsInEditor(selectionCoordinates);
+                event.gutenSelection = selectionCoordinates;
+                
+                return;
+            }
             
             for (i = 0; i < componentPipeline.beforeAny.length; i++) {
                 if (utils.isFunction(componentPipeline.beforeAny[i])) {
@@ -62,23 +72,15 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
             }
 
             if (utils.isFunction(definition.func)) {
-                output = definition.func(event, selected, formData);
+                output = definition.func(event, selected || selectionCoordinates.text, formData);
                 
-                if (utils.isObject(output)) {
-                    if (selected && selected.length > 0 && output) {
-                        utils.replaceSelectedText(output.markup);
-                    } else if (output.selectionCoordinates) {
-                        utils.pasteHtml(output.selectionCoordinates, output.markup);
-                    } else {
-                        // we lost the cursor, append the text area
-                        utils.insertHtml(output.gutenArea, output.markup);
-                    }
-                } else {
-                    if (selected && selected.length > 0 && output) {
-                        utils.replaceSelectedText(output);
-                    } else if (output) {
-                        utils.pasteHtmlAtCursor(output);
-                    }
+                // replace the selected text
+                if (selected && selected.length > 0 && output) {
+                    utils.replaceSelectedText(output);
+                } else if (selectionCoordinates && selectionCoordinates.isInEditor) {
+                    utils.pasteHtml(selectionCoordinates, output);
+                } else if (output) {
+                    utils.pasteHtmlAtCursor(output, false, event);
                 }
             }
 
@@ -104,6 +106,10 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
         if (definition.form && !self.displayHandler) {
             self.displayHandler = function () { return makeForm(self, definition.form); };
         }
+        
+        // we're done using these coordinates, get rid of them, so they aren't accidentally used 
+        // by following actions
+        selectionCoordinates = undefined;
 
         return self;
     };
@@ -120,8 +126,8 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
                     style;
 
                 // set the coordinates
-                style = 'left: ' + btnCoords.moveLeft;
-                style += '; top: ' + btnCoords.moveTop;
+                style = 'left: ' + btnCoords.moveLeft + 'px';
+                style += '; top: ' + btnCoords.moveTop + 'px';
                 utils.setStyle(target, style);
 
                 // show or hid this toolbar
@@ -171,17 +177,18 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
     };
     
     makeForm = function (component, formMeta) {
-        var i = 0,
+        var fields = formMeta.fields,
+            i = 0,
             markup = '',
             validators = { names: [] },
             validation = {},
             current;
         
-        for (i; i < formMeta.length; i++) {
+        for (i; i < fields.length; i++) {
             // do NOT combine uniqueId with the previous statement, it needs to be a new reference every time.
             var uniqueId = utils.getRandomString();
-            markup += appendMarkup(formMeta[i], uniqueId);
-            appendValidators(validators, formMeta[i], uniqueId);
+            markup += appendMarkup(fields[i], uniqueId);
+            appendValidators(validators, fields[i], uniqueId);
         }
         
         if (validators.names.length > 0) {
@@ -191,59 +198,51 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
         return makeComponentForm(component, markup, validation);
     };
     
-    appendForm = function (markup, validators, formMeta, i) {
-        var uniqueId = utils.getRandomString();
-        markup += appendMarkup(formMeta[i], uniqueId);
-        appendValidators(validators, formMeta[i], uniqueId);
-        
-        return { markup: markup, validators: validators };
-    };
-    
-    appendMarkup = function (item, uniqueId) {
+    appendMarkup = function (field, uniqueId) {
         var markup = '',
             attributes,
             alertCss;
         
-        if (!item || !item.elementType || !item.name) {
+        if (!field || !field.elementType || !field.name) {
             return '';
         }
         
-        if (item.validation && item.validation.message) {
+        if (field.validation && field.validation.message) {
             // <div class="link-url alert hidden">Please enter a valid Url.</div>
             alertCss = 'alert alert-warning hidden ' + uniqueId;
             
-            if (item.validation.cssClass) {
-                alertCss += ' ' + item.validation.cssClass;
+            if (field.validation.cssClass) {
+                alertCss += ' ' + field.validation.cssClass;
             }
             
-            markup += utils.makeElement('div', alertCss, undefined, item.validation.message, true);
+            markup += utils.makeElement('div', alertCss, undefined, field.validation.message, true);
         }
         
-        if (item.label) {
+        if (field.label) {
             // <label>Url</label>
-            markup += utils.makeElement('label', undefined, undefined, item.label, true);
+            markup += utils.makeElement('label', undefined, undefined, field.label, true);
         }
         
         // <input type="text" name="" />
-        attributes = utils.isArray(item.attributes) ? item.attributes : [];
-        attributes.push({ key: 'name', value: item.name });
+        attributes = utils.isArray(field.attributes) ? field.attributes : [];
+        attributes.push({ key: 'name', value: field.name });
         
-        if (item.elementType === 'input') {
-            attributes.push({ key: 'type', value: item.inputType || 'text' });
+        if (field.elementType === 'input') {
+            attributes.push({ key: 'type', value: field.inputType || 'text' });
         }
         
-        markup += utils.makeElement(item.elementType, item.cssClass || undefined, attributes, item.label, true);
+        markup += utils.makeElement(field.elementType, field.cssClass || undefined, attributes, field.label, true);
         markup += '<br />';
 
         return markup;
     };
     
-    appendValidators = function (validators, item, uniqueId) {
-        if (item.name && item.validation && utils.isFunction(item.validation.validate)) {
-            validators.names.push(item.name);
-            validators[item.name] = {
+    appendValidators = function (validators, field, uniqueId) {
+        if (field.name && field.validation && utils.isFunction(field.validation.validate)) {
+            validators.names.push(field.name);
+            validators[field.name] = {
                 messageId: uniqueId,
-                validate: item.validation.validate
+                validate: field.validation.validate
             };
         }
     };
@@ -278,7 +277,7 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
             events[component.pipelineName] = true;
         }
         
-        return '<button type="button" class="' + component.cssClass + '">'
+        return '<button type="button" class="' + component.cssClass + '" data-form-btn="true">'
                     + '<i class="' + config.cssClasses.toolbarBtnIcon + ' ' + component.icon + '"></i>'
                     + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">' + component.title + '</span>'
                 + '</button>'
