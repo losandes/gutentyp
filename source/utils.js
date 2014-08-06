@@ -353,14 +353,16 @@ hilary.register('gutentyp::utils', {
         };
         
         selectRange = function (selectioData) {
-            var selected, range = document.createRange();
-            //range.setStart(selectioData.baseNode || selectioData.anchorNode, selectioData.baseOffset || selectioData.anchorOffset);
-            //range.setEnd(selectioData.extentNode || selectioData.focusNode, selectioData.extentOffset || selectioData.focusOffset);
-            range.setStart(selectioData.anchorNode, selectioData.anchorOffset);
-            range.setEnd(selectioData.focusNode, selectioData.focusOffset);
-            selected = window.getSelection();
-            selected.removeAllRanges();
-            selected.addRange(range);
+            try {
+                var selected, range = document.createRange();
+                range.setStart(selectioData.baseNode || selectioData.anchorNode, selectioData.baseOffset || selectioData.anchorOffset);
+                range.setEnd(selectioData.extentNode || selectioData.focusNode, selectioData.extentOffset || selectioData.focusOffset);
+                selected = window.getSelection();
+                selected.removeAllRanges();
+                selected.addRange(range);
+            } catch (e) {
+                console.log(e);
+            }
         };
         
         getSelectedParentNode = function (selection) {

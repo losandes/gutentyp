@@ -106,6 +106,8 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
             self.displayHandler = function () { return makeForm(self, definition.form); };
         }
         
+        // we're done using these coordinates, get rid of them, so they aren't accidentally used 
+        // by following actions
         selectionCoordinates = undefined;
 
         return self;
