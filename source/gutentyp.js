@@ -8,7 +8,17 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
     var gutentyp;
     
     gutentyp = function () {
-        var self = {}, prep, gutenContainer, config, utils, pipeline, components, toolbar, core, tryResolveComponent;
+        var self = {},
+            prep,
+            gutenContainer,
+            config,
+            utils,
+            pipeline,
+            components,
+            toolbar,
+            core,
+            tryResolveComponent,
+            componentsAreRegistered = false;
 
         gutenContainer = hilary.createChildContainer();
 
@@ -51,11 +61,8 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
 
         // DEFAULT PREPARATION
         prep();
-
-        /*
-        * initializes gutentyp
-        */
-        self.init = function (options) {
+        
+        self.registerComponents = function (options) {
             var i;
             options = options || {};
             
@@ -79,6 +86,17 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
                 for (i = 0; i < options.components.length; i++) {
                     self.registerComponent(options.components[i]);
                 }
+            }
+            
+            componentsAreRegistered = true;
+        };
+
+        /*
+        * initializes gutentyp
+        */
+        self.init = function (options) {
+            if (!componentsAreRegistered) {
+                self.registerComponents(options);
             }
             
             // Build the toolbar and append it to the rich text area
