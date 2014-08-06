@@ -38,6 +38,7 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
 
         self.title = definition.title;
         self.cssClass = definition.cssClass || definition.pipelineName;
+        self.pipelineName = definition.pipelineName;
         self.icon = definition.icon || undefined;
         self.textClass = definition.textClass + ' ' + config.cssClasses.toolbarBtnText || config.cssClasses.toolbarBtnText;
         self.displayHandler = definition.displayHandler;
@@ -74,6 +75,7 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
             if (utils.isFunction(definition.func)) {
                 output = definition.func(event, selected || selectionCoordinates.text, formData);
                 
+                // replace the selected text
                 if (selected && selected.length > 0 && output) {
                     utils.replaceSelectedText(output);
                 } else if (selectionCoordinates && selectionCoordinates.isInEditor) {

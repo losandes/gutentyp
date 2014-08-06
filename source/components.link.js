@@ -24,8 +24,8 @@ hilary.register('gutentyp::components::link', { init: function (components, conf
             label: 'Url',
             elementType: 'input',
             type: 'text',
-            attributes: [{ key: 'data-test', value: 'test' }],
-            cssClass: 'test',
+//            attributes: [{ key: 'data-test', value: 'test' }],
+//            cssClass: 'test',
             validation: {
                 message: 'Please enter a valid Url.',
                 cssClass: 'link-url',
