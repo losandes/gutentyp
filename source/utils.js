@@ -32,6 +32,8 @@ hilary.register('gutentyp::utils', {
             pasteHtmlAtCursor,
             pasteHtml,
             selectRange,
+            getSelectedParentNode,
+            selectionIsInEditor,
             getCursorCoordinates,
             getRandomString,
             getCoordinates,
@@ -258,8 +260,8 @@ hilary.register('gutentyp::utils', {
         
         // Helper function because different browsers don't always cleanly implement this feature
         // Inspired by http://stackoverflow.com/a/6691294
-        pasteHtmlAtCursor = function (html, selectPastedContent) {
-            var sel;
+        pasteHtmlAtCursor = function (html, selectPastedContent, event) {
+            var sel, gutenArea;
             
             if (window.getSelection) {
                 // IE9 and non-IE
@@ -269,6 +271,12 @@ hilary.register('gutentyp::utils', {
                 if (sel.type === 'Control') {
                     sel = undefined;
                 }
+            }
+            
+            if (event && $(getSelectedParentNode()).closest(config.selectors.editor).length === 0) {
+                gutenArea = getClosestAdjacent(getClosest(event.target, config.selectors.toolbar), config.selectors.editor)
+                    .first();
+                insertHtml(gutenArea, html);
             }
             
             pasteHtml(sel);
@@ -346,11 +354,42 @@ hilary.register('gutentyp::utils', {
         
         selectRange = function (selectioData) {
             var selected, range = document.createRange();
-            range.setStart(selectioData.baseNode || selectioData.anchorNode, selectioData.baseOffset || selectioData.anchorOffset);
-            range.setEnd(selectioData.extentNode || selectioData.focusNode, selectioData.extentOffset || selectioData.focusOffset);
+            //range.setStart(selectioData.baseNode || selectioData.anchorNode, selectioData.baseOffset || selectioData.anchorOffset);
+            //range.setEnd(selectioData.extentNode || selectioData.focusNode, selectioData.extentOffset || selectioData.focusOffset);
+            range.setStart(selectioData.anchorNode, selectioData.anchorOffset);
+            range.setEnd(selectioData.focusNode, selectioData.focusOffset);
             selected = window.getSelection();
             selected.removeAllRanges();
             selected.addRange(range);
+        };
+        
+        getSelectedParentNode = function (selection) {
+            var node, range;
+            
+            if (selection && selection.anchorNode) {
+                node = selection.anchorNode;
+            }
+            
+            if (!node && window.getSelection) {
+                selection = window.getSelection();
+                node = selection.anchorNode;
+            }
+            
+            if (!node && document.selection) {
+                selection = document.selection;
+                range = selection.getRangeAt ? selection.getRangeAt(0) : selection.createRange();
+                node = range.commonAncestorContainer ? range.commonAncestorContainer :
+                        range.parentElement ? range.parentElement() : range.item(0);
+            }
+            
+            if (node) {
+                return (node.nodeName === "#text" ? node.parentNode : node);
+            }
+        };
+        
+        selectionIsInEditor = function (selection) {
+            var editor = $(getSelectedParentNode(selection)).closest(config.selectors.editor);
+            return editor.length > 0;
         };
 
         getRandomString = function (length) {
@@ -450,6 +489,7 @@ hilary.register('gutentyp::utils', {
             pasteHtmlAtCursor: pasteHtmlAtCursor,
             pasteHtml: pasteHtml,
             selectRange: selectRange,
+            selectionIsInEditor: selectionIsInEditor,
             getCursorCoordinates: getCursorCoordinates,
             getRandomString: getRandomString,
             

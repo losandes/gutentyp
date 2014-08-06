@@ -3,7 +3,7 @@
 hilary.register('gutentyp::components::link', { init: function (components, config, utils) {
     "use strict";
     
-    var link, selected;
+    var link;
     
     link = components.makeComponent({
         title: 'Add Link',
@@ -12,35 +12,12 @@ hilary.register('gutentyp::components::link', { init: function (components, conf
         icon: config.icons.link,
         textClass: 'sr-only',
         func: function (event, input, formData) {
-            if (!event.fromGutenForm) {
-                selected = event.gutenSelection;
-                return false;
-            }
-            
-            var gutenArea = utils.getClosestAdjacent(utils.getClosest(event.target, config.selectors.toolbar), config.selectors.editor).first(),
-                text,
-                markup;
-            
             if (!formData || !formData.href) {
-                return false;
+                throw 'No form data is present, so we can\'t write an anchor element.';
             }
             
-            if (input && input.length > 0) {
-                text = input;
-            } else if (selected && selected.text && selected.text.length > 0) {
-                text = selected.text;
-            } else {
-                text = formData.href;
-            }
-            
-            markup = '<a href="' + formData.href + '" target="_blank">' + text + '</a>';
-            utils.clearForm(event.target);
-            
-            return {
-                markup: markup,
-                selectionCoordinates: selected,
-                gutenArea: gutenArea
-            };
+            var text = input && input.length > 0 ? input : formData.href;
+            return '<a href="' + formData.href + '" target="_blank">' + text + '</a>';
         },
         form: [{
             name: 'href',
@@ -60,7 +37,10 @@ hilary.register('gutentyp::components::link', { init: function (components, conf
                     return true;
                 }
             }
-        }]
+        }],
+        after: function (event) {
+            utils.clearForm(event.target);
+        }
     });
     
     components.addComponent(link);
