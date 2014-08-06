@@ -72,26 +72,26 @@ pre {
     float: left;
 }
 
-.gutentyp-toolbar form {
+.gutentyp-toolbar .gutentyp-form {
     margin: 10px;
 }
 
-.gutentyp-toolbar form label {
+.gutentyp-toolbar .gutentyp-form label {
     color: #fff;
     margin-bottom: 5px;
 }
 
-.gutentyp-toolbar form input {
+.gutentyp-toolbar .gutentyp-form input {
     margin-bottom: 10px;
     width: 300px;
 }
 
-.gutentyp-toolbar form button {
+.gutentyp-toolbar .gutentyp-form button {
     float: right;
     margin-bottom: 10px;
 }
 
-.gutentyp-toolbar form .btn-cancel {
+.gutentyp-toolbar .gutentyp-form .btn-cancel {
     float: right;
     margin-bottom: 10px;
     margin-right: 10px;
@@ -186,7 +186,7 @@ pre {
     box-sizing: border-box;
 }
 
-.gutentyp-toolbar-group form label {
+.gutentyp-toolbar-group .gutentyp-form label {
     display: block;
     font-size: 14px;
     font-weight: 400;

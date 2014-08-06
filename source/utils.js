@@ -160,6 +160,12 @@ hilary.register('gutentyp::utils', {
         
         clearForm = function (formSelector) {
             var form = closestForm(formSelector);
+            form.val('');
+            
+            if (form.is('textarea')) {
+                form.html('');
+            }
+            
             form.find('input').val('');
             form.find('textarea').html('');
             
@@ -427,13 +433,29 @@ hilary.register('gutentyp::utils', {
             return $(selector).attr('style', style);
         };
         
-        closestForm = function (selector) {
-            return $(selector).is('form') ? $(selector) : $(selector).closest('form');
+        closestForm = function (selector, mustBeSerializable) {
+            var form;
+            
+            if ($(selector).is('form')) {
+                form = $(selector);
+            } else if (mustBeSerializable && $(selector).hasClass(config.cssClasses.form)) {
+                form = $(selector).find(':input');
+            } else if (mustBeSerializable) {
+                form = $(selector).closest(config.selectors.form).find(':input');
+            } else {
+                form = $(selector).closest(config.selectors.form);
+            }
+            
+            if (!form || form.length < 1) {
+                form = $(selector).find(config.selectors.form);
+            }
+            
+            return form;
         };
         
         // @param selector: usually the submit button (i.e. event.target)
         formToJson = function (selector) {
-            var form = closestForm(selector),
+            var form = closestForm(selector, true),
                 data = {},
                 arr;
             

@@ -281,11 +281,13 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
                     + '<i class="' + config.cssClasses.toolbarBtnIcon + ' ' + component.icon + '"></i>'
                     + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">' + component.title + '</span>'
                 + '</button>'
-                + '<div class="gutentyp-toolbar-group gutentyp-toolbar-arrow-over ' + component.cssClass + '-form"><form>'
-                    + formMarkup
-                    + '<button class="btn btn-success btn-sm" type="button">Add</button>'
-                    + '<button class="btn btn-cancel btn-sm" type="button">Cancel</button>'
-                + '</form></div>';
+                + '<div class="gutentyp-toolbar-group gutentyp-toolbar-arrow-over ' + component.cssClass + '-form">'
+                    + '<div class="' + config.cssClasses.form + '">'
+                        + formMarkup
+                        + '<button class="btn btn-success btn-sm" type="button">Add</button>'
+                        + '<button class="btn btn-cancel btn-sm" type="button">Cancel</button>'
+                    + '</div>'
+                + '</div>';
     };
 
     return {
