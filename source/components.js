@@ -1,4 +1,4 @@
-/*jslint plusplus: true */
+/*jslint plusplus: true, continue: true, vars: true */
 /*global hilary*/
 
 hilary.register('gutentyp::components', { init: function (config, utils, componentPipeline) {
@@ -6,7 +6,17 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
 
     var components = [],
         componentFactory,
-        addComponent;
+        makeForm,
+        appendForm,
+        appendMarkup,
+        appendValidators,
+        makeValidateFunc,
+        makeComponentForm,
+        attachToBtn,
+        attachToForm,
+        attachToCancel,
+        addComponent,
+        events = {};
 
     addComponent = function (component) {
         if (component instanceof Array) {
@@ -31,42 +41,55 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
         self.textClass = definition.textClass + ' ' + config.cssClasses.toolbarBtnText || config.cssClasses.toolbarBtnText;
         self.displayHandler = definition.displayHandler;
         self.group = definition.group || undefined;
-        self.execute = function (event) {
+        self.execute = function (event, formData) {
             var i,
                 beforeThis = config.prefixes.pipeline.beforeComponent + definition.pipelineName,
                 afterThis = config.prefixes.pipeline.afterComponent + definition.pipelineName,
-                selected,
+                selected = utils.getSelectedText(),
                 output;
+
+            event.gutenSelection = utils.getCursorCoordinates();
+            event.gutenSelection.text = selected;
             
             for (i = 0; i < componentPipeline.beforeAny.length; i++) {
                 if (utils.isFunction(componentPipeline.beforeAny[i])) {
-                    componentPipeline.beforeAny[i](event);
+                    componentPipeline.beforeAny[i](event, selected, formData);
                 }
             }
 
             if (utils.isFunction(componentPipeline[beforeThis])) {
-                componentPipeline[beforeThis](event);
+                componentPipeline[beforeThis](event, selected, formData);
             }
 
             if (utils.isFunction(definition.func)) {
-                selected = utils.getSelectedText();
-                output = definition.func(event, selected);
-
-                if (selected && selected.length > 0 && output) {
-                    utils.replaceSelectedText(output);
-                } else if (output) {
-                    utils.pasteHtmlAtCursor(output);
+                output = definition.func(event, selected, formData);
+                
+                if (utils.isObject(output)) {
+                    if (selected && selected.length > 0 && output) {
+                        utils.replaceSelectedText(output.markup);
+                    } else if (output.selectionCoordinates) {
+                        utils.pasteHtml(output.selectionCoordinates, output.markup);
+                    } else {
+                        // we lost the cursor, append the text area
+                        utils.insertHtml(output.gutenArea, output.markup);
+                    }
+                } else {
+                    if (selected && selected.length > 0 && output) {
+                        utils.replaceSelectedText(output);
+                    } else if (output) {
+                        utils.pasteHtmlAtCursor(output);
+                    }
                 }
             }
 
             for (i = 0; i < componentPipeline.afterAny.length; i++) {
                 if (utils.isFunction(componentPipeline.afterAny[i])) {
-                    componentPipeline.afterAny[i](event);
+                    componentPipeline.afterAny[i](event, selected, formData);
                 }
             }
 
             if (utils.isFunction(componentPipeline[afterThis])) {
-                componentPipeline[afterThis](event);
+                componentPipeline[afterThis](event, selected, formData);
             }
         };
         
@@ -77,8 +100,193 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
         if (definition.after) {
             componentPipeline.registerPipelineEvent.registerAfterComponentHandler(definition.pipelineName, definition.after);
         }
+        
+        if (definition.form && !self.displayHandler) {
+            self.displayHandler = function () { return makeForm(self, definition.form); };
+        }
 
         return self;
+    };
+    
+    attachToBtn = function (component) {
+        utils.attachEvent({
+            primarySelector: document,
+            secondarySelector: '.' + component.cssClass,
+            eventType: 'click',
+            eventHandler: function (event) {
+                var btn = utils.getClosest(event.target, 'button'),
+                    target = utils.getNext(btn, '.gutentyp-toolbar-group'),
+                    btnCoords = utils.getCoordinates(event.target, target),
+                    style;
+
+                // set the coordinates
+                style = 'left: ' + btnCoords.moveLeft;
+                style += '; top: ' + btnCoords.moveTop;
+                utils.setStyle(target, style);
+
+                // show or hid this toolbar
+                utils.toggleClass(target, 'active');
+            }
+        });
+    };
+    
+    attachToForm = function (component, validate) {
+        utils.attachEvent({
+            primarySelector: document,
+            secondarySelector: '.' + component.cssClass + '-form .btn-success',
+            eventType: 'click',
+            eventHandler: function (event) {
+                var formData = utils.formToJson(event.target),
+                    target;
+                
+                if (utils.isFunction(validate)) {
+                    if (!validate(event, formData)) {
+                        return false;
+                    }
+                }
+                
+                target = utils.getClosest(event.target, '.gutentyp-toolbar-group');
+                // show or hide this toolbar
+                utils.toggleClass(target, 'active');
+                event.fromGutenForm = true;
+                component.execute(event, formData);
+            }
+        });
+    };
+    
+    attachToCancel = function (component) {
+        utils.attachEvent({
+            primarySelector: document,
+            secondarySelector: '.' + component.cssClass + '-form .btn-cancel',
+            eventType: 'click',
+            eventHandler: function (event) {
+                var target = utils.getClosest(event.target, '.gutentyp-toolbar-group'),
+                    alerts = utils.getClosestAdjacent(event.target, '.alert');
+                // show or hide this toolbar
+                utils.toggleClass(target, 'active');
+                utils.clearForm(target);
+                utils.addClass(alerts, 'hidden');
+            }
+        });
+    };
+    
+    makeForm = function (component, formMeta) {
+        var i = 0,
+            markup = '',
+            validators = { names: [] },
+            validation = {},
+            current;
+        
+        for (i; i < formMeta.length; i++) {
+            // do NOT combine uniqueId with the previous statement, it needs to be a new reference every time.
+            var uniqueId = utils.getRandomString();
+            markup += appendMarkup(formMeta[i], uniqueId);
+            appendValidators(validators, formMeta[i], uniqueId);
+        }
+        
+        if (validators.names.length > 0) {
+            validation.validate = makeValidateFunc(validators);
+        }
+        
+        return makeComponentForm(component, markup, validation);
+    };
+    
+    appendForm = function (markup, validators, formMeta, i) {
+        var uniqueId = utils.getRandomString();
+        markup += appendMarkup(formMeta[i], uniqueId);
+        appendValidators(validators, formMeta[i], uniqueId);
+        
+        return { markup: markup, validators: validators };
+    };
+    
+    appendMarkup = function (item, uniqueId) {
+        var markup = '',
+            attributes,
+            alertCss;
+        
+        if (!item || !item.elementType || !item.name) {
+            return '';
+        }
+        
+        if (item.validation && item.validation.message) {
+            // <div class="link-url alert hidden">Please enter a valid Url.</div>
+            alertCss = 'alert alert-warning hidden ' + uniqueId;
+            
+            if (item.validation.cssClass) {
+                alertCss += ' ' + item.validation.cssClass;
+            }
+            
+            markup += utils.makeElement('div', alertCss, undefined, item.validation.message, true);
+        }
+        
+        if (item.label) {
+            // <label>Url</label>
+            markup += utils.makeElement('label', undefined, undefined, item.label, true);
+        }
+        
+        // <input type="text" name="" />
+        attributes = utils.isArray(item.attributes) ? item.attributes : [];
+        attributes.push({ key: 'name', value: item.name });
+        
+        if (item.elementType === 'input') {
+            attributes.push({ key: 'type', value: item.inputType || 'text' });
+        }
+        
+        markup += utils.makeElement(item.elementType, item.cssClass || undefined, attributes, item.label, true);
+        markup += '<br />';
+
+        return markup;
+    };
+    
+    appendValidators = function (validators, item, uniqueId) {
+        if (item.name && item.validation && utils.isFunction(item.validation.validate)) {
+            validators.names.push(item.name);
+            validators[item.name] = {
+                messageId: uniqueId,
+                validate: item.validation.validate
+            };
+        }
+    };
+    
+    makeValidateFunc = function (validators) {
+        return function (event, formData) {
+            var i, validator, alert, isValid = true;
+
+            for (i = 0; i < validators.names.length; i++) {
+                validator = validators[validators.names[i]];
+                
+                if (!validator || !utils.isFunction(validator.validate) || !validator.messageId) {
+                    continue;
+                }
+                
+                if (!validator.validate(event, formData)) {
+                    isValid = false;
+                    alert = utils.getClosestAdjacent(event.target, '.' + validator.messageId);
+                    alert.removeClass('hidden');
+                }
+            }
+            
+            return isValid;
+        };
+    };
+    
+    makeComponentForm = function (component, formMarkup, validation) {
+        if (!events[component.pipelineName]) {
+            attachToBtn(component);
+            attachToForm(component, validation && validation.validate);
+            attachToCancel(component);
+            events[component.pipelineName] = true;
+        }
+        
+        return '<button type="button" class="' + component.cssClass + '">'
+                    + '<i class="' + config.cssClasses.toolbarBtnIcon + ' ' + component.icon + '"></i>'
+                    + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">' + component.title + '</span>'
+                + '</button>'
+                + '<div class="gutentyp-toolbar-group gutentyp-toolbar-arrow-over ' + component.cssClass + '-form"><form>'
+                    + formMarkup
+                    + '<button class="btn btn-success" type="button">Add</button>'
+                    + '<button class="btn btn-cancel" type="button">Cancel</button>'
+                + '</form></div>';
     };
 
     return {
@@ -95,6 +303,8 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
          * @param func (function): the callback / function that will be executed when this component is used
          */
         makeComponent: componentFactory,
+        
+        makeComponentForm: makeComponentForm,
 
         /*
         * Adds a component (the result of makeComponent) to the components collection

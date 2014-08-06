@@ -1,6 +1,6 @@
 /*global hilary*/
 
-hilary.register('gutentyp::components::blocks', { init: function (components) {
+hilary.register('gutentyp::components::blocks', { init: function (components, config) {
     "use strict";
     
     var code, pre, quote;
@@ -9,7 +9,7 @@ hilary.register('gutentyp::components::blocks', { init: function (components) {
         title: 'Code Block',
         cssClass: 'gutentyp-code-block',
         pipelineName: 'code::block',
-        icon: 'fa fa-file-code-o',
+        icon: config.icons.pre,
         textClass: 'sr-only',
         func: function (event, text) {
             return '<pre class="prettyprint linenums">' + text + '</pre>';
@@ -20,7 +20,7 @@ hilary.register('gutentyp::components::blocks', { init: function (components) {
         title: 'Code',
         cssClass: 'gutentyp-code',
         pipelineName: 'code',
-        icon: 'fa fa-code',
+        icon: config.icons.code,
         textClass: 'sr-only',
         func: function (event, text) {
             return '<code>' + text + '</code>';
@@ -31,7 +31,7 @@ hilary.register('gutentyp::components::blocks', { init: function (components) {
         title: 'Quote',
         cssClass: 'gutentyp-quote',
         pipelineName: 'quote',
-        icon: 'fa fa-quote-left',
+        icon: config.icons.blockquote,
         textClass: 'sr-only',
         func: function (event, text) {
             return '<blockquote>' + text + '</blockquote>';

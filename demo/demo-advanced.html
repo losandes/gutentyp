@@ -16,42 +16,39 @@
         <br />
 
         <textarea class="gutentyp-ify" id="test">
-            <h2>Why Gutentyp?</h2>
-            <br />
-            <p>
+            <h2 data-brackets-id="149">Why Gutentyp?</h2>
+            <br data-brackets-id="150">
+            <div data-brackets-id="151">
                 We wanted a highly extensible, modular rich text editor that just works. There are a lot 
                 of great rich text editors out there, but each one presented a drawback to us, that led us 
                 to design our own.
-            </p>
-            <p>
+            </div>
+            <div data-brackets-id="152">
                 The result is a simple library that is easy to extend and customize. It supports multi-instance, 
                 not only so you can have multiple rich text editors on the same page, but unique configurations 
                 for them, if you desire.
-            </p>
+            </div>
             
-            <h2>Getting Started</h2>
-            <p>The super-simple path is to start with a <code>textarea</code></p>
+            <h2 data-brackets-id="153">Getting Started</h2>
+            <div data-brackets-id="154">The super-simple path is to start with a <code data-brackets-id="155">textarea</code></div>
             
-<pre>
-&lt; textarea id=&quot;id-isnt-required&quot; class=&quot;gutentyp-ify&quot;&gt;
+<pre data-brackets-id="156">&lt; textarea id="id-isnt-required" class="gutentyp-ify"&gt;
 &lt; /textarea&gt;
 </pre>
-            <br />
-            <p>and then wire it up with JavaScript</p>
+            <br data-brackets-id="157">
+            <div data-brackets-id="158">and then wire it up with JavaScript</div>
             
-<pre>
-var gutenInstance = gutentyp();
+<pre data-brackets-id="159">var gutenInstance = gutentyp();
 gutenInstance.init();
 </pre>
             
-            <br />
-            <p>
+            <br data-brackets-id="160">
+            <div data-brackets-id="161">
                 You can call init as much as you like, and you'll need to after DOM Mutations. If you're using 
                 jQuery for your ajax, you can initialize Gutentyp like this
-            </p>
+            </div>
             
-<pre>
-var gutenInstance = gutentyp();
+<pre data-brackets-id="162">var gutenInstance = gutentyp();
 
 ...
 
@@ -60,19 +57,18 @@ $(document).ajaxComplete(function () {
 });
 </pre>
             
-            <h2>Gutentyp is Modular and Highly Extensible</h2>
-            <br />
+            <h2 data-brackets-id="163">Gutentyp is Modular and Highly Extensible</h2>
+            <br data-brackets-id="164">
             
-            <p>
+            <div data-brackets-id="165">
                 Gutentyp is built so you can extend it easily, and replace modules with custom modules, if you like. 
                 Modules include the core components that make up Gutentyp, as well as the components that are 
                 available in the toolbar.
-            </p>
-            <p>
+            </div>
+            <div data-brackets-id="166">
                 To add components, you register them on the instance prior to initialization.
-            </p>
-<pre>
-var gutenInstance = gutentyp();
+            </div>
+<pre data-brackets-id="167">var gutenInstance = gutentyp();
 
 gutenInstance.registerComponent({
     title: 'Custom Foreground color',                   // The text that will be displayed or read by a screen reader
@@ -99,7 +95,40 @@ gutenInstance.registerComponent({
 gutenInstance.init();                                   // Once init is called, the toolbar will not change
 </pre>            
 
+            <br data-brackets-id="168">
+            <h3 data-brackets-id="169">Configuring Gutentyp</h3><div>Like registering components, configuration can be modified before you call the <code>init</code> function. Here's an example:</div><div><pre data-brackets-id="167">var gutenInstance = gutentyp();
+
+gutenInstance.config.icons = { 
+    code: 'fa fa-code',
+    pre: 'fa fa-file-code-o',
+    blockquote: 'fa fa-quote-left',
+    bold: 'fa fa-bold',
+    italic: 'fa fa-italic',
+    underline: 'fa fa-underline',
+    strikethrough: 'fa fa-strikethrough',
+    header: 'fa fa-header',
+    image: 'fa fa-image',
+    alignLeft: 'fa fa-align-left',
+    alignCenter: 'fa fa-align-center',
+    alignRight: 'fa fa-align-right',
+    alignJustify: 'fa fa-align-justify',
+    indent: 'fa fa-indent',
+    outdent: 'fa fa-outdent',
+    link: 'fa fa-link',
+    unorderedList: 'fa fa-list-ul',
+    orderedList: 'fa fa-list-ol'
+};
+
+gutenInstance.init();
+</pre></div>
+            
+            <h3 data-brackets-id="169">Registering and Overriding Modules</h3>
+            <div data-brackets-id="170">There are six core modules that are composed by a seventh module, any of which can be replaced easily.</div>        
+
         </textarea>
+        
+        
+        
         <br />
         <br />
         <h2>A second instance with the same configuration</h2>

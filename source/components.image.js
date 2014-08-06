@@ -9,7 +9,7 @@ hilary.register('gutentyp::components::image', { init: function (components, con
         title: 'Add Image',
         cssClass: 'gutentyp-image',
         pipelineName: 'image',
-        icon: 'fa fa-image',
+        icon: config.icons.image,
         textClass: 'sr-only',
         func: function (event, input) {
             var target = event.target, //utils.getClosest(event.target, 'button'),

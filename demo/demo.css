@@ -20,7 +20,7 @@ pre {
 
 
 .gutentyp-editor {
-    padding: 3px;
+    padding: 10px;
     border: 1px solid #C8C8C8;
     border-radius-bottom-left: 1px;
     border-radius-bottom-right: 1px;
@@ -28,6 +28,9 @@ pre {
 }
 .gutentyp-editor:focus {}
 
+.gutentyp-editor div {
+    margin-bottom: 10px;
+}
 
 .gutentyp-toolbar {
     border-radius: 5px;
@@ -48,6 +51,15 @@ pre {
 */
 }
 
+.gutentyp-toolbar:before,
+.gutentyp-toolbar:after {
+    content: " ";
+    display: table;
+}
+.gutentyp-toolbar:after {
+    clear: both;
+}
+
 .gutentyp-toolbar button {
     display: block;
     margin: 0;
@@ -60,13 +72,29 @@ pre {
     float: left;
 }
 
-.gutentyp-toolbar:before,
-.gutentyp-toolbar:after {
-    content: " ";
-    display: table;
+.gutentyp-toolbar form {
+    margin: 10px;
 }
-.gutentyp-toolbar:after {
-    clear: both;
+
+.gutentyp-toolbar form label {
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.gutentyp-toolbar form input {
+    margin-bottom: 10px;
+    width: 300px;
+}
+
+.gutentyp-toolbar form button {
+    float: right;
+    margin-bottom: 10px;
+}
+
+.gutentyp-toolbar form .btn-cancel {
+    float: right;
+    margin-bottom: 10px;
+    margin-right: 10px;
 }
 
 .hidden {
@@ -156,6 +184,13 @@ pre {
     line-height: 1.33;
     text-decoration: none;
     box-sizing: border-box;
+}
+
+.gutentyp-toolbar-group form label {
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
 }
 
 .gutentyp-toolbar-group.active {
