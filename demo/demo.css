@@ -248,9 +248,14 @@ pre {
 }
 
 .gutentyp-toolbar button {
+/*
     border-top: 1px solid #eee;
     border-right: 1px solid #eee;
     border-left: 1px solid #eee;
+*/
+    border: none;
+    box-shadow: 0 0 0 rgba(0,0,0,0.3);
+    
     background-color: #fff;
     color: #242424;
     background: linear-gradient(bottom, #fff, rgba(#fff, 0.89));
