@@ -227,9 +227,18 @@ gutenInstance.init();
             components.addComponent(custom);
         }});
         
-        rts.registerComponent('new::component');
+//                tryResolveComponent('gutentyp::components::emphasis');
+//                tryResolveComponent('gutentyp::components::colors');
+//                tryResolveComponent('gutentyp::components::headings');
+//                tryResolveComponent('gutentyp::components::justification');
+//                tryResolveComponent('gutentyp::components::lists');
+//                tryResolveComponent('gutentyp::components::blocks');
+//                tryResolveComponent('gutentyp::components::link');
+//                tryResolveComponent('gutentyp::components::image');        
 
-        rts.init();
+
+        //rts.init({ autoRegisterComponents: false, components: ['gutentyp::components::emphasis', 'new::component']});
+        rts.init({ autoRegisterComponents: true, components: ['new::component']});
 
     </script>
 
