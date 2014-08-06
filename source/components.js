@@ -7,7 +7,6 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
     var components = [],
         componentFactory,
         makeForm,
-        appendForm,
         appendMarkup,
         appendValidators,
         makeValidateFunc,
@@ -178,17 +177,18 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
     };
     
     makeForm = function (component, formMeta) {
-        var i = 0,
+        var fields = formMeta.fields,
+            i = 0,
             markup = '',
             validators = { names: [] },
             validation = {},
             current;
         
-        for (i; i < formMeta.length; i++) {
+        for (i; i < fields.length; i++) {
             // do NOT combine uniqueId with the previous statement, it needs to be a new reference every time.
             var uniqueId = utils.getRandomString();
-            markup += appendMarkup(formMeta[i], uniqueId);
-            appendValidators(validators, formMeta[i], uniqueId);
+            markup += appendMarkup(fields[i], uniqueId);
+            appendValidators(validators, fields[i], uniqueId);
         }
         
         if (validators.names.length > 0) {
@@ -198,59 +198,51 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
         return makeComponentForm(component, markup, validation);
     };
     
-    appendForm = function (markup, validators, formMeta, i) {
-        var uniqueId = utils.getRandomString();
-        markup += appendMarkup(formMeta[i], uniqueId);
-        appendValidators(validators, formMeta[i], uniqueId);
-        
-        return { markup: markup, validators: validators };
-    };
-    
-    appendMarkup = function (item, uniqueId) {
+    appendMarkup = function (field, uniqueId) {
         var markup = '',
             attributes,
             alertCss;
         
-        if (!item || !item.elementType || !item.name) {
+        if (!field || !field.elementType || !field.name) {
             return '';
         }
         
-        if (item.validation && item.validation.message) {
+        if (field.validation && field.validation.message) {
             // <div class="link-url alert hidden">Please enter a valid Url.</div>
             alertCss = 'alert alert-warning hidden ' + uniqueId;
             
-            if (item.validation.cssClass) {
-                alertCss += ' ' + item.validation.cssClass;
+            if (field.validation.cssClass) {
+                alertCss += ' ' + field.validation.cssClass;
             }
             
-            markup += utils.makeElement('div', alertCss, undefined, item.validation.message, true);
+            markup += utils.makeElement('div', alertCss, undefined, field.validation.message, true);
         }
         
-        if (item.label) {
+        if (field.label) {
             // <label>Url</label>
-            markup += utils.makeElement('label', undefined, undefined, item.label, true);
+            markup += utils.makeElement('label', undefined, undefined, field.label, true);
         }
         
         // <input type="text" name="" />
-        attributes = utils.isArray(item.attributes) ? item.attributes : [];
-        attributes.push({ key: 'name', value: item.name });
+        attributes = utils.isArray(field.attributes) ? field.attributes : [];
+        attributes.push({ key: 'name', value: field.name });
         
-        if (item.elementType === 'input') {
-            attributes.push({ key: 'type', value: item.inputType || 'text' });
+        if (field.elementType === 'input') {
+            attributes.push({ key: 'type', value: field.inputType || 'text' });
         }
         
-        markup += utils.makeElement(item.elementType, item.cssClass || undefined, attributes, item.label, true);
+        markup += utils.makeElement(field.elementType, field.cssClass || undefined, attributes, field.label, true);
         markup += '<br />';
 
         return markup;
     };
     
-    appendValidators = function (validators, item, uniqueId) {
-        if (item.name && item.validation && utils.isFunction(item.validation.validate)) {
-            validators.names.push(item.name);
-            validators[item.name] = {
+    appendValidators = function (validators, field, uniqueId) {
+        if (field.name && field.validation && utils.isFunction(field.validation.validate)) {
+            validators.names.push(field.name);
+            validators[field.name] = {
                 messageId: uniqueId,
-                validate: item.validation.validate
+                validate: field.validation.validate
             };
         }
     };

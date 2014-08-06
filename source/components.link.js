@@ -19,25 +19,27 @@ hilary.register('gutentyp::components::link', { init: function (components, conf
             var text = selectedText && selectedText.length > 0 ? selectedText : formData.href;
             return '<a href="' + formData.href + '" target="_blank">' + text + '</a>';
         },
-        form: [{
-            name: 'href',
-            label: 'Url',
-            elementType: 'input',
-            type: 'text',
-//            attributes: [{ key: 'data-test', value: 'test' }],
-//            cssClass: 'test',
-            validation: {
-                message: 'Please enter a valid Url.',
-                cssClass: 'link-url',
-                validate: function (event, formData) {
-                    if (!formData || !formData.href || formData.href.indexOf('://') < 0) {
-                        return false;
-                    }
+        form: {
+            fields: [{
+                name: 'href',
+                label: 'Url',
+                elementType: 'input',
+                type: 'text',
+    //            attributes: [{ key: 'data-test', value: 'test' }],
+    //            cssClass: 'test',
+                validation: {
+                    message: 'Please enter a valid Url.',
+                    cssClass: 'link-url',
+                    validate: function (event, formData) {
+                        if (!formData || !formData.href || formData.href.indexOf('://') < 0) {
+                            return false;
+                        }
 
-                    return true;
+                        return true;
+                    }
                 }
-            }
-        }],
+            }]
+        },
         after: function (event) {
             utils.clearForm(event.target);
         }

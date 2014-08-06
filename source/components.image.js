@@ -29,75 +29,77 @@ hilary.register('gutentyp::components::image', { init: function (components, con
             
             return img;
         },
-        form: [
-            {
-                name: 'src',
-                label: 'Url',
-                elementType: 'input',
-                type: 'text',
-                validation: {
-                    message: 'Please enter a valid Url.',
-                    cssClass: 'link-src',
-                    validate: function (event, formData) {
-                        if (!formData || !formData.src || formData.src.indexOf('://') < 0) {
-                            return false;
-                        }
+        form: {
+            fields: [
+                {
+                    name: 'src',
+                    label: 'Url',
+                    elementType: 'input',
+                    type: 'text',
+                    validation: {
+                        message: 'Please enter a valid Url.',
+                        cssClass: 'link-src',
+                        validate: function (event, formData) {
+                            if (!formData || !formData.src || formData.src.indexOf('://') < 0) {
+                                return false;
+                            }
 
-                        return true;
-                    }
-                }
-            },
-            {
-                name: 'alt',
-                label: 'Description',
-                elementType: 'input',
-                type: 'text',
-                validation: {
-                    message: 'Please enter a description. It\'s used by screen readers for accessibility.',
-                    cssClass: 'link-alt',
-                    validate: function (event, formData) {
-                        if (!formData || !formData.alt) {
-                            return false;
+                            return true;
                         }
-
-                        return true;
                     }
-                }
-            },
-            {
-                name: 'width',
-                label: 'Width',
-                elementType: 'input',
-                type: 'text',
-                validation: {
-                    message: 'Width is not required, but it has to be a number',
-                    cssClass: 'link-width',
-                    validate: function (event, formData) {
-                        if (formData && formData.width && isNaN(formData.width)) {
-                            return false;
+                },
+                {
+                    name: 'alt',
+                    label: 'Description',
+                    elementType: 'input',
+                    type: 'text',
+                    validation: {
+                        message: 'Please enter a description. It\'s used by screen readers for accessibility.',
+                        cssClass: 'link-alt',
+                        validate: function (event, formData) {
+                            if (!formData || !formData.alt) {
+                                return false;
+                            }
+
+                            return true;
                         }
-
-                        return true;
                     }
-                }
-            },
-            {
-                name: 'height',
-                label: 'Height',
-                elementType: 'input',
-                type: 'text',
-                validation: {
-                    message: 'Height is not required, but it has to be a number',
-                    cssClass: 'link-height',
-                    validate: function (event, formData) {
-                        if (formData && formData.height && isNaN(formData.height)) {
-                            return false;
+                },
+                {
+                    name: 'width',
+                    label: 'Width',
+                    elementType: 'input',
+                    type: 'text',
+                    validation: {
+                        message: 'Width is not required, but it has to be a number',
+                        cssClass: 'link-width',
+                        validate: function (event, formData) {
+                            if (formData && formData.width && isNaN(formData.width)) {
+                                return false;
+                            }
+
+                            return true;
                         }
-
-                        return true;
                     }
-                }
-            }],
+                },
+                {
+                    name: 'height',
+                    label: 'Height',
+                    elementType: 'input',
+                    type: 'text',
+                    validation: {
+                        message: 'Height is not required, but it has to be a number',
+                        cssClass: 'link-height',
+                        validate: function (event, formData) {
+                            if (formData && formData.height && isNaN(formData.height)) {
+                                return false;
+                            }
+
+                            return true;
+                        }
+                    }
+                }]
+        },
         after: function (event) {
             utils.clearForm(event.target);
         }
