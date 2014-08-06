@@ -11,12 +11,12 @@ hilary.register('gutentyp::components::link', { init: function (components, conf
         pipelineName: 'link',
         icon: config.icons.link,
         textClass: 'sr-only',
-        func: function (event, input, formData) {
+        func: function (event, selectedText, formData) {
             if (!formData || !formData.href) {
                 throw 'No form data is present, so we can\'t write an anchor element.';
             }
             
-            var text = input && input.length > 0 ? input : formData.href;
+            var text = selectedText && selectedText.length > 0 ? selectedText : formData.href;
             return '<a href="' + formData.href + '" target="_blank">' + text + '</a>';
         },
         form: [{

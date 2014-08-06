@@ -11,7 +11,7 @@ hilary.register('gutentyp::components::image', { init: function (components, con
         pipelineName: 'image',
         icon: config.icons.image,
         textClass: 'sr-only',
-        func: function (event, input, formData) {
+        func: function (event, selectedText, formData) {
             if (!formData) {
                 throw 'No form data is present, so we can\'t write an anchor element.';
             }
