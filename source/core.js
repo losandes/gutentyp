@@ -14,9 +14,9 @@ hilary.register('gutentyp::core', {
             // Add an event that updates the textarea on each focusout
             utils.attachEvent({
                 primarySelector: config.selectors.eventlessEditors,
-                eventType: 'focusout',
+                eventType: 'blur',
                 eventHandler: function (event) {
-                    utils.updateTextarea(event.currentTarget);
+                    utils.updateTextarea(event.target);
                 }
             });
             
