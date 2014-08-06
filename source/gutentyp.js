@@ -85,8 +85,13 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
         * time activate is called.
         */
         self.registerComponent = function (component) {
-            var newComp = components.makeComponent(component);
-            components.addComponent(newComp);
+            if (typeof component === 'string') {
+                tryResolveComponent(component);
+            } else {
+                var newComp = components.makeComponent(component);
+                components.addComponent(newComp);
+            }
+            
             return self;
         };
 
