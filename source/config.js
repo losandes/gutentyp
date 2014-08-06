@@ -12,6 +12,13 @@ hilary.register('gutentyp::config', { init: function () {
         }
     };
     
+    config.attributes = {
+        formBtn: {
+            key: 'data-form-btn',
+            value: 'true'
+        }
+    };
+    
     config.colors = [];
     config.colors.push({ title: 'Black', name: 'black', value: '#000000' });
     config.colors.push({ title: 'Grey', name: 'grey', value: '#62615f' });

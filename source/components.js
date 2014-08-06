@@ -16,7 +16,8 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
         attachToForm,
         attachToCancel,
         addComponent,
-        events = {};
+        events = {},
+        selectionCoordinates;
 
     addComponent = function (component) {
         if (component instanceof Array) {
@@ -37,6 +38,7 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
 
         self.title = definition.title;
         self.cssClass = definition.cssClass || definition.pipelineName;
+        self.pipelineName = definition.pipelineName;
         self.icon = definition.icon || undefined;
         self.textClass = definition.textClass + ' ' + config.cssClasses.toolbarBtnText || config.cssClasses.toolbarBtnText;
         self.displayHandler = definition.displayHandler;
@@ -46,10 +48,19 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
                 beforeThis = config.prefixes.pipeline.beforeComponent + definition.pipelineName,
                 afterThis = config.prefixes.pipeline.afterComponent + definition.pipelineName,
                 selected = utils.getSelectedText(),
-                output;
-
-            event.gutenSelection = utils.getCursorCoordinates();
-            event.gutenSelection.text = selected;
+                output,
+                gutenArea;
+            
+            // if the event is a form button click, capture the selected text (if any) and 
+            // do not continue
+            if (utils.getAttribute(utils.getClosest(event.target, 'button'), config.attributes.formBtn.key)) {
+                selectionCoordinates = utils.getCursorCoordinates();
+                selectionCoordinates.text = selected;
+                selectionCoordinates.isInEditor = utils.selectionIsInEditor(selectionCoordinates);
+                event.gutenSelection = selectionCoordinates;
+                
+                return;
+            }
             
             for (i = 0; i < componentPipeline.beforeAny.length; i++) {
                 if (utils.isFunction(componentPipeline.beforeAny[i])) {
@@ -62,23 +73,15 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
             }
 
             if (utils.isFunction(definition.func)) {
-                output = definition.func(event, selected, formData);
+                output = definition.func(event, selected || selectionCoordinates.text, formData);
                 
-                if (utils.isObject(output)) {
-                    if (selected && selected.length > 0 && output) {
-                        utils.replaceSelectedText(output.markup);
-                    } else if (output.selectionCoordinates) {
-                        utils.pasteHtml(output.selectionCoordinates, output.markup);
-                    } else {
-                        // we lost the cursor, append the text area
-                        utils.insertHtml(output.gutenArea, output.markup);
-                    }
-                } else {
-                    if (selected && selected.length > 0 && output) {
-                        utils.replaceSelectedText(output);
-                    } else if (output) {
-                        utils.pasteHtmlAtCursor(output);
-                    }
+                // replace the selected text
+                if (selected && selected.length > 0 && output) {
+                    utils.replaceSelectedText(output);
+                } else if (selectionCoordinates && selectionCoordinates.isInEditor) {
+                    utils.pasteHtml(selectionCoordinates, output);
+                } else if (output) {
+                    utils.pasteHtmlAtCursor(output, false, event);
                 }
             }
 
@@ -104,6 +107,10 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
         if (definition.form && !self.displayHandler) {
             self.displayHandler = function () { return makeForm(self, definition.form); };
         }
+        
+        // we're done using these coordinates, get rid of them, so they aren't accidentally used 
+        // by following actions
+        selectionCoordinates = undefined;
 
         return self;
     };
@@ -278,7 +285,7 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
             events[component.pipelineName] = true;
         }
         
-        return '<button type="button" class="' + component.cssClass + '">'
+        return '<button type="button" class="' + component.cssClass + '" data-form-btn="true">'
                     + '<i class="' + config.cssClasses.toolbarBtnIcon + ' ' + component.icon + '"></i>'
                     + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">' + component.title + '</span>'
                 + '</button>'
