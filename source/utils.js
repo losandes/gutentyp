@@ -26,6 +26,7 @@ hilary.register('gutentyp::utils', {
             updateTextarea,
             isFunction,
             isObject,
+            isArray,
             getSelectedText,
             replaceSelectedText,
             pasteHtmlAtCursor,
@@ -34,7 +35,9 @@ hilary.register('gutentyp::utils', {
             getCursorCoordinates,
             getRandomString,
             getCoordinates,
-            setStyle;
+            setStyle,
+            closestForm,
+            formToJson;
 
         initializeRichTextAreas = function () {
             var allAreas = [];
@@ -65,7 +68,7 @@ hilary.register('gutentyp::utils', {
             return allAreas;
         };
 
-        makeElement = function (newElementType, domClass, attrPairs) {
+        makeElement = function (newElementType, domClass, attrPairs, innerHtml, returnAsString) {
             var newElement = $('<' + (newElementType || 'div') + ' />'),
                 i;
 
@@ -80,7 +83,15 @@ hilary.register('gutentyp::utils', {
                     newElement.attr(attrPairs[i].key, attrPairs[i].value);
                 }
             }
-
+            
+            if (typeof innerHtml !== 'undefined') {
+                newElement.html(innerHtml);
+            }
+            
+            if (returnAsString) {
+                return newElement.prop('outerHTML');
+            }
+            
             return newElement;
         };
 
@@ -146,8 +157,11 @@ hilary.register('gutentyp::utils', {
         };
         
         clearForm = function (formSelector) {
-            $(formSelector).find('input').val('');
-            $(formSelector).find('textarea').html('');
+            var form = closestForm(formSelector);
+            form.find('input').val('');
+            form.find('textarea').html('');
+            
+            form.find('.alert').addClass('hidden');
         };
         
         getClosest = function (currentNode, targetSelector) {
@@ -196,6 +210,10 @@ hilary.register('gutentyp::utils', {
         
         isObject = function (obj) {
             return $.isPlainObject(obj);
+        };
+        
+        isArray = function (obj) {
+            return $.isArray(obj);
         };
         
         getSelectedText = function () {
@@ -261,7 +279,7 @@ hilary.register('gutentyp::utils', {
         pasteHtml = function (sel, html, selectPastedContent) {
             var range, el, frag, node, lastNode, firstNode, originalRange;
             
-            if(!sel) {
+            if (!sel) {
                 return false;
             }
             
@@ -328,7 +346,7 @@ hilary.register('gutentyp::utils', {
         
         selectRange = function (selectioData) {
             var selected, range = document.createRange();
-            range.setStart(selectioData.baseNode || selectioData.anchorNode,selectioData.baseOffset || selectioData.anchorOffset);
+            range.setStart(selectioData.baseNode || selectioData.anchorNode, selectioData.baseOffset || selectioData.anchorOffset);
             range.setEnd(selectioData.extentNode || selectioData.focusNode, selectioData.extentOffset || selectioData.focusOffset);
             selected = window.getSelection();
             selected.removeAllRanges();
@@ -363,8 +381,50 @@ hilary.register('gutentyp::utils', {
         setStyle = function (selector, style) {
             return $(selector).attr('style', style);
         };
+        
+        closestForm = function (selector) {
+            return $(selector).is('form') ? $(selector) : $(selector).closest('form');
+        };
+        
+        // @param selector: usually the submit button (i.e. event.target)
+        formToJson = function (selector) {
+            var form = closestForm(selector),
+                data = {},
+                arr;
+            
+            if (form.length === 0) {
+                return;
+            }
+            
+            arr = form.serializeArray();
+            
+            // convert array to JSON
+            $.each(arr, function () {
+                if (data[this.name] !== undefined) {
+                    if (!data[this.name].push) {
+                        data[this.name] = [data[this.name]];
+                    }
+                    data[this.name].push(this.value || '');
+                } else {
+                    data[this.name] = this.value || '';
+                }
+            });
+            
+            // add disabled inputs
+            form.find(':input[disabled="disabled"]').each(function (index) {
+                var ele = $(this),
+                    name = ele.attr('name');
+                
+                if (name) {
+                    data[name] = ele.val();
+                }
+            });
+            
+            return data;
+        };
 
         return {
+            makeElement: makeElement,
             initializeRichTextAreas: initializeRichTextAreas,
             insertNewElementBefore: insertNewElementBefore,
             insertNewElementInto: insertNewElementInto,
@@ -384,6 +444,7 @@ hilary.register('gutentyp::utils', {
             updateTextarea: updateTextarea,
             isFunction: isFunction,
             isObject: isObject,
+            isArray: isArray,
             getSelectedText: getSelectedText,
             replaceSelectedText: replaceSelectedText,
             pasteHtmlAtCursor: pasteHtmlAtCursor,
@@ -399,7 +460,8 @@ hilary.register('gutentyp::utils', {
             *       element near another one, then you can pass in a selector for the element that you intend to move
             */
             getCoordinates: getCoordinates,
-            setStyle: setStyle
+            setStyle: setStyle,
+            formToJson: formToJson
         };
     }
 });
