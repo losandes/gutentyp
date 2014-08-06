@@ -191,23 +191,54 @@ gutenInstance.init();
         // register a custom component to be added to the toolbar and then initialize all textareas
         // that match the config
 
-        rts.registerComponent({
-            title: 'Custom Foreground color',
-            cssClass: 'gutentyp-fg-color',
-            pipelineName: 'foregroundColor2',
-            func: function (event, text) {
-                document.execCommand('forecolor', false, '#FF0000');
-                return false;
-            },
-            before: function (event) {
-                console.log('before', event);
-            },
-            after: function (event) {
-                console.log('after', event);
-            }
-        });
+//        rts.registerComponent({
+//            title: 'Custom Foreground color',
+//            cssClass: 'gutentyp-fg-color',
+//            pipelineName: 'foregroundColor2',
+//            func: function (event, text) {
+//                document.execCommand('forecolor', false, '#FF0000');
+//                return false;
+//            },
+//            before: function (event) {
+//                console.log('before', event);
+//            },
+//            after: function (event) {
+//                console.log('after', event);
+//            }
+//        });
+        
+        hilary.register('new::component', { init: function (components, config, utils) {
+            var custom = components.makeComponent({
+                title: 'Custom Foreground color',
+                cssClass: 'gutentyp-fg-color',
+                pipelineName: 'foregroundColor2',
+                func: function (event, text) {
+                    document.execCommand('forecolor', false, '#FF0000');
+                    return false;
+                },
+                before: function (event) {
+                    console.log('before', event);
+                },
+                after: function (event) {
+                    console.log('after', event);
+                }
+            });
+            
+            components.addComponent(custom);
+        }});
+        
+//                tryResolveComponent('gutentyp::components::emphasis');
+//                tryResolveComponent('gutentyp::components::colors');
+//                tryResolveComponent('gutentyp::components::headings');
+//                tryResolveComponent('gutentyp::components::justification');
+//                tryResolveComponent('gutentyp::components::lists');
+//                tryResolveComponent('gutentyp::components::blocks');
+//                tryResolveComponent('gutentyp::components::link');
+//                tryResolveComponent('gutentyp::components::image');        
 
-        rts.init();
+
+        //rts.init({ autoRegisterComponents: false, components: ['gutentyp::components::emphasis', 'new::component']});
+        rts.init({ autoRegisterComponents: true, components: ['new::component']});
 
     </script>
 

@@ -47,16 +47,6 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
             // Initalize the component that controls the editing functions that are provided to the rich text area
             components = gutenContainer.resolve('gutentyp::components')
                 .init(config, utils, pipeline);
-
-            // resolve components
-            tryResolveComponent('gutentyp::components::emphasis');
-            tryResolveComponent('gutentyp::components::colors');
-            tryResolveComponent('gutentyp::components::headings');
-            tryResolveComponent('gutentyp::components::justification');
-            tryResolveComponent('gutentyp::components::lists');
-            tryResolveComponent('gutentyp::components::blocks');
-            tryResolveComponent('gutentyp::components::link');
-            tryResolveComponent('gutentyp::components::image');
         };
 
         // DEFAULT PREPARATION
@@ -65,7 +55,32 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
         /*
         * initializes gutentyp
         */
-        self.init = function () {
+        self.init = function (options) {
+            var i;
+            options = options || {};
+            
+            if (options.autoRegisterComponents === undefined) {
+                options.autoRegisterComponents = true;
+            }
+            
+            if (options.autoRegisterComponents) {
+                // resolve components
+                tryResolveComponent('gutentyp::components::emphasis');
+                tryResolveComponent('gutentyp::components::colors');
+                tryResolveComponent('gutentyp::components::headings');
+                tryResolveComponent('gutentyp::components::justification');
+                tryResolveComponent('gutentyp::components::lists');
+                tryResolveComponent('gutentyp::components::blocks');
+                tryResolveComponent('gutentyp::components::link');
+                tryResolveComponent('gutentyp::components::image');
+            }
+            
+            if (options.components) {
+                for (i = 0; i < options.components.length; i++) {
+                    self.registerComponent(options.components[i]);
+                }
+            }
+            
             // Build the toolbar and append it to the rich text area
             toolbar = gutenContainer.resolve('gutentyp::toolbar')
                 .init(config, utils, components);
@@ -85,8 +100,13 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
         * time activate is called.
         */
         self.registerComponent = function (component) {
-            var newComp = components.makeComponent(component);
-            components.addComponent(newComp);
+            if (typeof component === 'string') {
+                tryResolveComponent(component);
+            } else {
+                var newComp = components.makeComponent(component);
+                components.addComponent(newComp);
+            }
+            
             return self;
         };
 
