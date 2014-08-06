@@ -1,7 +1,8 @@
 // Input 0
 hilary.register("gutentyp::config", {init:function() {
-  var config = {}, autoCreateSelectors;
+  var config = {};
   config.prefixes = {pipeline:{beforeComponent:"gutentyp::before::", afterComponent:"gutentyp::after::"}};
+  config.attributes = {formBtn:{key:"data-form-btn", value:"true"}};
   config.colors = [];
   config.colors.push({title:"Black", name:"black", value:"#000000"});
   config.colors.push({title:"Grey", name:"grey", value:"#62615f"});
@@ -14,7 +15,7 @@ hilary.register("gutentyp::config", {init:function() {
   config.colors.push({title:"Purple", name:"purple", value:"#a952cd"});
   config.icons = {code:"fa fa-code", pre:"fa fa-file-code-o", blockquote:"fa fa-quote-left", bold:"fa fa-bold", italic:"fa fa-italic", underline:"fa fa-underline", strikethrough:"fa fa-strikethrough", header:"fa fa-header", image:"fa fa-image", alignLeft:"fa fa-align-left", alignCenter:"fa fa-align-center", alignRight:"fa fa-align-right", alignJustify:"fa fa-align-justify", indent:"fa fa-indent", outdent:"fa fa-outdent", link:"fa fa-link", unorderedList:"fa fa-list-ul", orderedList:"fa fa-list-ol"};
   config.cssClasses = {toGutentypify:"gutentyp-ify", gutentypified:"gutentyp-ified", hasEvents:"has-events", hasToolbar:"has-toolbar", hasComponents:"has-components", editor:"gutentyp-editor", textarea:"gutentyp-textarea", toolbar:"gutentyp-toolbar", toolbarBtn:"gutentyp-toolbar-btn", toolbarBtnText:"gutentyp-toolbar-btn-text", toolbarBtnIcon:"gutentyp-toolbar-btn-icon", hidden:"gutentyp-hidden"};
-  autoCreateSelectors = function() {
+  config.autoCreateSelectors = function() {
     var i;
     config.selectors = {};
     for (i in config.cssClasses) {
@@ -26,12 +27,13 @@ hilary.register("gutentyp::config", {init:function() {
     config.selectors.eventlessEditors = config.selectors.editor + ":not(" + config.selectors.hasEvents + ")";
     config.selectors.newToolbars = config.selectors.toolbar + ":not(" + config.selectors.hasComponents + ")";
   };
-  autoCreateSelectors();
+  config.autoCreateSelectors();
   return config;
 }});
 // Input 1
 hilary.register("gutentyp::utils", {init:function($, config) {
-  var initializeRichTextAreas, makeElement, insertNewElementBefore, insertNewElementInto, setText, insertHtml, addClass, removeClass, toggleClass, addAttribute, getAttribute, getOrSetValue, clearForm, getClosest, getClosestAdjacent, getNext, getPrevious, attachEvent, updateTextarea, isFunction, isObject, isArray, getSelectedText, replaceSelectedText, pasteHtmlAtCursor, pasteHtml, selectRange, getCursorCoordinates, getRandomString, getCoordinates, setStyle, closestForm, formToJson;
+  var initializeRichTextAreas, makeElement, insertNewElementBefore, insertNewElementInto, setText, insertHtml, addClass, removeClass, toggleClass, addAttribute, getAttribute, getOrSetValue, clearForm, getClosest, getClosestAdjacent, getNext, getPrevious, attachEvent, updateTextarea, isFunction, isObject, isArray, getSelectedText, replaceSelectedText, pasteHtmlAtCursor, pasteHtml, selectRange, getSelectedParentNode, selectionIsInEditor, getCursorCoordinates, getRandomString, getCoordinates, setStyle, 
+  closestForm, formToJson;
   initializeRichTextAreas = function() {
     var allAreas = [];
     $(config.selectors.toGutentypify).each(function(index, element) {
@@ -195,8 +197,8 @@ hilary.register("gutentyp::utils", {init:function($, config) {
       }
     }
   };
-  pasteHtmlAtCursor = function(html, selectPastedContent) {
-    var sel;
+  pasteHtmlAtCursor = function(html, selectPastedContent, event) {
+    var sel, gutenArea;
     if (window.getSelection) {
       sel = window.getSelection();
     } else {
@@ -204,6 +206,10 @@ hilary.register("gutentyp::utils", {init:function($, config) {
       if (sel.type === "Control") {
         sel = undefined;
       }
+    }
+    if (event && $(getSelectedParentNode()).closest(config.selectors.editor).length === 0) {
+      gutenArea = getClosestAdjacent(getClosest(event.target, config.selectors.toolbar), config.selectors.editor).first();
+      insertHtml(gutenArea, html);
     }
     pasteHtml(sel);
   };
@@ -261,12 +267,38 @@ hilary.register("gutentyp::utils", {init:function($, config) {
     return false;
   };
   selectRange = function(selectioData) {
-    var selected, range = document.createRange();
-    range.setStart(selectioData.baseNode || selectioData.anchorNode, selectioData.baseOffset || selectioData.anchorOffset);
-    range.setEnd(selectioData.extentNode || selectioData.focusNode, selectioData.extentOffset || selectioData.focusOffset);
-    selected = window.getSelection();
-    selected.removeAllRanges();
-    selected.addRange(range);
+    try {
+      var selected, range = document.createRange();
+      range.setStart(selectioData.baseNode || selectioData.anchorNode, selectioData.baseOffset || selectioData.anchorOffset);
+      range.setEnd(selectioData.extentNode || selectioData.focusNode, selectioData.extentOffset || selectioData.focusOffset);
+      selected = window.getSelection();
+      selected.removeAllRanges();
+      selected.addRange(range);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  getSelectedParentNode = function(selection) {
+    var node, range;
+    if (selection && selection.anchorNode) {
+      node = selection.anchorNode;
+    }
+    if (!node && window.getSelection) {
+      selection = window.getSelection();
+      node = selection.anchorNode;
+    }
+    if (!node && document.selection) {
+      selection = document.selection;
+      range = selection.getRangeAt ? selection.getRangeAt(0) : selection.createRange();
+      node = range.commonAncestorContainer ? range.commonAncestorContainer : range.parentElement ? range.parentElement() : range.item(0);
+    }
+    if (node) {
+      return node.nodeName === "#text" ? node.parentNode : node;
+    }
+  };
+  selectionIsInEditor = function(selection) {
+    var editor = $(getSelectedParentNode(selection)).closest(config.selectors.editor);
+    return editor.length > 0;
   };
   getRandomString = function(length) {
     var text = "", possible = "abcdefghijklmnopqrstuvwxyz", i;
@@ -275,14 +307,15 @@ hilary.register("gutentyp::utils", {init:function($, config) {
     }
     return text;
   };
-  getCoordinates = function(selector, secondarySelector) {
-    var result = $(selector)[0].getBoundingClientRect();
-    result.offset = $(selector).offset();
+  getCoordinates = function(selector, secondarySelector, relativeTo) {
+    var element = $(selector), result = element.position();
+    result.width = element.width();
+    result.height = element.height();
     if (secondarySelector) {
       result.moveLeft = result.left + result.width / 2 - getCoordinates(secondarySelector).width / 2;
-      result.moveTop = result.offset.top + result.height + 6;
+      result.moveTop = result.top + result.height + 6;
       result.moveRight = result.right + result.width / 2 - getCoordinates(secondarySelector).width / 2;
-      result.moveBottom = result.offset.bottom + result.height + 6;
+      result.moveBottom = result.bottom + result.height + 6;
     }
     return result;
   };
@@ -317,7 +350,7 @@ hilary.register("gutentyp::utils", {init:function($, config) {
     return data;
   };
   return{makeElement:makeElement, initializeRichTextAreas:initializeRichTextAreas, insertNewElementBefore:insertNewElementBefore, insertNewElementInto:insertNewElementInto, setText:setText, insertHtml:insertHtml, addClass:addClass, removeClass:removeClass, toggleClass:toggleClass, getAttribute:getAttribute, getOrSetValue:getOrSetValue, clearForm:clearForm, getClosest:getClosest, getClosestAdjacent:getClosestAdjacent, getNext:getNext, getPrevious:getPrevious, attachEvent:attachEvent, updateTextarea:updateTextarea, 
-  isFunction:isFunction, isObject:isObject, isArray:isArray, getSelectedText:getSelectedText, replaceSelectedText:replaceSelectedText, pasteHtmlAtCursor:pasteHtmlAtCursor, pasteHtml:pasteHtml, selectRange:selectRange, getCursorCoordinates:getCursorCoordinates, getRandomString:getRandomString, getCoordinates:getCoordinates, setStyle:setStyle, formToJson:formToJson};
+  isFunction:isFunction, isObject:isObject, isArray:isArray, getSelectedText:getSelectedText, replaceSelectedText:replaceSelectedText, pasteHtmlAtCursor:pasteHtmlAtCursor, pasteHtml:pasteHtml, selectRange:selectRange, selectionIsInEditor:selectionIsInEditor, getCursorCoordinates:getCursorCoordinates, getRandomString:getRandomString, getCoordinates:getCoordinates, setStyle:setStyle, formToJson:formToJson};
 }});
 // Input 2
 hilary.register("gutentyp::pipeline", {init:function(config, utils) {
@@ -350,7 +383,7 @@ hilary.register("gutentyp::pipeline", {init:function(config, utils) {
 }});
 // Input 3
 hilary.register("gutentyp::components", {init:function(config, utils, componentPipeline) {
-  var components = [], componentFactory, makeForm, appendForm, appendMarkup, appendValidators, makeValidateFunc, makeComponentForm, attachToBtn, attachToForm, attachToCancel, addComponent, events = {};
+  var components = [], componentFactory, makeForm, appendMarkup, appendValidators, makeValidateFunc, makeComponentForm, attachToBtn, attachToForm, attachToCancel, addComponent, events = {}, selectionCoordinates;
   addComponent = function(component) {
     if (component instanceof Array) {
       var i;
@@ -367,14 +400,20 @@ hilary.register("gutentyp::components", {init:function(config, utils, componentP
     var self = {};
     self.title = definition.title;
     self.cssClass = definition.cssClass || definition.pipelineName;
+    self.pipelineName = definition.pipelineName;
     self.icon = definition.icon || undefined;
     self.textClass = definition.textClass + " " + config.cssClasses.toolbarBtnText || config.cssClasses.toolbarBtnText;
     self.displayHandler = definition.displayHandler;
     self.group = definition.group || undefined;
     self.execute = function(event, formData) {
-      var i, beforeThis = config.prefixes.pipeline.beforeComponent + definition.pipelineName, afterThis = config.prefixes.pipeline.afterComponent + definition.pipelineName, selected = utils.getSelectedText(), output;
-      event.gutenSelection = utils.getCursorCoordinates();
-      event.gutenSelection.text = selected;
+      var i, beforeThis = config.prefixes.pipeline.beforeComponent + definition.pipelineName, afterThis = config.prefixes.pipeline.afterComponent + definition.pipelineName, selected = utils.getSelectedText(), output, gutenArea;
+      if (utils.getAttribute(utils.getClosest(event.target, "button"), config.attributes.formBtn.key)) {
+        selectionCoordinates = utils.getCursorCoordinates();
+        selectionCoordinates.text = selected;
+        selectionCoordinates.isInEditor = utils.selectionIsInEditor(selectionCoordinates);
+        event.gutenSelection = selectionCoordinates;
+        return;
+      }
       for (i = 0;i < componentPipeline.beforeAny.length;i++) {
         if (utils.isFunction(componentPipeline.beforeAny[i])) {
           componentPipeline.beforeAny[i](event, selected, formData);
@@ -384,23 +423,15 @@ hilary.register("gutentyp::components", {init:function(config, utils, componentP
         componentPipeline[beforeThis](event, selected, formData);
       }
       if (utils.isFunction(definition.func)) {
-        output = definition.func(event, selected, formData);
-        if (utils.isObject(output)) {
-          if (selected && selected.length > 0 && output) {
-            utils.replaceSelectedText(output.markup);
-          } else {
-            if (output.selectionCoordinates) {
-              utils.pasteHtml(output.selectionCoordinates, output.markup);
-            } else {
-              utils.insertHtml(output.gutenArea, output.markup);
-            }
-          }
+        output = definition.func(event, selected || selectionCoordinates.text, formData);
+        if (selected && selected.length > 0 && output) {
+          utils.replaceSelectedText(output);
         } else {
-          if (selected && selected.length > 0 && output) {
-            utils.replaceSelectedText(output);
+          if (selectionCoordinates && selectionCoordinates.isInEditor) {
+            utils.pasteHtml(selectionCoordinates, output);
           } else {
             if (output) {
-              utils.pasteHtmlAtCursor(output);
+              utils.pasteHtmlAtCursor(output, false, event);
             }
           }
         }
@@ -425,13 +456,14 @@ hilary.register("gutentyp::components", {init:function(config, utils, componentP
         return makeForm(self, definition.form);
       };
     }
+    selectionCoordinates = undefined;
     return self;
   };
   attachToBtn = function(component) {
     utils.attachEvent({primarySelector:document, secondarySelector:"." + component.cssClass, eventType:"click", eventHandler:function(event) {
       var btn = utils.getClosest(event.target, "button"), target = utils.getNext(btn, ".gutentyp-toolbar-group"), btnCoords = utils.getCoordinates(event.target, target), style;
-      style = "left: " + btnCoords.moveLeft;
-      style += "; top: " + btnCoords.moveTop;
+      style = "left: " + btnCoords.moveLeft + "px";
+      style += "; top: " + btnCoords.moveTop + "px";
       utils.setStyle(target, style);
       utils.toggleClass(target, "active");
     }});
@@ -459,51 +491,45 @@ hilary.register("gutentyp::components", {init:function(config, utils, componentP
     }});
   };
   makeForm = function(component, formMeta) {
-    var i = 0, markup = "", validators = {names:[]}, validation = {}, current;
-    for (i;i < formMeta.length;i++) {
+    var fields = formMeta.fields, i = 0, markup = "", validators = {names:[]}, validation = {}, current;
+    for (i;i < fields.length;i++) {
       var uniqueId = utils.getRandomString();
-      markup += appendMarkup(formMeta[i], uniqueId);
-      appendValidators(validators, formMeta[i], uniqueId);
+      markup += appendMarkup(fields[i], uniqueId);
+      appendValidators(validators, fields[i], uniqueId);
     }
     if (validators.names.length > 0) {
       validation.validate = makeValidateFunc(validators);
     }
     return makeComponentForm(component, markup, validation);
   };
-  appendForm = function(markup, validators, formMeta, i) {
-    var uniqueId = utils.getRandomString();
-    markup += appendMarkup(formMeta[i], uniqueId);
-    appendValidators(validators, formMeta[i], uniqueId);
-    return{markup:markup, validators:validators};
-  };
-  appendMarkup = function(item, uniqueId) {
+  appendMarkup = function(field, uniqueId) {
     var markup = "", attributes, alertCss;
-    if (!item || !item.elementType || !item.name) {
+    if (!field || !field.elementType || !field.name) {
       return "";
     }
-    if (item.validation && item.validation.message) {
+    if (field.validation && field.validation.message) {
       alertCss = "alert alert-warning hidden " + uniqueId;
-      if (item.validation.cssClass) {
-        alertCss += " " + item.validation.cssClass;
+      if (field.validation.cssClass) {
+        alertCss += " " + field.validation.cssClass;
       }
-      markup += utils.makeElement("div", alertCss, undefined, item.validation.message, true);
+      markup += utils.makeElement("div", alertCss, undefined, field.validation.message, true);
     }
-    if (item.label) {
-      markup += utils.makeElement("label", undefined, undefined, item.label, true);
+    if (field.label) {
+      markup += utils.makeElement("label", undefined, undefined, field.label, true);
     }
-    attributes = utils.isArray(item.attributes) ? item.attributes : [];
-    attributes.push({key:"name", value:item.name});
-    if (item.elementType === "input") {
-      attributes.push({key:"type", value:item.inputType || "text"});
+    attributes = utils.isArray(field.attributes) ? field.attributes : [];
+    attributes.push({key:"name", value:field.name});
+    if (field.elementType === "input") {
+      attributes.push({key:"type", value:field.inputType || "text"});
     }
-    markup += utils.makeElement(item.elementType, item.cssClass || undefined, attributes, item.label, true);
+    markup += utils.makeElement(field.elementType, field.cssClass || undefined, attributes, field.label, true);
     markup += "<br />";
     return markup;
   };
-  appendValidators = function(validators, item, uniqueId) {
-    if (item.name && item.validation && utils.isFunction(item.validation.validate)) {
-      validators.names.push(item.name);
-      validators[item.name] = {messageId:uniqueId, validate:item.validation.validate};
+  appendValidators = function(validators, field, uniqueId) {
+    if (field.name && field.validation && utils.isFunction(field.validation.validate)) {
+      validators.names.push(field.name);
+      validators[field.name] = {messageId:uniqueId, validate:field.validation.validate};
     }
   };
   makeValidateFunc = function(validators) {
@@ -530,7 +556,7 @@ hilary.register("gutentyp::components", {init:function(config, utils, componentP
       attachToCancel(component);
       events[component.pipelineName] = true;
     }
-    return'<button type="button" class="' + component.cssClass + '">' + '<i class="' + config.cssClasses.toolbarBtnIcon + " " + component.icon + '"></i>' + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">' + component.title + "</span>" + "</button>" + '<div class="gutentyp-toolbar-group gutentyp-toolbar-arrow-over ' + component.cssClass + '-form"><form>' + formMarkup + '<button class="btn btn-success" type="button">Add</button>' + '<button class="btn btn-cancel" type="button">Cancel</button>' + 
+    return'<button type="button" class="' + component.cssClass + '" data-form-btn="true">' + '<i class="' + config.cssClasses.toolbarBtnIcon + " " + component.icon + '"></i>' + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">' + component.title + "</span>" + "</button>" + '<div class="gutentyp-toolbar-group gutentyp-toolbar-arrow-over ' + component.cssClass + '-form"><form>' + formMarkup + '<button class="btn btn-success" type="button">Add</button>' + '<button class="btn btn-cancel" type="button">Cancel</button>' + 
     "</form></div>";
   };
   return{components:components, makeComponent:componentFactory, makeComponentForm:makeComponentForm, addComponent:addComponent};
@@ -569,8 +595,8 @@ hilary.register("gutentyp::toolbar", {init:function(config, utils, componentColl
       utils.insertNewElementInto({markup:'<div class="' + currentGroup.menuId + " gutentyp-toolbar-group gutentyp-toolbar-arrow-" + (component.group.arrow || "over") + '"><ul></ul></div>'}, config.selectors.newToolbars);
       utils.attachEvent({primarySelector:currentGroup.toggleSelector, eventType:"click", eventHandler:function(event) {
         var btnCoords = utils.getCoordinates(event.target, currentGroup.menuSelector), style;
-        style = "left: " + btnCoords.moveLeft;
-        style += "; top: " + btnCoords.moveTop;
+        style = "left: " + btnCoords.moveLeft + "px";
+        style += "; top: " + btnCoords.moveTop + "px";
         utils.setStyle(currentGroup.menuSelector, style);
         utils.toggleClass(".gutentyp-toolbar-group.active:not(" + currentGroup.menuSelector + ")", "active");
         utils.toggleClass(currentGroup.menuSelector, "active");
@@ -651,7 +677,7 @@ hilary.register("gutentyp::components::colors", {init:function(components, confi
       document.execCommand("forecolor", false, color.value);
       return false;
     }, displayHandler:function(domId) {
-      return'<button class="' + domId + '"><span class="color-block" style="background-color: ' + color.value + '"></span></button>';
+      return'<button type="button" class="' + domId + '"><span class="color-block" style="background-color: ' + color.value + '"></span></button>';
     }, group:group}));
   };
   for (i;i < colors.length;i++) {
@@ -708,18 +734,36 @@ hilary.register("gutentyp::components::headings", {init:function(components, con
 // Input 10
 hilary.register("gutentyp::components::image", {init:function(components, config, utils) {
   var image;
-  image = components.makeComponent({title:"Add Image", cssClass:"gutentyp-image", pipelineName:"image", icon:config.icons.image, textClass:"sr-only", func:function(event, input) {
-    var target = event.target, src = utils.getAttribute(target, "data-src"), alt = utils.getAttribute(target, "data-alt"), width = utils.getAttribute(target, "data-width"), height = utils.getAttribute(target, "data-height"), img;
-    alt = alt || input.length > 0 ? input : src;
-    if (!src) {
-      throw new Error("the data-src attribute was not set on the target element.");
+  image = components.makeComponent({title:"Add Image", cssClass:"gutentyp-image", pipelineName:"image", icon:config.icons.image, textClass:"sr-only", func:function(event, selectedText, formData) {
+    if (!formData) {
+      throw "No form data is present, so we can't write an anchor element.";
     }
+    var src = formData.src, alt = formData.alt || formData.src, width = formData.width, height = formData.height, img;
     img = '<img src="' + src + '" alt="' + alt + '" ' + (width ? 'width="' + width + '"' : "") + (height ? 'height="' + height + '"' : "") + "/>";
     return img;
+  }, form:{fields:[{name:"src", label:"Url", elementType:"input", type:"text", validation:{message:"Please enter a valid Url.", cssClass:"link-src", validate:function(event, formData) {
+    if (!formData || !formData.src || formData.src.indexOf("://") < 0) {
+      return false;
+    }
+    return true;
+  }}}, {name:"alt", label:"Description", elementType:"input", type:"text", validation:{message:"Please enter a description. It's used by screen readers for accessibility.", cssClass:"link-alt", validate:function(event, formData) {
+    if (!formData || !formData.alt) {
+      return false;
+    }
+    return true;
+  }}}, {name:"width", label:"Width", elementType:"input", type:"text", validation:{message:"Width is not required, but it has to be a number", cssClass:"link-width", validate:function(event, formData) {
+    if (formData && formData.width && isNaN(formData.width)) {
+      return false;
+    }
+    return true;
+  }}}, {name:"height", label:"Height", elementType:"input", type:"text", validation:{message:"Height is not required, but it has to be a number", cssClass:"link-height", validate:function(event, formData) {
+    if (formData && formData.height && isNaN(formData.height)) {
+      return false;
+    }
+    return true;
+  }}}]}, after:function(event) {
+    utils.clearForm(event.target);
   }});
-  image.displayHandler = function() {
-    return'<button type="button" class="' + image.cssClass + '" data-src="http://thissongissick.com/wp-content/uploads/2013/03/Daft-Punk-Helmets-Columbia-Album-artwork.jpg" data-alt="daft">' + '<i class="' + config.cssClasses.toolbarBtnIcon + ' fa fa-image"></i>' + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">Add Image</span>' + "</button>";
-  };
   components.addComponent(image);
 }});
 // Input 11
@@ -756,34 +800,21 @@ hilary.register("gutentyp::components::justification", {init:function(components
 }});
 // Input 12
 hilary.register("gutentyp::components::link", {init:function(components, config, utils) {
-  var link, selected;
-  link = components.makeComponent({title:"Add Link", cssClass:"gutentyp-link", pipelineName:"link", icon:config.icons.link, textClass:"sr-only", func:function(event, input, formData) {
-    if (!event.fromGutenForm) {
-      selected = event.gutenSelection;
-      return false;
-    }
-    var gutenArea = utils.getClosestAdjacent(utils.getClosest(event.target, config.selectors.toolbar), config.selectors.editor).first(), text, markup;
+  var link;
+  link = components.makeComponent({title:"Add Link", cssClass:"gutentyp-link", pipelineName:"link", icon:config.icons.link, textClass:"sr-only", func:function(event, selectedText, formData) {
     if (!formData || !formData.href) {
-      return false;
+      throw "No form data is present, so we can't write an anchor element.";
     }
-    if (input && input.length > 0) {
-      text = input;
-    } else {
-      if (selected && selected.text && selected.text.length > 0) {
-        text = selected.text;
-      } else {
-        text = formData.href;
-      }
-    }
-    markup = '<a href="' + formData.href + '" target="_blank">' + text + "</a>";
-    utils.clearForm(event.target);
-    return{markup:markup, selectionCoordinates:selected, gutenArea:gutenArea};
-  }, form:[{name:"href", label:"Url", elementType:"input", type:"text", attributes:[{key:"data-test", value:"test"}], cssClass:"test", validation:{message:"Please enter a valid Url.", cssClass:"link-url", validate:function(event, formData) {
+    var text = selectedText && selectedText.length > 0 ? selectedText : formData.href;
+    return'<a href="' + formData.href + '" target="_blank">' + text + "</a>";
+  }, form:{fields:[{name:"href", label:"Url", elementType:"input", type:"text", validation:{message:"Please enter a valid Url.", cssClass:"link-url", validate:function(event, formData) {
     if (!formData || !formData.href || formData.href.indexOf("://") < 0) {
       return false;
     }
     return true;
-  }}}]});
+  }}}]}, after:function(event) {
+    utils.clearForm(event.target);
+  }});
   components.addComponent(link);
 }});
 // Input 13
@@ -864,7 +895,7 @@ hilary.use([hilary, jQuery, window], function(hilarysInnerContainer, hilary, $, 
       gutenContainer.register("gutentyp::core", coreOverride);
       return self;
     };
-    self.ifYouReallyKnowWhatYourDoing = {IoC:gutenContainer, prep:prep};
+    self.ifYouReallyKnowWhatYoureDoing = {IoC:gutenContainer, prep:prep};
     return self;
   };
   window.gutentyp = gutentyp;
