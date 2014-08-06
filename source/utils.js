@@ -365,16 +365,20 @@ hilary.register('gutentyp::utils', {
             return text;
         };
         
-        getCoordinates = function (selector, secondarySelector) {
-            var result = $(selector)[0].getBoundingClientRect();
-            result.offset = $(selector).offset();
+        getCoordinates = function (selector, secondarySelector, relativeTo) {
+            var element = $(selector),
+                result = element.position();
             
+            result.width = element.width();
+            result.height = element.height();
+
             if (secondarySelector) {
                 result.moveLeft = (result.left + (result.width / 2) - (getCoordinates(secondarySelector).width / 2));
-                result.moveTop = (result.offset.top + result.height + 6);
+                result.moveTop = (result.top + result.height + 6);
                 result.moveRight = (result.right + (result.width / 2) - (getCoordinates(secondarySelector).width / 2));
-                result.moveBottom = (result.offset.bottom + result.height + 6);
+                result.moveBottom = (result.bottom + result.height + 6);
             }
+
             return result;
         };
         

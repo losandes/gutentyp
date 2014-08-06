@@ -120,8 +120,8 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
                     style;
 
                 // set the coordinates
-                style = 'left: ' + btnCoords.moveLeft;
-                style += '; top: ' + btnCoords.moveTop;
+                style = 'left: ' + btnCoords.moveLeft + 'px';
+                style += '; top: ' + btnCoords.moveTop + 'px';
                 utils.setStyle(target, style);
 
                 // show or hid this toolbar
