@@ -241,10 +241,8 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
     appendValidators = function (validators, field, uniqueId) {
         if (field.name && field.validation && dom.isFunction(field.validation.validate)) {
             validators.names.push(field.name);
-            validators[field.name] = {
-                messageId: uniqueId,
-                validate: field.validation.validate
-            };
+            validators[field.name] = field.validation;
+            validators[field.name].messageId = uniqueId;
         }
     };
     
@@ -261,7 +259,7 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
                 
                 if (!validator.validate(event, formData)) {
                     isValid = false;
-                    alert = dom.getClosestAdjacent(event.target, '.' + validator.messageId);
+                    alert = dom.getClosestAdjacent(event.target, '.' + validator.cssClass);
                     alert.removeClass(config.cssClasses.hidden);
                 }
             }
