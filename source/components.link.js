@@ -12,16 +12,16 @@ hilary.register('gutentyp::components::link', { init: function (components, conf
         icon: config.icons.link,
         textClass: 'sr-only',
         func: function (event, selectedText, formData) {
-            if (!formData || !formData.href) {
+            if (!formData) {
                 throw 'No form data is present, so we can\'t write an anchor element.';
             }
             
-            var text = selectedText && selectedText.length > 0 ? selectedText : formData.href;
-            return '<a href="' + formData.href + '" target="_blank">' + text + '</a>';
+            var text = selectedText && selectedText.length > 0 ? selectedText : formData.gutenHref;
+            return '<a href="' + formData.gutenHref + '" target="_blank">' + text + '</a>';
         },
         form: {
             fields: [{
-                name: 'href',
+                name: 'gutenHref',
                 label: 'Url',
                 elementType: 'input',
                 type: 'text',
@@ -31,7 +31,7 @@ hilary.register('gutentyp::components::link', { init: function (components, conf
                     message: 'Please enter a valid Url.',
                     cssClass: 'link-url',
                     validate: function (event, formData) {
-                        if (!formData || !formData.href || formData.href.indexOf('://') < 0) {
+                        if (!formData || !formData.gutenHref || formData.gutenHref.indexOf('://') < 0) {
                             return false;
                         }
 
