@@ -22,7 +22,6 @@ hilary.register('gutentyp::keyEvents', { init: function (config, dom, nicephore)
         } else {
             waitCount = 0;
             throw new Error('This image is too large to paste in Gutentyp');
-            return false;
         }
     };
     
