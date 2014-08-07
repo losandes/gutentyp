@@ -1,4 +1,4 @@
-/*jslint plusplus: true, continue: true, vars: true */
+/*jslint plusplus: true, continue: true*/
 /*global hilary*/
 
 hilary.register('gutentyp::components', { init: function (config, dom, componentPipeline) {
@@ -121,7 +121,7 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
             eventType: 'click',
             eventHandler: function (event) {
                 var btn = dom.getClosest(event.target, 'button'),
-                    target = dom.getNext(btn, '.gutentyp-toolbar-group'),
+                    target = dom.getNext(btn, config.selectors.toolbarGroup),
                     btnCoords = dom.getCoordinates(event.target, target),
                     style;
 
@@ -151,7 +151,7 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
                     }
                 }
                 
-                target = dom.getClosest(event.target, '.gutentyp-toolbar-group');
+                target = dom.getClosest(event.target, config.selectors.toolbarGroup);
                 // show or hide this toolbar
                 dom.toggleClass(target, 'active');
                 event.fromGutenForm = true;
@@ -166,12 +166,12 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
             secondarySelector: '.' + component.cssClass + '-form .btn-cancel',
             eventType: 'click',
             eventHandler: function (event) {
-                var target = dom.getClosest(event.target, '.gutentyp-toolbar-group'),
+                var target = dom.getClosest(event.target, config.selectors.toolbarGroup),
                     alerts = dom.getClosestAdjacent(event.target, '.alert');
                 // show or hide this toolbar
                 dom.toggleClass(target, 'active');
                 dom.clearForm(target);
-                dom.addClass(alerts, 'hidden');
+                dom.addClass(alerts, config.cssClasses.hidden);
             }
         });
     };
@@ -182,13 +182,14 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
             markup = '',
             validators = { names: [] },
             validation = {},
-            current;
+            current,
+            uniqueIds = {};
         
         for (i; i < fields.length; i++) {
             // do NOT combine uniqueId with the previous statement, it needs to be a new reference every time.
-            var uniqueId = dom.getRandomString();
-            markup += appendMarkup(fields[i], uniqueId);
-            appendValidators(validators, fields[i], uniqueId);
+            uniqueIds[('a' + i)] = dom.getRandomString();
+            markup += appendMarkup(fields[i], uniqueIds[('a' + i)]);
+            appendValidators(validators, fields[i], uniqueIds[('a' + i)]);
         }
         
         if (validators.names.length > 0) {
@@ -209,7 +210,7 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
         
         if (field.validation && field.validation.message) {
             // <div class="link-url alert hidden">Please enter a valid Url.</div>
-            alertCss = 'alert alert-warning hidden ' + uniqueId;
+            alertCss = 'alert alert-warning ' + config.cssClasses.hidden + ' ' + uniqueId;
             
             if (field.validation.cssClass) {
                 alertCss += ' ' + field.validation.cssClass;
@@ -261,7 +262,7 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
                 if (!validator.validate(event, formData)) {
                     isValid = false;
                     alert = dom.getClosestAdjacent(event.target, '.' + validator.messageId);
-                    alert.removeClass('hidden');
+                    alert.removeClass(config.cssClasses.hidden);
                 }
             }
             
@@ -281,7 +282,9 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
                     + '<i class="' + config.cssClasses.toolbarBtnIcon + ' ' + component.icon + '"></i>'
                     + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">' + component.title + '</span>'
                 + '</button>'
-                + '<div class="gutentyp-toolbar-group gutentyp-toolbar-arrow-over ' + component.cssClass + '-form">'
+                + '<div class="' + config.cssClasses.toolbarGroup + ' '
+                        + config.cssClasses.toolbarArrowOver + ' '
+                        + component.cssClass + '-form">'
                     + '<div class="' + config.cssClasses.form + '">'
                         + formMarkup
                         + '<button class="btn btn-success btn-sm" type="button">Add</button>'

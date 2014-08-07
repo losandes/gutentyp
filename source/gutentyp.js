@@ -96,11 +96,16 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
         * initializes gutentyp
         */
         self.init = function (options) {
+            var events;
+            
             if (!componentsAreRegistered) {
                 self.registerComponents(options);
-                if (options && options.observePaste && nicephore) {
-                    gutenContainer.tryResolve('gutentyp::keyEvents')
-                        .init(config, dom, nicephore);
+                if (nicephore) {
+                    events = gutenContainer.tryResolve('gutentyp::keyEvents');
+                    
+                    if (events) {
+                        events.init(config, dom, nicephore);
+                    }
                 }
             }
             

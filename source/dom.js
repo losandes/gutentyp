@@ -175,7 +175,7 @@ hilary.register('gutentyp::dom', {
             form.find(':input').val('');
             form.find('textarea').html('');
             
-            return form.find('.alert').addClass('hidden');
+            return form.find('.alert').addClass(config.cssClasses.hidden);
         };
         
         getClosest = function (currentNode, targetSelector) {
@@ -231,7 +231,15 @@ hilary.register('gutentyp::dom', {
         };
         
         hasAncestor = function (selector, ancestor) {
-            return $(selector).parents(ancestor).length !== 0;
+            if ($(selector).parents(ancestor).length !== 0) {
+                return true;
+            } else if (typeof ancestor === 'string' && $(selector).hasClass(ancestor)) {
+                return true;
+            } else if (typeof ancestor === 'string' && $(selector).hasClass(ancestor.substring(1))) {
+                return true;
+            }
+            
+            return false;
         };
         
         getSelectedText = function () {
