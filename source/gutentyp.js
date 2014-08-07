@@ -100,7 +100,7 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
                 self.registerComponents(options);
                 if (options && options.observePaste && nicephore) {
                     gutenContainer.resolve('gutentyp::paste')
-                        .init($, nicephore);
+                        .init($, nicephore, config);
                 }
             }
             

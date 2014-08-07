@@ -1,5 +1,5 @@
 /*globals hilary, console, window*/
-hilary.register('gutentyp::paste', { init: function ($, nicephore) {
+hilary.register('gutentyp::paste', { init: function ($, nicephore, config) {
     "use strict";
     
     var when, waitThreshold = 33, waitCount = 0, observer = nicephore();
@@ -27,6 +27,10 @@ hilary.register('gutentyp::paste', { init: function ($, nicephore) {
     
     
     observer.observe('paste', 'keypress', function (event, keyInfo, clipboard) {
+        if ($(event.target).parents(config.selectors.editor).length === 0) {
+            return;
+        }
+        
         var assert, then, item = clipboard.items[0];
         
         assert = function () {
