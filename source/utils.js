@@ -9,6 +9,7 @@ hilary.register('gutentyp::utils', {
             makeElement,
             insertNewElementBefore,
             insertNewElementInto,
+            insertHtmlAfter,
             setText,
             insertHtml,
             addClass,
@@ -27,6 +28,7 @@ hilary.register('gutentyp::utils', {
             isFunction,
             isObject,
             isArray,
+            hasAncestor,
             getSelectedText,
             replaceSelectedText,
             pasteHtmlAtCursor,
@@ -120,29 +122,33 @@ hilary.register('gutentyp::utils', {
                     .appendTo($(target));
             }
         };
+        
+        insertHtmlAfter = function (selector, html) {
+            return $(selector).after(html);
+        };
 
         setText = function (selector, newText) {
-            $(selector).text(newText);
+            return $(selector).text(newText);
         };
         
         insertHtml = function (selector, html) {
-            $(selector).append(html);
+            return $(selector).append(html);
         };
         
         addClass = function (selector, cssClass) {
-            $(selector).addClass(cssClass);
+            return $(selector).addClass(cssClass);
         };
         
         removeClass = function (selector, cssClass) {
-            $(selector).removeClass(cssClass);
+            return $(selector).removeClass(cssClass);
         };
         
         toggleClass = function (selector, cssClass) {
-            $(selector).toggleClass(cssClass);
+            return $(selector).toggleClass(cssClass);
         };
         
         addAttribute = function (selector, newAttr, newValue) {
-            $(selector).attr(newAttr, newValue);
+            return $(selector).attr(newAttr, newValue);
         };
         
         getAttribute = function (elemtnContext, attributeName) {
@@ -169,7 +175,7 @@ hilary.register('gutentyp::utils', {
             form.find(':input').val('');
             form.find('textarea').html('');
             
-            form.find('.alert').addClass('hidden');
+            return form.find('.alert').addClass('hidden');
         };
         
         getClosest = function (currentNode, targetSelector) {
@@ -205,11 +211,11 @@ hilary.register('gutentyp::utils', {
                 });
             }
     
-            addClass($this, config.cssClasses.hasEvents);
+            return addClass($this, config.cssClasses.hasEvents);
         };
 
         updateTextarea = function (target) {
-            $('textarea#' + $(target).attr('data-for')).html($(target).html());
+            return $('textarea#' + $(target).attr('data-for')).html($(target).html());
         };
 
         isFunction = function (obj) {
@@ -222,6 +228,10 @@ hilary.register('gutentyp::utils', {
         
         isArray = function (obj) {
             return $.isArray(obj);
+        };
+        
+        hasAncestor = function (selector, ancestor) {
+            return $(selector).parents(ancestor).length !== 0;
         };
         
         getSelectedText = function () {
@@ -495,6 +505,7 @@ hilary.register('gutentyp::utils', {
             initializeRichTextAreas: initializeRichTextAreas,
             insertNewElementBefore: insertNewElementBefore,
             insertNewElementInto: insertNewElementInto,
+            insertHtmlAfter: insertHtmlAfter,
             setText: setText,
             insertHtml: insertHtml,
             addClass: addClass,
@@ -512,6 +523,7 @@ hilary.register('gutentyp::utils', {
             isFunction: isFunction,
             isObject: isObject,
             isArray: isArray,
+            hasAncestor: hasAncestor,
             getSelectedText: getSelectedText,
             replaceSelectedText: replaceSelectedText,
             pasteHtmlAtCursor: pasteHtmlAtCursor,
