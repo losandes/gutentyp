@@ -80,6 +80,7 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
                 tryResolveComponent('gutentyp::components::blocks');
                 tryResolveComponent('gutentyp::components::link');
                 tryResolveComponent('gutentyp::components::image');
+                tryResolveComponent('gutentyp::components::embed');
             }
             
             if (options.components) {

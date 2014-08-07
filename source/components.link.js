@@ -3,9 +3,7 @@
 hilary.register('gutentyp::components::link', { init: function (components, config, utils) {
     "use strict";
     
-    var link;
-    
-    link = components.makeComponent({
+    var component = components.makeComponent({
         title: 'Add Link',
         cssClass: 'gutentyp-link',
         pipelineName: 'link',
@@ -45,5 +43,7 @@ hilary.register('gutentyp::components::link', { init: function (components, conf
         }
     });
     
-    components.addComponent(link);
+    components.addComponent(component);
+    
+    return component;
 }});

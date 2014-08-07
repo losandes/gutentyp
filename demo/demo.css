@@ -81,7 +81,7 @@ pre {
     margin-bottom: 5px;
 }
 
-.gutentyp-toolbar .gutentyp-form input {
+.gutentyp-toolbar .gutentyp-form input, .gutentyp-toolbar .gutentyp-form textarea {
     margin-bottom: 10px;
     width: 300px;
 }
@@ -120,9 +120,11 @@ pre {
     height: 20px;
 }
 
-.color-pink {
-    background-color: #cd52bd;
-    margin-left: 5px;
+.color-label {
+    width: 15px;
+    height: 15px;
+    background-color: #EE3DC2; /*#cd52bd*/ /*#FF369B*/
+    margin-left: 7.5px;
 }
 
 /* groups */

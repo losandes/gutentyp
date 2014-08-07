@@ -10,7 +10,7 @@ hilary.register('gutentyp::components::colors', { init: function (components, co
         title: 'Colors',
         cssClass: 'gutentyp-colors',
         pipelineName: 'colors',
-        icon: 'color-block color-pink',
+        icon: 'color-block color-label',
         textClass: 'sr-only'
     });
     group.name = 'colors';

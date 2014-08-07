@@ -3,9 +3,7 @@
 hilary.register('gutentyp::components::image', { init: function (components, config, utils) {
     "use strict";
     
-    var image;
-    
-    image = components.makeComponent({
+    var component = components.makeComponent({
         title: 'Add Image',
         cssClass: 'gutentyp-image',
         pipelineName: 'image',
@@ -105,5 +103,7 @@ hilary.register('gutentyp::components::image', { init: function (components, con
         }
     });
 
-    components.addComponent(image);
+    components.addComponent(component);
+    
+    return component;
 }});

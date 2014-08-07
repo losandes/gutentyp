@@ -166,7 +166,7 @@ hilary.register('gutentyp::utils', {
                 form.html('');
             }
             
-            form.find('input').val('');
+            form.find(':input').val('');
             form.find('textarea').html('');
             
             form.find('.alert').addClass('hidden');

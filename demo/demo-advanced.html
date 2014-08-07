@@ -181,6 +181,7 @@ gutenInstance.init();
     <script src="../source/components.blocks.js"></script>
     <script src="../source/components.link.js"></script>
     <script src="../source/components.image.js"></script>
+    <script src="../source/components.embed.js"></script>
     <script src="../source/gutentyp.js"></script>
 
     <script type="text/javascript">
@@ -209,7 +210,7 @@ gutenInstance.init();
         
         hilary.register('new::component', { init: function (components, config, utils) {
             var custom = components.makeComponent({
-                title: 'Custom Foreground color',
+                title: 'Custom',
                 cssClass: 'gutentyp-fg-color',
                 pipelineName: 'foregroundColor2',
                 func: function (event, text) {

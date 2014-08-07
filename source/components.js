@@ -231,7 +231,7 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
             attributes.push({ key: 'type', value: field.inputType || 'text' });
         }
         
-        markup += utils.makeElement(field.elementType, field.cssClass || undefined, attributes, field.label, true);
+        markup += utils.makeElement(field.elementType, field.cssClass || undefined, attributes, undefined, true);
         markup += '<br />';
 
         return markup;
