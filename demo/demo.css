@@ -286,3 +286,8 @@ pre {
     color: #fff;
     background: linear-gradient(bottom, #242424, rgba(#000, 0.89));
 }
+
+:focus {
+    outline: none; 
+    box-shadow: 0 2px 2px rgba(0,0,0,0.3);
+}
