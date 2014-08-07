@@ -2,7 +2,7 @@
 hilary.register('gutentyp::keyEvents', { init: function (config, dom, nicephore) {
     "use strict";
     
-    var when, waitThreshold = 33, waitCount = 0, observer = nicephore();
+    var when, waitThreshold = ((config.keyEvents && config.keyEvents.waitThreshold) || 33), waitCount = 0, observer = nicephore();
     
     when = function (assert, then) {
         if (typeof assert !== 'function' || typeof then !== 'function') {
@@ -21,6 +21,7 @@ hilary.register('gutentyp::keyEvents', { init: function (config, dom, nicephore)
             }, 30);
         } else {
             waitCount = 0;
+            throw new Error('This image is too large to paste in Gutentyp');
             return false;
         }
     };
@@ -33,15 +34,17 @@ hilary.register('gutentyp::keyEvents', { init: function (config, dom, nicephore)
         
         var assert, then, item = clipboard.items[0];
         
-        assert = function () {
-            return item.type.indexOf('image') > -1 && item.dataUrl;
-        };
-        
-        then = function () {
-            var img = '<img src="' + item.dataUrl + '" alt="user entered image" />';
-            return dom.insertHtmlAfter(event.target, img);
-        };
-        
-        when(assert, then);
+        if (item.type.indexOf('image') > -1) {
+            assert = function () {
+                return item.dataUrl;
+            };
+
+            then = function () {
+                var img = '<img src="' + item.dataUrl + '" alt="sorry, this is a user entered image with no context" />';
+                return dom.insertHtmlAfter(event.target, img);
+            };
+
+            when(assert, then);
+        }
     });
 }});

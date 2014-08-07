@@ -38,5 +38,5 @@ hilary.register('gutentyp::components::blocks', { init: function (components, co
         }
     });
     
-    components.addComponent([code, pre, quote]);
+    components.addComponent([code, quote]);
 }});
