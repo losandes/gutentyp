@@ -3,11 +3,16 @@
     <title>Gutentyp Demo</title>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css" />
+<!--    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/monokai.min.css" />-->
+<!--    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/monokai_sublime.min.css" />-->
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/github.min.css" />
     <link rel="stylesheet" href="demo.css" />
     
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="../lib/hilary.js"></script>
     <script src="../lib/nicephore.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script>
 </head>
 <body>
 
@@ -16,60 +21,80 @@
         <br />
 
         <textarea class="gutentyp-ify" id="test">
-            <h2 data-brackets-id="149">Why Gutentyp?</h2>
-            <br data-brackets-id="150">
-            <div data-brackets-id="151">
-                We wanted a highly extensible, modular rich text editor that just works. There are a lot 
-                of great rich text editors out there, but each one presented a drawback to us, that led us 
-                to design our own.
-            </div>
-            <div data-brackets-id="152">
-                The result is a simple library that is easy to extend and customize. It supports multi-instance, 
-                not only so you can have multiple rich text editors on the same page, but unique configurations 
-                for them, if you desire.
-            </div>
+            <h2>Why Gutentyp?</h2>
+            <br />
+            <div>We wanted a highly extensible, modular rich text editor that looks beautiful and just works. There are a lot of great rich text editors out there, but each one presented a drawback, that led us to design our own.</div>
+            <div>The result is a simple library that is easy to extend and customize. You can write new components in a matter of minutes, and replace anything you don't like with your own flavor. Gutentyp also supports multiple instances, so you can have multiple editors on the same page with different configurations.</div>
             
-            <h2 data-brackets-id="153">Getting Started</h2>
-            <div data-brackets-id="154">The super-simple path is to start with a <code data-brackets-id="155">textarea</code></div>
+            <h2>Getting Started</h2>
+            <div>The super-simple path is to start with a <code>textarea</code></div>
             
-<pre data-brackets-id="156">&lt; textarea id="id-isnt-required" class="gutentyp-ify"&gt;
+<pre>&lt; textarea class="gutentyp-ify"&gt;
 &lt; /textarea&gt;
 </pre>
-            <br data-brackets-id="157">
-            <div data-brackets-id="158">and then wire it up with JavaScript</div>
+            <br>
+            <div>and then wire it up with JavaScript</div>
             
-<pre data-brackets-id="159">var gutenInstance = gutentyp();
+<pre>
+var gutenInstance = gutentyp();
 gutenInstance.init();
 </pre>
             
-            <br data-brackets-id="160">
-            <div data-brackets-id="161">
-                You can call init as much as you like, and you'll need to after DOM Mutations. If you're using 
-                jQuery for your ajax, you can initialize Gutentyp like this
-            </div>
+            <br>
+            <div>You can call init as much as you like, and you'll need to after DOM Mutations. If you're using jQuery for your ajax, you can initialize Gutentyp like this:</div>
             
-<pre data-brackets-id="162">var gutenInstance = gutentyp();
+<pre>
+var gutenInstance = gutentyp();
+gutenInstance.init();
 
-...
+// ...
 
 $(document).ajaxComplete(function () {
     gutenInstance.init();
 });
 </pre>
             
-            <h2 data-brackets-id="163">Gutentyp is Modular and Highly Extensible</h2>
-            <br data-brackets-id="164">
+            <h2>Gutentyp is Modular and Highly Extensible</h2>
+            <br>
             
-            <div data-brackets-id="165">
-                Gutentyp is built so you can extend it easily, and replace modules with custom modules, if you like. 
-                Modules include the core components that make up Gutentyp, as well as the components that are 
-                available in the toolbar.
-            </div>
-            <div data-brackets-id="166">
-                To add components, you register them on the instance prior to initialization.
-            </div>
-<pre data-brackets-id="167">var gutenInstance = gutentyp();
+            <div>Gutentyp is built so you can extend it easily, and replace modules with custom modules, if you like. Modules include the core components that make up Gutentyp, as well as the components that are available in the toolbar.</div>
+            <div>The preferred way to register components is to register hilary modules and then pass the component names into the Gutentyp init</div>
+<pre>
+// the advantage of registering your components this way, is that you 
+// can get access to the components, config and utils modules, inside of your component
+// All components receive the same parameters in their init functions
+hilary.register('new::component', { init: function (components, config, utils) {
+    var custom = components.makeComponent({
+        title: 'Custom',
+        cssClass: 'gutentyp-fg-color',
+        pipelineName: 'foregroundColor2',
+        func: function (event, text) {
+            document.execCommand('forecolor', false, '#FF0000');
+            return false;
+        },
+        before: function (event) {
+            console.log('before', event);
+        },
+        after: function (event) {
+            console.log('after', event);
+        }
+    });
 
+    components.addComponent(custom);
+}});
+
+var gutenInstance = gutentyp();
+
+// if you set autoRegisterComponents to false, you can pass in any components that you want 
+// to include, in the order that you want them to appear
+gutenInstance.init({ autoRegisterComponents: true, components: ['new::component']});
+</pre>            
+            <div>You can also register them on the instance prior to initialization.</div>
+<pre>
+var gutenInstance = gutentyp();
+
+// if you don't need components, config or utils modules, then 
+// this is the short-hand registration technique
 gutenInstance.registerComponent({
     title: 'Custom Foreground color',                   // The text that will be displayed or read by a screen reader
     cssClass: 'gutentyp-fg-color',                      // A css class is added to the button, so you can style with CSS/LESS/SASS
@@ -93,37 +118,32 @@ gutenInstance.registerComponent({
 });
 
 gutenInstance.init();                                   // Once init is called, the toolbar will not change
-</pre>            
+</pre>
 
-            <br data-brackets-id="168">
-            <h3 data-brackets-id="169">Configuring Gutentyp</h3><div>Like registering components, configuration can be modified before you call the <code>init</code> function. Here's an example:</div><div><pre data-brackets-id="167">var gutenInstance = gutentyp();
+            <br>
+            <h3>Configuring Gutentyp</h3>
+            <div>Like registering components, configuration can be modified before you call the <code>init</code> function. Here's an example:</div>
+<pre>
+var gutenInstance = gutentyp();
 
-gutenInstance.config.icons = { 
-    code: 'fa fa-code',
-    pre: 'fa fa-file-code-o',
-    blockquote: 'fa fa-quote-left',
-    bold: 'fa fa-bold',
-    italic: 'fa fa-italic',
-    underline: 'fa fa-underline',
-    strikethrough: 'fa fa-strikethrough',
-    header: 'fa fa-header',
-    image: 'fa fa-image',
-    alignLeft: 'fa fa-align-left',
-    alignCenter: 'fa fa-align-center',
-    alignRight: 'fa fa-align-right',
-    alignJustify: 'fa fa-align-justify',
-    indent: 'fa fa-indent',
-    outdent: 'fa fa-outdent',
-    link: 'fa fa-link',
-    unorderedList: 'fa fa-list-ul',
-    orderedList: 'fa fa-list-ol'
-};
+// get the default config and override just what you need.
+gutenInstance.config.icons.header = 'fa fa-header';
+gutenInstance.config.icons.image = 'fa fa-image';
+
+// when overriding a module, the signature has to match, so our
+// config override will return an Object Literal with an init function
+// because that is the signature of the config module
+gutenInstance.overrideConfig({
+    init: function () {
+        return gutenInstance.config;
+    }
+});
 
 gutenInstance.init();
-</pre></div>
+</pre>
             
-            <h3 data-brackets-id="169">Registering and Overriding Modules</h3>
-            <div data-brackets-id="170">There are six core modules that are composed by a seventh module, any of which can be replaced easily.</div>        
+            <h3>Registering and Overriding Modules</h3>
+            <div>There are six core modules that are composed by a seventh module, any of which can be replaced easily.</div>
 
         </textarea>
         
@@ -166,7 +186,7 @@ gutenInstance.init();
         </textarea>
     </section>
 
-
+    
     <script src="../source/config.js"></script>
     <script src="../source/utils.js"></script>
     <script src="../source/pipeline.js"></script>
@@ -186,6 +206,7 @@ gutenInstance.init();
     <script src="../source/gutentyp.js"></script>
 
     <script type="text/javascript">
+        
         // create 2 instances of gutentyp, for different configurations
         var rts = gutentyp(),
             rts2 = gutentyp();
@@ -307,6 +328,14 @@ gutenInstance.init();
 
         // init a second time to verify that we don't re-do anything
         rts.init();
+        
+        
+        
+        $(document).ready(function() {
+          $('.gutentyp-editor pre').each(function(i, block) {
+            hljs.highlightBlock(block);
+          });
+        });
     </script>
 
 
