@@ -1,6 +1,6 @@
 /*global hilary,isNaN*/
 
-hilary.register('gutentyp::components::image', { init: function (components, config, utils) {
+hilary.register('gutentyp::components::image', { init: function (components, config, dom) {
     "use strict";
     
     var component = components.makeComponent({
@@ -99,7 +99,7 @@ hilary.register('gutentyp::components::image', { init: function (components, con
                 }]
         },
         after: function (event) {
-            utils.clearForm(event.target);
+            dom.clearForm(event.target);
         }
     });
 

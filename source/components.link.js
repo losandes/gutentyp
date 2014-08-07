@@ -1,6 +1,6 @@
 /*global hilary*/
 
-hilary.register('gutentyp::components::link', { init: function (components, config, utils) {
+hilary.register('gutentyp::components::link', { init: function (components, config, dom) {
     "use strict";
     
     var component = components.makeComponent({
@@ -39,7 +39,7 @@ hilary.register('gutentyp::components::link', { init: function (components, conf
             }]
         },
         after: function (event) {
-            utils.clearForm(event.target);
+            dom.clearForm(event.target);
         }
     });
     

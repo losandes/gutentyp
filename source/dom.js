@@ -1,7 +1,7 @@
 /*jslint plusplus: true */
 /*global hilary*/
 
-hilary.register('gutentyp::utils', {
+hilary.register('gutentyp::dom', {
     init: function ($, config) {
         "use strict";
         

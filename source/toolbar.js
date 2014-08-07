@@ -1,7 +1,7 @@
 /*jslint plusplus: true */
 /*global hilary*/
 
-hilary.register('gutentyp::toolbar', { init: function (config, utils, componentCollection) {
+hilary.register('gutentyp::toolbar', { init: function (config, dom, componentCollection) {
     "use strict";
     
     var build = function () {
@@ -36,10 +36,10 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
         };
         
         add = function (component) {
-            utils.insertNewElementInto({
+            dom.insertNewElementInto({
                 markup: buttonTemplate(component)
             }, config.selectors.newToolbars);
-            utils.attachEvent({
+            dom.attachEvent({
                 primarySelector: formatEventSelector(component),
                 eventType: 'click',
                 eventHandler: component.execute
@@ -47,8 +47,8 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
         };
         
         addWithDisplayHandler = function (component) {
-            utils.insertHtml(config.selectors.newToolbars, component.displayHandler());
-            utils.attachEvent({
+            dom.insertHtml(config.selectors.newToolbars, component.displayHandler());
+            dom.attachEvent({
                 primarySelector: formatEventSelector(component),
                 eventType: 'click',
                 eventHandler: component.execute
@@ -57,35 +57,35 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
         
         addGroup = function (component) {
             var currentGroup = groups[component.group.name] = { components: [component] };
-            currentGroup.toggleId = utils.getRandomString();// component.group.name + 'toggle';
-            currentGroup.menuId = utils.getRandomString(); // component.group.name + 'menu';//utils.getRandomString();
+            currentGroup.toggleId = dom.getRandomString();// component.group.name + 'toggle';
+            currentGroup.menuId = dom.getRandomString(); // component.group.name + 'menu';//dom.getRandomString();
             currentGroup.toggleSelector = '.' + currentGroup.toggleId;
             currentGroup.menuSelector = '.' + currentGroup.menuId;
 
-            utils.insertNewElementInto({
+            dom.insertNewElementInto({
                 markup: buttonTemplate(component.group, currentGroup.toggleId)
             }, config.selectors.newToolbars);
-            utils.insertNewElementInto({
+            dom.insertNewElementInto({
                 markup: '<div class="' + currentGroup.menuId + ' gutentyp-toolbar-group gutentyp-toolbar-arrow-' + (component.group.arrow || 'over') + '"><ul></ul></div>'
             }, config.selectors.newToolbars);
 
             // toggle hidden
-            utils.attachEvent({
+            dom.attachEvent({
                 primarySelector: currentGroup.toggleSelector,
                 eventType: 'click',
                 eventHandler: function (event) {
-	                var btnCoords = utils.getCoordinates(event.target, currentGroup.menuSelector),
+	                var btnCoords = dom.getCoordinates(event.target, currentGroup.menuSelector),
 	                    style;
 	                
 	                // set the coordinates
 	                style = 'left: ' + btnCoords.moveLeft + 'px';
 	                style += '; top: ' + btnCoords.moveTop + 'px';
-	                utils.setStyle(currentGroup.menuSelector, style);
+	                dom.setStyle(currentGroup.menuSelector, style);
 	                
 	                // hide any other toolbars that might be open
-	                utils.toggleClass('.gutentyp-toolbar-group.active:not(' + currentGroup.menuSelector + ')', 'active');
+	                dom.toggleClass('.gutentyp-toolbar-group.active:not(' + currentGroup.menuSelector + ')', 'active');
 	                // show or hid this toolbar
-	                utils.toggleClass(currentGroup.menuSelector, 'active');
+	                dom.toggleClass(currentGroup.menuSelector, 'active');
                 }
             });
             
@@ -93,7 +93,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
         };
         
         addWithGroup = function (component) {
-            var componentId = utils.getRandomString(),
+            var componentId = dom.getRandomString(),
                 componentSelector = '.' + componentId,
                 currentGroup,
                 execWrapper;
@@ -106,41 +106,41 @@ hilary.register('gutentyp::toolbar', { init: function (config, utils, componentC
             }
             
             if (component.displayHandler) {
-                utils.insertNewElementInto({
+                dom.insertNewElementInto({
                     markup: '<li>' + component.displayHandler(componentId) + '</li>'
                 }, currentGroup.menuSelector + ' ul');
             } else {
-                utils.insertNewElementInto({
+                dom.insertNewElementInto({
                     markup: '<li>' + buttonTemplate(component, componentId) + '</li>'
                 }, currentGroup.menuSelector + ' ul');
             }
 
             execWrapper = function (event, input) {
                 component.execute(event, input);
-                utils.toggleClass(currentGroup.menuSelector, 'active');
+                dom.toggleClass(currentGroup.menuSelector, 'active');
             };
 
-            utils.attachEvent({
+            dom.attachEvent({
                 primarySelector: componentSelector,
                 eventType: 'click',
                 eventHandler: execWrapper
             });
         };
         
-        utils.insertNewElementBefore('div', config.selectors.newEditors, config.selectors.toolbar);
+        dom.insertNewElementBefore('div', config.selectors.newEditors, config.selectors.toolbar);
 
         for (i = 0; i < components.length; i++) {
             if (components[i].group !== undefined) {
                 addWithGroup(components[i]);
-            } else if (utils.isFunction(components[i].displayHandler)) {
+            } else if (dom.isFunction(components[i].displayHandler)) {
                 addWithDisplayHandler(components[i]);
             } else {
                 add(components[i]);
             }
         }
         
-        utils.addClass(config.selectors.newEditors, config.cssClasses.hasToolbar);
-        utils.addClass(config.selectors.newToolbars, config.cssClasses.hasComponents);
+        dom.addClass(config.selectors.newEditors, config.cssClasses.hasToolbar);
+        dom.addClass(config.selectors.newToolbars, config.cssClasses.hasComponents);
 
         return;
     };

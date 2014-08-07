@@ -1,26 +1,26 @@
 /*global hilary*/
 
 hilary.register('gutentyp::core', {
-    init: function (config, utils, components, toolbarBuilder) {
+    init: function (config, dom, components, toolbarBuilder) {
         "use strict";
 
         var loadGutenCore = function () {
 
-            var areaIds = utils.initializeRichTextAreas();
+            var areaIds = dom.initializeRichTextAreas();
             
             // Append toolbars to rich text areas
             toolbarBuilder.build();
 
             // Add an event that updates the textarea on each focusout
-            utils.attachEvent({
+            dom.attachEvent({
                 primarySelector: config.selectors.eventlessEditors,
                 eventType: 'blur',
                 eventHandler: function (event) {
-                    utils.updateTextarea(event.target);
+                    dom.updateTextarea(event.target);
                 }
             });
             
-            utils.addClass(config.selectors.editor, config.cssClasses.hasEvents);
+            dom.addClass(config.selectors.editor, config.cssClasses.hasEvents);
         };
 
         return {

@@ -1,7 +1,7 @@
 /*jslint plusplus: true, continue: true, vars: true */
 /*global hilary*/
 
-hilary.register('gutentyp::components', { init: function (config, utils, componentPipeline) {
+hilary.register('gutentyp::components', { init: function (config, dom, componentPipeline) {
     "use strict";
 
     var components = [],
@@ -46,51 +46,51 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
             var i,
                 beforeThis = config.prefixes.pipeline.beforeComponent + definition.pipelineName,
                 afterThis = config.prefixes.pipeline.afterComponent + definition.pipelineName,
-                selected = utils.getSelectedText(),
+                selected = dom.getSelectedText(),
                 output,
                 gutenArea;
             
             // if the event is a form button click, capture the selected text (if any) and 
             // do not continue
-            if (utils.getAttribute(utils.getClosest(event.target, 'button'), config.attributes.formBtn.key)) {
-                selectionCoordinates = utils.getCursorCoordinates();
+            if (dom.getAttribute(dom.getClosest(event.target, 'button'), config.attributes.formBtn.key)) {
+                selectionCoordinates = dom.getCursorCoordinates();
                 selectionCoordinates.text = selected;
-                selectionCoordinates.isInEditor = utils.selectionIsInEditor(selectionCoordinates);
+                selectionCoordinates.isInEditor = dom.selectionIsInEditor(selectionCoordinates);
                 event.gutenSelection = selectionCoordinates;
                 
                 return;
             }
             
             for (i = 0; i < componentPipeline.beforeAny.length; i++) {
-                if (utils.isFunction(componentPipeline.beforeAny[i])) {
+                if (dom.isFunction(componentPipeline.beforeAny[i])) {
                     componentPipeline.beforeAny[i](event, selected, formData);
                 }
             }
 
-            if (utils.isFunction(componentPipeline[beforeThis])) {
+            if (dom.isFunction(componentPipeline[beforeThis])) {
                 componentPipeline[beforeThis](event, selected, formData);
             }
 
-            if (utils.isFunction(definition.func)) {
+            if (dom.isFunction(definition.func)) {
                 output = definition.func(event, selected || selectionCoordinates.text, formData);
                 
                 // replace the selected text
                 if (selected && selected.length > 0 && output) {
-                    utils.replaceSelectedText(output);
+                    dom.replaceSelectedText(output);
                 } else if (selectionCoordinates && selectionCoordinates.isInEditor) {
-                    utils.pasteHtml(selectionCoordinates, output);
+                    dom.pasteHtml(selectionCoordinates, output);
                 } else if (output) {
-                    utils.pasteHtmlAtCursor(output, false, event);
+                    dom.pasteHtmlAtCursor(output, false, event);
                 }
             }
 
             for (i = 0; i < componentPipeline.afterAny.length; i++) {
-                if (utils.isFunction(componentPipeline.afterAny[i])) {
+                if (dom.isFunction(componentPipeline.afterAny[i])) {
                     componentPipeline.afterAny[i](event, selected, formData);
                 }
             }
 
-            if (utils.isFunction(componentPipeline[afterThis])) {
+            if (dom.isFunction(componentPipeline[afterThis])) {
                 componentPipeline[afterThis](event, selected, formData);
             }
         };
@@ -115,45 +115,45 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
     };
     
     attachToBtn = function (component) {
-        utils.attachEvent({
+        dom.attachEvent({
             primarySelector: document,
             secondarySelector: '.' + component.cssClass,
             eventType: 'click',
             eventHandler: function (event) {
-                var btn = utils.getClosest(event.target, 'button'),
-                    target = utils.getNext(btn, '.gutentyp-toolbar-group'),
-                    btnCoords = utils.getCoordinates(event.target, target),
+                var btn = dom.getClosest(event.target, 'button'),
+                    target = dom.getNext(btn, '.gutentyp-toolbar-group'),
+                    btnCoords = dom.getCoordinates(event.target, target),
                     style;
 
                 // set the coordinates
                 style = 'left: ' + btnCoords.moveLeft + 'px';
                 style += '; top: ' + btnCoords.moveTop + 'px';
-                utils.setStyle(target, style);
+                dom.setStyle(target, style);
 
                 // show or hid this toolbar
-                utils.toggleClass(target, 'active');
+                dom.toggleClass(target, 'active');
             }
         });
     };
     
     attachToForm = function (component, validate) {
-        utils.attachEvent({
+        dom.attachEvent({
             primarySelector: document,
             secondarySelector: '.' + component.cssClass + '-form .btn-success',
             eventType: 'click',
             eventHandler: function (event) {
-                var formData = utils.formToJson(event.target),
+                var formData = dom.formToJson(event.target),
                     target;
                 
-                if (utils.isFunction(validate)) {
+                if (dom.isFunction(validate)) {
                     if (!validate(event, formData)) {
                         return false;
                     }
                 }
                 
-                target = utils.getClosest(event.target, '.gutentyp-toolbar-group');
+                target = dom.getClosest(event.target, '.gutentyp-toolbar-group');
                 // show or hide this toolbar
-                utils.toggleClass(target, 'active');
+                dom.toggleClass(target, 'active');
                 event.fromGutenForm = true;
                 component.execute(event, formData);
             }
@@ -161,17 +161,17 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
     };
     
     attachToCancel = function (component) {
-        utils.attachEvent({
+        dom.attachEvent({
             primarySelector: document,
             secondarySelector: '.' + component.cssClass + '-form .btn-cancel',
             eventType: 'click',
             eventHandler: function (event) {
-                var target = utils.getClosest(event.target, '.gutentyp-toolbar-group'),
-                    alerts = utils.getClosestAdjacent(event.target, '.alert');
+                var target = dom.getClosest(event.target, '.gutentyp-toolbar-group'),
+                    alerts = dom.getClosestAdjacent(event.target, '.alert');
                 // show or hide this toolbar
-                utils.toggleClass(target, 'active');
-                utils.clearForm(target);
-                utils.addClass(alerts, 'hidden');
+                dom.toggleClass(target, 'active');
+                dom.clearForm(target);
+                dom.addClass(alerts, 'hidden');
             }
         });
     };
@@ -186,7 +186,7 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
         
         for (i; i < fields.length; i++) {
             // do NOT combine uniqueId with the previous statement, it needs to be a new reference every time.
-            var uniqueId = utils.getRandomString();
+            var uniqueId = dom.getRandomString();
             markup += appendMarkup(fields[i], uniqueId);
             appendValidators(validators, fields[i], uniqueId);
         }
@@ -215,30 +215,30 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
                 alertCss += ' ' + field.validation.cssClass;
             }
             
-            markup += utils.makeElement('div', alertCss, undefined, field.validation.message, true);
+            markup += dom.makeElement('div', alertCss, undefined, field.validation.message, true);
         }
         
         if (field.label) {
             // <label>Url</label>
-            markup += utils.makeElement('label', undefined, undefined, field.label, true);
+            markup += dom.makeElement('label', undefined, undefined, field.label, true);
         }
         
         // <input type="text" name="" />
-        attributes = utils.isArray(field.attributes) ? field.attributes : [];
+        attributes = dom.isArray(field.attributes) ? field.attributes : [];
         attributes.push({ key: 'name', value: field.name });
         
         if (field.elementType === 'input') {
             attributes.push({ key: 'type', value: field.inputType || 'text' });
         }
         
-        markup += utils.makeElement(field.elementType, field.cssClass || undefined, attributes, undefined, true);
+        markup += dom.makeElement(field.elementType, field.cssClass || undefined, attributes, undefined, true);
         markup += '<br />';
 
         return markup;
     };
     
     appendValidators = function (validators, field, uniqueId) {
-        if (field.name && field.validation && utils.isFunction(field.validation.validate)) {
+        if (field.name && field.validation && dom.isFunction(field.validation.validate)) {
             validators.names.push(field.name);
             validators[field.name] = {
                 messageId: uniqueId,
@@ -254,13 +254,13 @@ hilary.register('gutentyp::components', { init: function (config, utils, compone
             for (i = 0; i < validators.names.length; i++) {
                 validator = validators[validators.names[i]];
                 
-                if (!validator || !utils.isFunction(validator.validate) || !validator.messageId) {
+                if (!validator || !dom.isFunction(validator.validate) || !validator.messageId) {
                     continue;
                 }
                 
                 if (!validator.validate(event, formData)) {
                     isValid = false;
-                    alert = utils.getClosestAdjacent(event.target, '.' + validator.messageId);
+                    alert = dom.getClosestAdjacent(event.target, '.' + validator.messageId);
                     alert.removeClass('hidden');
                 }
             }

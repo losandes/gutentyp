@@ -1,5 +1,5 @@
 /*globals hilary, console, window*/
-hilary.register('gutentyp::keyEvents', { init: function (config, utils, nicephore) {
+hilary.register('gutentyp::keyEvents', { init: function (config, dom, nicephore) {
     "use strict";
     
     var when, waitThreshold = 33, waitCount = 0, observer = nicephore();
@@ -27,7 +27,7 @@ hilary.register('gutentyp::keyEvents', { init: function (config, utils, nicephor
     
     
     observer.observe('paste', 'keypress', function (event, keyInfo, clipboard) {
-        if (!utils.hasAncestor(event.target, config.selectors.editor)) {
+        if (!dom.hasAncestor(event.target, config.selectors.editor)) {
             return true;
         }
         
@@ -39,7 +39,7 @@ hilary.register('gutentyp::keyEvents', { init: function (config, utils, nicephor
         
         then = function () {
             var img = '<img src="' + item.dataUrl + '" alt="user entered image" />';
-            return utils.insertHtmlAfter(event.target, img);
+            return dom.insertHtmlAfter(event.target, img);
         };
         
         when(assert, then);
