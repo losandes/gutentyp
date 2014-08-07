@@ -1,0 +1,176 @@
+pre {
+  overflow: auto;
+  word-wrap: normal;
+  white-space: pre;
+}
+
+.main {
+    margin: auto;
+    width: 888px;
+}
+
+.gutentyp-hidden {
+    display: none;
+    visibility: hidden;
+}
+
+
+.gutentyp-editor {
+    padding: 10px;
+    border: 1px solid #C8C8C8;
+    border-radius-bottom-left: 1px;
+    border-radius-bottom-right: 1px;
+    max-width: 885px;
+    
+    &:focus {}
+    
+    div {
+        margin-bottom: 10px;
+    }
+}
+
+.gutentyp-toolbar {
+    
+    &:before,
+    &:after {
+        content: " ";
+        display: table;
+    }
+    
+    &:after {
+        clear: both;
+    }
+    
+    button {
+        display: block;
+        margin: 0;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1.33;
+        text-decoration: none;
+        box-sizing: border-box;
+        min-width: 45px;
+        float: left;
+    }
+    
+    .gutentyp-form {
+        margin: 10px;
+        
+        label {
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        
+        input, textarea {
+            margin-bottom: 10px;
+            width: 300px;
+        }
+        
+        button {
+            float: right;
+            margin-bottom: 10px;
+        }
+        
+        .btn-cancel {
+            float: right;
+            margin-bottom: 10px;
+            margin-right: 10px;
+        }
+    }    
+}
+
+/* components */
+
+.color-block {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+.color-label {
+    width: 15px;
+    height: 15px;
+    background-color: #EE3DC2; /*#cd52bd*/ /*#FF369B*/
+    margin-left: 7.5px;
+}
+
+/* groups */
+
+.gutentyp-toolbar-arrow-under:after {
+    position: absolute;
+    left: 50%;
+    display: block;
+    margin-left: -8px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    content: "";
+    
+    border-width: 8px 8px 0 8px;
+}
+
+.gutentyp-toolbar-arrow-over:before {
+    position: absolute;
+    left: 50%;
+    display: block;
+    margin-left: -8px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    content: "";
+    
+    top: -8px;
+    border-width: 0 8px 8px 8px;
+}
+
+
+.gutentyp-toolbar-group {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+    visibility: hidden;
+    
+    ul {
+        margin: 0;
+        padding: 0;
+        
+        li {
+            float: left;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            
+            button {
+                display: block;
+                margin: 0;
+                padding: 15px;
+                cursor: pointer;
+                font-size: 14px;
+                line-height: 1.33;
+                text-decoration: none;
+                box-sizing: border-box;
+            }            
+        }        
+    }
+    
+    .gutentyp-form {
+        label {
+                display: block;
+                font-size: 14px;
+                font-weight: 400;
+                text-decoration: none;
+            }    
+    }
+    
+    &.active {
+        visibility: visible;
+        -webkit-animation: pop-upwards 160ms forwards linear;
+           -moz-animation: pop-upwards 160ms forwards linear;
+            -ms-animation: pop-upwards 160ms forwards linear;
+             -o-animation: pop-upwards 160ms forwards linear;
+                animation: pop-upwards 160ms forwards linear;
+        transition: top .075s ease-out, left .075s ease-out;
+    }
+}
