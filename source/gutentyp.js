@@ -1,9 +1,9 @@
 /*jslint plusplus: true */
-/*global hilary, jQuery*/
+/*global hilary, jQuery, nicephore*/
 
 // Gutentyp - composition root
 
-hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $, window) {
+hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer, hilary, $, window, nicephore) {
     "use strict";
     var gutentyp;
     
@@ -98,6 +98,10 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
         self.init = function (options) {
             if (!componentsAreRegistered) {
                 self.registerComponents(options);
+                if (options && options.observePaste && nicephore) {
+                    gutenContainer.resolve('gutentyp::paste')
+                        .init($, nicephore);
+                }
             }
             
             // Build the toolbar and append it to the rich text area

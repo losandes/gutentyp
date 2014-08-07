@@ -182,6 +182,7 @@ gutenInstance.init();
     <script src="../source/components.link.js"></script>
     <script src="../source/components.image.js"></script>
     <script src="../source/components.embed.js"></script>
+    <script src="../source/paste.js"></script>
     <script src="../source/gutentyp.js"></script>
 
     <script type="text/javascript">
@@ -239,7 +240,7 @@ gutenInstance.init();
 
 
         //rts.init({ autoRegisterComponents: false, components: ['gutentyp::components::emphasis', 'new::component']});
-        rts.init({ autoRegisterComponents: true, components: ['new::component']});
+        rts.init({ observePaste: true, autoRegisterComponents: true, components: ['new::component']});
 
     </script>
 
