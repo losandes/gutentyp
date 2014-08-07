@@ -99,7 +99,7 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
             if (!componentsAreRegistered) {
                 self.registerComponents(options);
                 if (options && options.observePaste && nicephore) {
-                    gutenContainer.resolve('gutentyp::keyEvents')
+                    gutenContainer.tryResolve('gutentyp::keyEvents')
                         .init(config, dom, nicephore);
                 }
             }
