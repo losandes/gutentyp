@@ -1,9 +1,9 @@
 /*jslint plusplus: true */
-/*global hilary, jQuery*/
+/*global hilary, jQuery, nicephore*/
 
 // Gutentyp - composition root
 
-hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $, window) {
+hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer, hilary, $, window, nicephore) {
     "use strict";
     var gutentyp;
     
@@ -12,7 +12,7 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
             prep,
             gutenContainer,
             config,
-            utils,
+            dom,
             pipeline,
             components,
             toolbar,
@@ -26,7 +26,7 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
             var modul = gutenContainer.tryResolve(moduleName);
 
             if (modul) {
-                modul.init(components, config, utils);
+                modul.init(components, config, dom);
             }
         };
 
@@ -41,12 +41,12 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
             self.config = config;
 
             // Initialize the base utilities required by this library
-            utils = gutenContainer.resolve('gutentyp::utils')
+            dom = gutenContainer.resolve('gutentyp::dom')
                 .init($, config);
 
             // Initialize the content pipeline, which pipes the editing functions with common helper functions
             pipeline = gutenContainer.resolve('gutentyp::pipeline')
-                .init(config, utils);
+                .init(config, dom);
 
             /*
             * the pipeline for gutentyp. you can register before and after handlers for all
@@ -56,7 +56,7 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
 
             // Initalize the component that controls the editing functions that are provided to the rich text area
             components = gutenContainer.resolve('gutentyp::components')
-                .init(config, utils, pipeline);
+                .init(config, dom, pipeline);
         };
 
         // DEFAULT PREPARATION
@@ -80,6 +80,7 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
                 tryResolveComponent('gutentyp::components::blocks');
                 tryResolveComponent('gutentyp::components::link');
                 tryResolveComponent('gutentyp::components::image');
+                tryResolveComponent('gutentyp::components::embed');
             }
             
             if (options.components) {
@@ -97,15 +98,19 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
         self.init = function (options) {
             if (!componentsAreRegistered) {
                 self.registerComponents(options);
+                if (options && options.observePaste && nicephore) {
+                    gutenContainer.tryResolve('gutentyp::keyEvents')
+                        .init(config, dom, nicephore);
+                }
             }
             
             // Build the toolbar and append it to the rich text area
             toolbar = gutenContainer.resolve('gutentyp::toolbar')
-                .init(config, utils, components);
+                .init(config, dom, components);
 
             // Initialize the core component
             core = gutenContainer.resolve('gutentyp::core')
-                .init(config, utils, components, toolbar);
+                .init(config, dom, components, toolbar);
 
             core.load();
 
@@ -156,15 +161,15 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
         };
 
         /*
-        * overrides the utils module, using the given override. upon registering this module,
+        * overrides the dom module, using the given override. upon registering this module,
         * all other modules are re-constructed to support own and downstream dependencies. overriding modules
         * has no impact after init is executed.
-        * @param utilsOverride (Object): the module initializer
+        * @param domOverride (Object): the module initializer
         * @signature: { init: function($, config) { your code here } }
         * @returns gutentyp: the instance you are interacting with
         */
-        self.overrideUtils = function (utilsOverride) {
-            return self.overrideModule('gutentyp::utils', utilsOverride);
+        self.overridedom = function (domOverride) {
+            return self.overrideModule('gutentyp::dom', domOverride);
         };
 
         /*
@@ -172,7 +177,7 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
         * all other modules are re-constructed to support own and downstream dependencies. overriding modules
         * has no impact after init is executed.
         * @param pipelineOverride (Object): the module initializer
-        * @signature: { init: function(config, utils) { your code here } }
+        * @signature: { init: function(config, dom) { your code here } }
         * @returns gutentyp: the instance you are interacting with
         */
         self.overridePipeline = function (pipelineOverride) {
@@ -184,7 +189,7 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
         * all other modules are re-constructed to support own and downstream dependencies. overriding modules
         * has no impact after init is executed.
         * @param componentsOverride (Object): the module initializer
-        * @signature: { init: function(config, utils, pipeline) { your code here } }
+        * @signature: { init: function(config, dom, pipeline) { your code here } }
         * @returns gutentyp: the instance you are interacting with
         */
         self.overrideComponents = function (componentsOverride) {
@@ -196,7 +201,7 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
         * all other modules are re-constructed to support own and downstream dependencies. overriding modules
         * has no impact after init is executed.
         * @param toolbarOverride (Object): the module initializer
-        * @signature: { init: function(config, utils, components) { your code here } }
+        * @signature: { init: function(config, dom, components) { your code here } }
         * @returns gutentyp: the instance you are interacting with
         */
         self.overrideToolbar = function (toolbarOverride) {
@@ -209,7 +214,7 @@ hilary.use([hilary, jQuery, window], function (hilarysInnerContainer, hilary, $,
         * all other modules are re-constructed to support own and downstream dependencies. overriding modules
         * has no impact after init is executed.
         * @param coreOverride (Object): the module initializer
-        * @signature: { init: function(config, utils, components, toolbar) { your code here } }
+        * @signature: { init: function(config, dom, components, toolbar) { your code here } }
         * @returns gutentyp: the instance you are interacting with
         */
         self.overrideCore = function (coreOverride) {

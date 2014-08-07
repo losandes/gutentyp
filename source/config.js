@@ -48,7 +48,8 @@ hilary.register('gutentyp::config', { init: function () {
         outdent: 'fa fa-outdent',
         link: 'fa fa-link',
         unorderedList: 'fa fa-list-ul',
-        orderedList: 'fa fa-list-ol'
+        orderedList: 'fa fa-list-ol',
+        embed: 'fa fa-play-circle-o'
     };
     
     config.cssClasses = {

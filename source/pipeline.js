@@ -1,7 +1,7 @@
 /*global hilary*/
 
 hilary.register('gutentyp::pipeline', {
-    init: function (config, utils) {
+    init: function (config, dom) {
         "use strict";
 
         var beforeAny = [], // Save the cursor's position
@@ -15,14 +15,14 @@ hilary.register('gutentyp::pipeline', {
             };
         
         registerPipelineEvent.registerBeforeAnyHandler = function (func) {
-            if (!utils.isFunction(func)) {
+            if (!dom.isFunction(func)) {
                 throw new Error('Only functions can be registered as beforeAny events.');
             }
             beforeAny.push(func);
         };
         
         registerPipelineEvent.registerAfterAnyHandler = function (func) {
-            if (!utils.isFunction(func)) {
+            if (!dom.isFunction(func)) {
                 throw new Error('Only functions can be registered as afterAny events.');
             }
             afterAny.push(func);
@@ -37,7 +37,7 @@ hilary.register('gutentyp::pipeline', {
         };
         
         registerPiplineEventHandler = function (pipelineName, func) {
-            if (!utils.isFunction(func)) {
+            if (!dom.isFunction(func)) {
                 throw new Error('Only functions can be registered as pipeline events.');
             }
             pipeline[pipelineName] = func;

@@ -81,7 +81,7 @@ pre {
     margin-bottom: 5px;
 }
 
-.gutentyp-toolbar .gutentyp-form input {
+.gutentyp-toolbar .gutentyp-form input, .gutentyp-toolbar .gutentyp-form textarea {
     margin-bottom: 10px;
     width: 300px;
 }
@@ -120,9 +120,11 @@ pre {
     height: 20px;
 }
 
-.color-pink {
-    background-color: #cd52bd;
-    margin-left: 5px;
+.color-label {
+    width: 15px;
+    height: 15px;
+    background-color: #EE3DC2; /*#cd52bd*/ /*#FF369B*/
+    margin-left: 7.5px;
 }
 
 /* groups */
@@ -283,4 +285,9 @@ pre {
     background-color: #000;
     color: #fff;
     background: linear-gradient(bottom, #242424, rgba(#000, 0.89));
+}
+
+:focus {
+    outline: none; 
+    box-shadow: 0 2px 2px rgba(0,0,0,0.3);
 }

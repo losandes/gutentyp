@@ -1,11 +1,9 @@
 /*global hilary,isNaN*/
 
-hilary.register('gutentyp::components::image', { init: function (components, config, utils) {
+hilary.register('gutentyp::components::image', { init: function (components, config, dom) {
     "use strict";
     
-    var image;
-    
-    image = components.makeComponent({
+    var component = components.makeComponent({
         title: 'Add Image',
         cssClass: 'gutentyp-image',
         pipelineName: 'image',
@@ -13,13 +11,13 @@ hilary.register('gutentyp::components::image', { init: function (components, con
         textClass: 'sr-only',
         func: function (event, selectedText, formData) {
             if (!formData) {
-                throw 'No form data is present, so we can\'t write an anchor element.';
+                throw 'No form data is present, so we can\'t write an image element.';
             }
             
-            var src = formData.src,
-                alt = formData.alt || formData.src,
-                width = formData.width,
-                height = formData.height,
+            var src = formData.gutenSrc,
+                alt = formData.gutenAlt || formData.gutenSrc,
+                width = formData.gutenWidth,
+                height = formData.gutenHeight,
                 img;
 
             img = '<img src="' + src + '" alt="' + alt + '" '
@@ -32,7 +30,7 @@ hilary.register('gutentyp::components::image', { init: function (components, con
         form: {
             fields: [
                 {
-                    name: 'src',
+                    name: 'gutenSrc',
                     label: 'Url',
                     elementType: 'input',
                     type: 'text',
@@ -40,7 +38,7 @@ hilary.register('gutentyp::components::image', { init: function (components, con
                         message: 'Please enter a valid Url.',
                         cssClass: 'link-src',
                         validate: function (event, formData) {
-                            if (!formData || !formData.src || formData.src.indexOf('://') < 0) {
+                            if (!formData || !formData.gutenSrc || formData.gutenSrc.indexOf('://') < 0) {
                                 return false;
                             }
 
@@ -49,7 +47,7 @@ hilary.register('gutentyp::components::image', { init: function (components, con
                     }
                 },
                 {
-                    name: 'alt',
+                    name: 'gutenAlt',
                     label: 'Description',
                     elementType: 'input',
                     type: 'text',
@@ -57,7 +55,7 @@ hilary.register('gutentyp::components::image', { init: function (components, con
                         message: 'Please enter a description. It\'s used by screen readers for accessibility.',
                         cssClass: 'link-alt',
                         validate: function (event, formData) {
-                            if (!formData || !formData.alt) {
+                            if (!formData || !formData.gutenAlt) {
                                 return false;
                             }
 
@@ -66,7 +64,7 @@ hilary.register('gutentyp::components::image', { init: function (components, con
                     }
                 },
                 {
-                    name: 'width',
+                    name: 'gutenWidth',
                     label: 'Width',
                     elementType: 'input',
                     type: 'text',
@@ -74,7 +72,7 @@ hilary.register('gutentyp::components::image', { init: function (components, con
                         message: 'Width is not required, but it has to be a number',
                         cssClass: 'link-width',
                         validate: function (event, formData) {
-                            if (formData && formData.width && isNaN(formData.width)) {
+                            if (formData && formData.gutenWidth && isNaN(formData.gutenWidth)) {
                                 return false;
                             }
 
@@ -83,7 +81,7 @@ hilary.register('gutentyp::components::image', { init: function (components, con
                     }
                 },
                 {
-                    name: 'height',
+                    name: 'gutenHeight',
                     label: 'Height',
                     elementType: 'input',
                     type: 'text',
@@ -91,7 +89,7 @@ hilary.register('gutentyp::components::image', { init: function (components, con
                         message: 'Height is not required, but it has to be a number',
                         cssClass: 'link-height',
                         validate: function (event, formData) {
-                            if (formData && formData.height && isNaN(formData.height)) {
+                            if (formData && formData.gutenHeight && isNaN(formData.gutenHeight)) {
                                 return false;
                             }
 
@@ -101,9 +99,11 @@ hilary.register('gutentyp::components::image', { init: function (components, con
                 }]
         },
         after: function (event) {
-            utils.clearForm(event.target);
+            dom.clearForm(event.target);
         }
     });
 
-    components.addComponent(image);
+    components.addComponent(component);
+    
+    return component;
 }});
