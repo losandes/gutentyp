@@ -72,7 +72,7 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
             }
 
             if (dom.isFunction(definition.func)) {
-                output = definition.func(event, selected || selectionCoordinates.text, formData);
+                output = definition.func(event, selected || (selectionCoordinates && selectionCoordinates.text), formData);
                 
                 // replace the selected text
                 if (selected && selected.length > 0 && output) {
