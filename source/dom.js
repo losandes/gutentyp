@@ -1,5 +1,5 @@
 /*jslint plusplus: true */
-/*global hilary*/
+/*global hilary, console*/
 
 hilary.register('gutentyp::dom', {
     init: function ($, config) {
@@ -24,6 +24,7 @@ hilary.register('gutentyp::dom', {
             getNext,
             getPrevious,
             attachEvent,
+            triggerEvent,
             updateTextarea,
             isFunction,
             isObject,
@@ -213,9 +214,44 @@ hilary.register('gutentyp::dom', {
     
             return addClass($this, config.cssClasses.hasEvents);
         };
+        
+        triggerEvent = function (domElement, eventName) {
+
+            var event;
+            
+            if (domElement instanceof $) {
+                domElement = domElement[0];
+            }
+
+            if (document.createEvent) {
+
+                event = document.createEvent("HTMLEvents");
+                event.initEvent(eventName, true, true);
+                event.eventName = eventName;
+                domElement.dispatchEvent(event);
+            } else {
+
+                event = document.createEventObject();
+                event.eventType = eventName;
+                event.eventName = eventName;
+                domElement.fireEvent("on" + event.eventType, event);
+            }
+            
+            $(domElement).trigger(eventName);
+        };
+
 
         updateTextarea = function (target) {
-            return $('textarea#' + $(target).attr('data-for')).html($(target).html());
+            var textArea = $('textarea#' + $(target).attr('data-for'));
+            
+            if (textArea.is('textarea')) {
+                textArea.html($(target).html());            
+            } else {
+                textArea.val($(target).html());
+            }
+
+            triggerEvent(textArea[0], 'change');
+            return target;
         };
 
         isFunction = function (obj) {

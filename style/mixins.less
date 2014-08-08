@@ -1,0 +1,63 @@
+// main: light-theme.less
+
+.gradient (@position: bottom, @startColorHex: #eee, @endColorHex: white) {
+    background-color: @startColorHex;
+//	background: -webkit-gradient(linear, left top, left bottom, from(@startColorHex), to(@endColorHex));
+	background: -webkit-linear-gradient(@position, @startColorHex, @endColorHex);
+	background: -moz-linear-gradient(@position, @startColorHex, @endColorHex);
+	background: -ms-linear-gradient(@position, @startColorHex, @endColorHex);
+	background: -o-linear-gradient(@position, @startColorHex, @endColorHex);
+    background: linear-gradient(@position, @startColorHex, @endColorHex);
+}
+
+.rgbaGradient (@position: bottom, @startColorHex: #eee, @endColorHex: white, @endColorAlpha: 0.1) {
+	background-color: @startColorHex;
+//	background: -webkit-gradient(linear, left top, left bottom, from(@startColor), to(@endColor));
+	background: -webkit-linear-gradient(@position, @startColorHex, fade(@endColorHex, @endColorAlpha));
+	background: -moz-linear-gradient(@position, @startColorHex, fade(@endColorHex, @endColorAlpha));
+	background: -ms-linear-gradient(@position, @startColorHex, fade(@endColorHex, @endColorAlpha));
+	background: -o-linear-gradient(@position, @startColorHex, fade(@endColorHex, @endColorAlpha));
+    background: linear-gradient(@position, @startColorHex, fade(@endColorHex, @endColorAlpha));
+}
+
+.animate (@name: pop-upwards, @duration: 160ms, @direction: forward, @ease: linear) {
+    -webkit-animation: @name @duration @direction @ease;
+       -moz-animation: @name @duration @direction @ease;
+        -ms-animation: @name @duration @direction @ease;
+         -o-animation: @name @duration @direction @ease;
+            animation: @name @duration @direction @ease;
+}
+
+//.colorAnimation (@name, @fromColor: red, @toColor: yellow) {
+//    /* Chrome, Safari, Opera */
+//    @-webkit-keyframes @name {
+//        from { background: @fromColor; }
+//        to { background: @toColor; }
+//    }
+//
+//    /* Standard syntax */
+//    @keyframes @name {
+//        from { background: @fromColor; }
+//        to { background: @toColor; }
+//    }
+//}
+//
+//.fiveColorKeyFrames (@name, @color1: red, @color2: yellow, @color3: blue, @color4: green, @color5: purple) {
+//    /* Chrome, Safari, Opera */
+//    @-webkit-keyframes @name {
+//        0% { background: @color1; }
+//        25% { background: @color2; }
+//        50% { background: @color3; }
+//        75% { background: @color4; }
+//        100% { background: @color5; }
+//    }
+//
+//    /* Standard syntax */
+//    @keyframes @name {
+//        0% { background: @color1; }
+//        25% { background: @color2; }
+//        50% { background: @color3; }
+//        75% { background: @color4; }
+//        100% { background: @color5; }
+//    }
+//}
