@@ -11,7 +11,7 @@ hilary.register('gutentyp::demo', { init: function ($, hilary, gutentyp, highlig
         useCustomToolbar,
         useCustomColors,
         addDemoThemeEvents,
-        clearDemoTheme,
+        chooseDemoTheme,
         start;
     
     // register a custom component to be used in our text areas
@@ -176,8 +176,15 @@ hilary.register('gutentyp::demo', { init: function ($, hilary, gutentyp, highlig
         }});
     };
     
-    clearDemoTheme = function () {
+    chooseDemoTheme = function (theme) {
+        var style;
+        
         $('head [data-theme="true"]').remove();
+        
+        if (theme !== 'default') {
+            style = '<link rel="stylesheet" href="../build/' + theme + '-theme.css" data-theme="true" />';
+            $('head').append(style);
+        }
     };
     
     addDemoThemeEvents = function () {
@@ -186,21 +193,7 @@ hilary.register('gutentyp::demo', { init: function ($, hilary, gutentyp, highlig
                 theme = $this.val(),
                 style;
             
-            switch (theme) {
-            case 'github':
-                clearDemoTheme();
-                style = '<link rel="stylesheet" href="../build/github-theme.css" data-theme="true" />';
-                $('head').append(style);
-                break;
-            case 'acatar':
-                clearDemoTheme();
-                style = '<link rel="stylesheet" href="../build/acatar-theme.css" data-theme="true" />';
-                $('head').append(style);
-                break;
-            default:
-                clearDemoTheme();
-                break;
-            }
+            chooseDemoTheme(theme);
         });
     };
     
