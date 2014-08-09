@@ -210,7 +210,7 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
         
         if (field.validation && field.validation.message) {
             // <div class="link-url alert hidden">Please enter a valid Url.</div>
-            alertCss = 'alert alert-warning ' + config.cssClasses.hidden + ' ' + uniqueId;
+            alertCss = 'alert ' + config.cssClasses.hidden + ' ' + uniqueId;
             
             if (field.validation.cssClass) {
                 alertCss += ' ' + field.validation.cssClass;

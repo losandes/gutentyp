@@ -67,7 +67,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, dom, componentCol
             }, config.selectors.newToolbars);
             dom.insertNewElementInto({
                 markup: '<div class="' + currentGroup.menuId + ' gutentyp-toolbar-group gutentyp-toolbar-arrow-' + (component.group.arrow || 'over') + '"><ul></ul></div>'
-            }, config.selectors.newToolbars);
+            }, 'body'); //config.selectors.newToolbars);
 
             // toggle hidden
             dom.attachEvent({

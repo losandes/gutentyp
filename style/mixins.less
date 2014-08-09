@@ -28,6 +28,16 @@
             animation: @name @duration @direction @ease;
 }
 
+.border-radius (@radius: 1px) {
+	-webkit-border-radius: @radius;
+	-moz-border-radius:    @radius;
+	border-radius:         @radius;
+
+	-moz-background-clip:    padding;
+	-webkit-background-clip: padding-box;
+	background-clip:         padding-box;
+}
+
 //.colorAnimation (@name, @fromColor: red, @toColor: yellow) {
 //    /* Chrome, Safari, Opera */
 //    @-webkit-keyframes @name {

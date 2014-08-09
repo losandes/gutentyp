@@ -3,16 +3,47 @@
 // mixins
 @import 'mixins.less';
 
-.group-button () {
-    color: #fff;
+.gutentyp-button () {
     display: block;
     margin: 0;
-    padding: 15px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.33;
+    text-decoration: none;
+    box-sizing: border-box;    
+}
+
+.toolbar-button () {
+    padding: 10px;
     cursor: pointer;
     font-size: 14px;
     line-height: 1.33;
     text-decoration: none;
     box-sizing: border-box;
+    min-width: 50px;
+    height: 50px;
+    float: left;
+    border: none;
+    color: #242424;
+    background-color: transparent;
+    box-shadow: 0 0 0 fade(#000, 0.3);
+
+    &:hover {
+        background-color: #eee;
+    }
+
+    &:focus {
+        outline: none; 
+        box-shadow: 0 2px 2px rgba(0,0,0,0.3);    
+    }
+}
+
+.group-button () {
+    color: #fff;
+    background-color: #242424;
+    padding: 15px;
+    border: none;
+    .border-radius(5px);
 
     &:hover {
         background-color: #000;
@@ -20,12 +51,36 @@
     }
 }
 
+.gutentyp-toolbar-arrow () {
+    position: absolute;
+    left: 50%;
+    display: block;
+    margin-left: -8px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    content: "";
+}
+
+// /mixins
+
 // main
 
 pre {
   overflow: auto;
   word-wrap: normal;
   white-space: pre;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
 }
 
 .gutentyp-hidden {
@@ -37,9 +92,6 @@ pre {
 .gutentyp-editor {
     padding: 10px;
     border: 1px solid #C8C8C8;
-    border-radius-bottom-left: 1px;
-    border-radius-bottom-right: 1px;
-    max-width: 885px;
     
     &:focus {
         outline: none; 
@@ -65,30 +117,8 @@ pre {
     }
     
     button {
-        display: block;
-        margin: 0;
-        padding: 10px;
-        cursor: pointer;
-        font-size: 14px;
-        line-height: 1.33;
-        text-decoration: none;
-        box-sizing: border-box;
-        min-width: 50px;
-        height: 50px;
-        float: left;
-        border: none;
-        color: #242424;
-        background-color: transparent;
-        box-shadow: 0 0 0 fade(#000, 0.3);
-        
-        &:hover {
-            background-color: #eee;
-        }
-        
-        &:focus {
-            outline: none; 
-            box-shadow: 0 2px 2px rgba(0,0,0,0.3);    
-        }
+        .gutentyp-button();
+        .toolbar-button();
     }
     
     .gutentyp-form {
@@ -137,14 +167,7 @@ pre {
 // popup arrows
 .gutentyp-toolbar-arrow-under {
     &:after {
-        position: absolute;
-        left: 50%;
-        display: block;
-        margin-left: -8px;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        content: "";
+        .gutentyp-toolbar-arrow();
         border-width: 8px 8px 0 8px;        
         top: 50px;
         border-color: #242424 transparent transparent transparent;
@@ -153,15 +176,7 @@ pre {
 
 .gutentyp-toolbar-arrow-over {
     &:before {
-        position: absolute;
-        left: 50%;
-        display: block;
-        margin-left: -8px;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        content: "";
-        top: -8px;
+        .gutentyp-toolbar-arrow();
         border-width: 0 8px 8px 8px;
         top: -8px;
         border-color: transparent transparent #242424 transparent;
@@ -190,6 +205,7 @@ pre {
             list-style: none;
             
             button {
+                .gutentyp-button();
                 .group-button();
             }            
         }        
@@ -210,9 +226,11 @@ pre {
         input, textarea {
             margin-bottom: 10px;
             width: 300px;
+            color: #000;
         }
         
         button {
+            .gutentyp-button();
             .group-button();
             float: right;
             margin-bottom: 10px;
@@ -221,6 +239,17 @@ pre {
                 float: right;
                 margin-right: 10px;
             }
+        }
+        
+        .alert {
+            background-color: #FFD2D2;
+            border: 1px solid #FFA8A8;
+            color: #242424;
+            padding: 5px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            max-width: 300px;
+            .border-radius(1px);
         }
     }
     
