@@ -187,9 +187,14 @@ hilary.register('gutentyp::demo', { init: function ($, hilary, gutentyp, highlig
                 style;
             
             switch (theme) {
-            case 'in-context':
+            case 'github':
                 clearDemoTheme();
-                style = '<link rel="stylesheet" href="../build/in-context-theme.css" data-theme="true" />';
+                style = '<link rel="stylesheet" href="../build/github-theme.css" data-theme="true" />';
+                $('head').append(style);
+                break;
+            case 'acatar':
+                clearDemoTheme();
+                style = '<link rel="stylesheet" href="../build/acatar-theme.css" data-theme="true" />';
                 $('head').append(style);
                 break;
             default:
