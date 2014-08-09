@@ -115,7 +115,7 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
 
             // Initialize the core component
             transformer = gutenContainer.resolve('gutentyp::transformer')
-                .init(config, dom, components, toolbar);
+                .init(config, dom, components, toolbar, options);
 
             transformer.transform();
 
