@@ -10,4 +10,6 @@ hilary.use([jQuery, hilary, gutentyp, hljs, document, console], function (ctx, $
     demo.useCustomColors(demo.gutenInstance2);
     
     demo.start();
+    
+    demo.addDemoThemeEvents();
 });

@@ -10,7 +10,8 @@ hilary.register('gutentyp::demo', { init: function ($, hilary, gutentyp, highlig
         useCustomConfig,
         useCustomToolbar,
         useCustomColors,
-        addDemoThemePicker,
+        addDemoThemeEvents,
+        clearDemoTheme,
         start;
     
     // register a custom component to be used in our text areas
@@ -175,8 +176,27 @@ hilary.register('gutentyp::demo', { init: function ($, hilary, gutentyp, highlig
         }});
     };
     
-    addDemoThemePicker = function () {
-        // <link rel="stylesheet" href="../build/in-context-theme.css" />
+    clearDemoTheme = function () {
+        $('head [data-theme="true"]').remove();
+    };
+    
+    addDemoThemeEvents = function () {
+        $('.theme-picker').on('change', function (event) {
+            var $this = $(event.target),
+                theme = $this.val(),
+                style;
+            
+            switch (theme) {
+            case 'in-context':
+                clearDemoTheme();
+                style = '<link rel="stylesheet" href="../build/in-context-theme.css" data-theme="true" />';
+                $('head').append(style);
+                break;
+            default:
+                clearDemoTheme();
+                break;
+            }
+        });
     };
     
     start = function () {
@@ -204,7 +224,7 @@ hilary.register('gutentyp::demo', { init: function ($, hilary, gutentyp, highlig
         useCustomConfig: useCustomConfig,
         useCustomToolbar: useCustomToolbar,
         useCustomColors: useCustomColors,
-        addDemoThemePicker: addDemoThemePicker,
+        addDemoThemeEvents: addDemoThemeEvents,
         start: start
     };
     
