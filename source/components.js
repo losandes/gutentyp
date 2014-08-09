@@ -295,7 +295,7 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
         /*
          * The default components supported by gutentyp
          */
-        components: components,
+        getComponents: function () { return components; },
 
         /*
          * Returns a component object that will leverage the component pipeline

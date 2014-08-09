@@ -9,14 +9,14 @@
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/github.min.css" />
     <link rel="stylesheet" href="../build/gutentyp.css" />
     <style>
-    .main {
-        margin: auto;
-        width: 888px;
-    }
+        .main {
+            margin: auto;
+            width: 888px;
+        }
     </style>
 </head>
 <body>
-
+    
     <section class="main">
         <h1>Gutentyp</h1>
         <br />
@@ -149,7 +149,7 @@ gutenInstance.init();
         </textarea>
         
         
-        
+<!--        SECOND Text Area-->
         <br />
         <br />
         <h2>A second instance with the same configuration</h2>
@@ -178,6 +178,8 @@ gutenInstance.init();
             <p>No, I did not kill Kitty. However, I am going to oblige and answer the nice officer's questions because I am an honest man with no secrets to hide. Michael! Michael! Michael! No, I did not kill Kitty. However, I am going to oblige and answer the nice officer's questions because I am an honest man with no secrets to hide. That's what it said on 'Ask Jeeves.'</p>
         </textarea>
 
+        
+<!--        THIRD Text Area-->
         <br />
         <br />
         <h2>A third instance with unique configuration</h2>
@@ -210,140 +212,8 @@ gutenInstance.init();
     <script src="../source/components.embed.js"></script>
     <script src="../source/keyEvents.js"></script>
     <script src="../source/gutentyp.js"></script>
-
-    <script type="text/javascript">
-        
-        // create 2 instances of gutentyp, for different configurations
-        var rts = gutentyp(),
-            rts2 = gutentyp();
-
-        // register a custom component to be added to the toolbar and then initialize all textareas
-        // that match the config
-
-//        rts.registerComponent({
-//            title: 'Custom Foreground color',
-//            cssClass: 'gutentyp-fg-color',
-//            pipelineName: 'foregroundColor2',
-//            func: function (event, text) {
-//                document.execCommand('forecolor', false, '#FF0000');
-//                return false;
-//            },
-//            before: function (event) {
-//                console.log('before', event);
-//            },
-//            after: function (event) {
-//                console.log('after', event);
-//            }
-//        });
-        
-        hilary.register('new::component', { init: function (components, config, utils) {
-            var custom = components.makeComponent({
-                title: 'Custom',
-                cssClass: 'gutentyp-fg-color',
-                pipelineName: 'foregroundColor2',
-                func: function (event, text) {
-                    document.execCommand('forecolor', false, '#FF0000');
-                    return false;
-                },
-                before: function (event) {
-                    console.log('before', event);
-                },
-                after: function (event) {
-                    console.log('after', event);
-                }
-            });
-            
-            components.addComponent(custom);
-        }});
-        
-//                tryResolveComponent('gutentyp::components::emphasis');
-//                tryResolveComponent('gutentyp::components::colors');
-//                tryResolveComponent('gutentyp::components::headings');
-//                tryResolveComponent('gutentyp::components::justification');
-//                tryResolveComponent('gutentyp::components::lists');
-//                tryResolveComponent('gutentyp::components::blocks');
-//                tryResolveComponent('gutentyp::components::link');
-//                tryResolveComponent('gutentyp::components::image');        
-
-
-        //rts.init({ autoRegisterComponents: false, components: ['gutentyp::components::emphasis', 'new::component']});
-        rts.init({ observePaste: true, autoRegisterComponents: true, components: ['new::component']});
-
-    </script>
-
-    <script type="text/javascript">
-        // configure an alternate gutentyp instance, then override the toolbar module and
-        // initialize the textareas that match this config
-
-        // here we are modifying the existing config, so we can override it later
-        var rts2Config = rts2.config;
-        rts2Config.cssClasses.toGutentypify = 'rts2';
-        rts2Config.selectors.toGutentypify = '.rts2';
-        rts2Config.cssClasses.editor = 'rts2editor';
-        rts2Config.selectors.editor = '.rts2editor';
-
-        // override the existing config with our modifications
-        rts2.overrideConfig({ init: function () { return rts2Config; }});
-
-        // override the toolbar => we want to create our own!
-        rts2.overrideToolbar({ init: function (config, utils, components) {
-            "use strict";
-
-            var build = function () {
-                $(config.selectors.editor).prepend('<div><strong>Foo Toolbar!</strong></div>');
-
-                return;
-            };
-
-            return {
-                build: build
-            };
-
-        }});
-
-        // override an existing component
-        rts2.overrideModule('gutentyp::components::colors', { init: function (components) {
-            "use strict";
-
-            var fgColor, bgColor;
-
-            fgColor = components.makeComponent({
-                title: 'Foreground color',
-                cssClass: 'gutentyp-fg-color',
-                pipelineName: 'foregroundColor',
-                func: function (event, text) {
-                    document.execCommand('forecolor', false, '#FF0000');
-                    return false;
-                }
-            });
-
-            bgColor = components.makeComponent({
-                title: 'Background color',
-                cssClass: 'gutentyp-bg-color',
-                pipelineName: 'backgroundColor',
-                func: function () {
-                    document.execCommand('backcolor', false, '#FF0000');
-                    return false;
-                }
-            });
-
-            components.addComponent([fgColor, bgColor]);
-        }});
-
-        rts2.init();
-
-        // init a second time to verify that we don't re-do anything
-        rts.init();
-        
-        
-        
-        $(document).ready(function() {
-          $('.gutentyp-editor pre').each(function(i, block) {
-            hljs.highlightBlock(block);
-          });
-        });
-    </script>
-
+    <script src="demo.js"></script>
+    <script src="compositionRoot.js"></script>
 
 </body>
 </html>
