@@ -1,36 +1,216 @@
 <html>
 <head>
     <title>Gutentyp Demo</title>
-
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="../lib/hilary.js"></script>
-    <link rel="stylesheet" href="demo.css" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css" />
+<!--    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/monokai.min.css" />-->
+<!--    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/monokai_sublime.min.css" />-->
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/github.min.css" />
+    <link rel="stylesheet" href="../build/gutentyp.css" />
+    <style>
+        .main {
+            margin: auto;
+            width: 888px;
+        }
+        .themes {
+            float: right;
+        }
+    </style>
 </head>
 <body>
+    
+    <section class="main">
+        <div class="themes">
+            <select class="theme-picker">
+                <option value="default">default</option>
+                <option value="in-context">in-context</option>
+            </select>
+        </div>
+        
+        <h1>Gutentyp</h1>
+        <br />
 
+        <textarea class="gutentyp-ify" id="test">
+            <h2>Why Gutentyp?</h2>
+            <br />
+            <div>We wanted a highly extensible, modular rich text editor that looks beautiful and just works. There are a lot of great rich text editors out there, but each one presented a drawback, that led us to design our own.</div>
+            <div>The result is a simple library that is easy to extend and customize. You can write new components in a matter of minutes, and replace anything you don't like with your own flavor. Gutentyp also supports multiple instances, so you can have multiple editors on the same page with different configurations.</div>
+            
+            <h2>Getting Started</h2>
+            <div>The super-simple path is to start with a <code>textarea</code></div>
+            
+<pre>&lt; textarea class="gutentyp-ify"&gt;
+&lt; /textarea&gt;
+</pre>
+            <br>
+            <div>and then wire it up with JavaScript</div>
+            
+<pre>
+var gutenInstance = gutentyp();
+gutenInstance.init();
+</pre>
+            
+            <br>
+            <div>You can call init as much as you like, and you'll need to after DOM Mutations. If you're using jQuery for your ajax, you can initialize Gutentyp like this:</div>
+            
+<pre>
+var gutenInstance = gutentyp();
+gutenInstance.init();
 
-    <h1>Gutentyp</h2>
+// ...
 
-    <textarea class="gutentyp-ify" id="test">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet sapien vitae purus ultricies lobortis id ut turpis. Phasellus pellentesque tristique nulla nec blandit. Pellentesque augue massa, fringilla ut erat non, commodo hendrerit augue. Suspendisse aliquam sapien vitae sem semper, at molestie justo pretium. Quisque pellentesque mattis iaculis. Pellentesque fermentum laoreet tincidunt. Maecenas rhoncus porta dui, ut elementum orci tincidunt sit amet.
-        Nunc lorem felis, placerat quis malesuada id, ornare a neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur placerat lorem ac velit faucibus congue. Suspendisse ut bibendum eros:
-        <ol>
-            <li>Donec sagittis vestibulum arcu, ac tincidunt urna eleifend a.</li>
-            <li>Sed eget pharetra risus. Duis cursus nisl quis sagittis volutpat.</li>
-            <li>Nunc justo lacus, tincidunt vitae elit sit amet, gravida convallis urna.</li>
-            <li>Sed ut hendrerit dolor, vel tempus mi. Ut in orci non neque ornare viverra sit amet in mauris.</li>
-        </ol>
-        Vestibulum gravida nibh sed vulputate tincidunt. Mauris volutpat urna eget faucibus posuere. Vestibulum rhoncus at sem in lacinia. Nulla vulputate leo non mi sagittis gravida. Cras id ipsum eu dui posuere ullamcorper eget ac libero. Suspendisse sapien nunc, pharetra nec commodo id, euismod id orci. Aliquam bibendum ultrices felis sed cursus. Nullam ultricies, ligula ut tincidunt feugiat, lectus lectus cursus lacus, in vehicula risus felis ut purus.
-        Mauris facilisis hendrerit nisi, in vehicula erat tempus sagittis. Sed tempor, ligula ac aliquet vestibulum, metus risus tempus turpis, vel euismod nulla neque ac nibh. Etiam quis varius libero. Cras dapibus pellentesque purus sed semper. Nullam porttitor mattis nisl vitae viverra. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sodales ultricies lorem, ac luctus dolor elementum vel. Nulla facilisi. Pellentesque purus nisi, pellentesque non turpis sit amet, aliquet faucibus quam. Curabitur ullamcorper nisi odio, ut ultrices orci dignissim ullamcorper. Proin ac ultrices enim. Sed porta ultricies elit, id dapibus justo imperdiet vitae. Nullam consectetur velit sed tincidunt gravida. Nunc nec ultricies diam.
-        Aenean mollis eleifend volutpat. Integer sollicitudin ultricies arcu, vitae bibendum lacus vulputate eget. Nam et nibh fermentum, congue nunc quis, venenatis massa. Vestibulum porttitor nulla erat, sit amet tempor arcu pellentesque sed. Praesent quis volutpat quam. Nam rutrum condimentum elit, nec lobortis erat condimentum ac. Praesent vitae ultrices dui. Fusce mollis porttitor est. Etiam non luctus quam. Praesent dui nisl, ullamcorper sit amet iaculis at, consequat ac diam. Vestibulum eu tempus enim, in fermentum nisi. Nam dolor elit, rhoncus vel eros ac, vulputate ornare quam. Praesent tincidunt orci ac tempus egestas.
-    </textarea>
+$(document).ajaxComplete(function () {
+    gutenInstance.init();
+});
+</pre>
+            
+            <h2>Gutentyp is Modular and Highly Extensible</h2>
+            <br>
+            
+            <div>Gutentyp is built so you can extend it easily, and replace modules with custom modules, if you like. Modules include the core components that make up Gutentyp, as well as the components that are available in the toolbar.</div>
+            <div>The preferred way to register components is to register hilary modules and then pass the component names into the Gutentyp init</div>
+<pre>
+// the advantage of registering your components this way, is that you 
+// can get access to the components, config and utils modules, inside of your component
+// All components receive the same parameters in their init functions
+hilary.register('new::component', { init: function (components, config, utils) {
+    var custom = components.makeComponent({
+        title: 'Custom',
+        cssClass: 'gutentyp-fg-color',
+        pipelineName: 'foregroundColor2',
+        func: function (event, text) {
+            document.execCommand('forecolor', false, '#FF0000');
+            return false;
+        },
+        before: function (event) {
+            console.log('before', event);
+        },
+        after: function (event) {
+            console.log('after', event);
+        }
+    });
 
+    components.addComponent(custom);
+}});
+
+var gutenInstance = gutentyp();
+
+// if you set autoRegisterComponents to false, you can pass in any components that you want 
+// to include, in the order that you want them to appear
+gutenInstance.init({ autoRegisterComponents: true, components: ['new::component']});
+</pre>            
+            <div>You can also register them on the instance prior to initialization.</div>
+<pre>
+var gutenInstance = gutentyp();
+
+// if you don't need components, config or utils modules, then 
+// this is the short-hand registration technique
+gutenInstance.registerComponent({
+    title: 'Custom Foreground color',                   // The text that will be displayed or read by a screen reader
+    cssClass: 'gutentyp-fg-color',                      // A css class is added to the button, so you can style with CSS/LESS/SASS
+    pipelineName: 'foregroundColor2',                   // This is a unique name that the component will be registered as
+    icon: 'fa fa-edit',                                 // CSS Classes for your icon
+    textCss: 'sr-only'                                  // CSS Classes for the text (sr-only means it won't be displayed, but will be read by screen readers)
+    // @param event: the original event
+    // @param text: the text that is selected, if any
+    func: function (event, text) {                      // The handler that is executed on button click
+        document.execCommand('forecolor', false, '#FF0000');
+        return false;
+    },
+    // @param event: the original event
+    before: function (event) {                          // You can register before
+        console.log('before', event);
+    },
+    // @param event: the original event
+    after: function (event) {                           // and after handlers inline, as well as exclusively
+        console.log('after', event);
+    }
+});
+
+gutenInstance.init();                                   // Once init is called, the toolbar will not change
+</pre>
+
+            <br>
+            <h3>Configuring Gutentyp</h3>
+            <div>Like registering components, configuration can be modified before you call the <code>init</code> function. Here's an example:</div>
+<pre>
+var gutenInstance = gutentyp();
+
+// get the default config and override just what you need.
+gutenInstance.config.icons.header = 'fa fa-header';
+gutenInstance.config.icons.image = 'fa fa-image';
+
+// when overriding a module, the signature has to match, so our
+// config override will return an Object Literal with an init function
+// because that is the signature of the config module
+gutenInstance.overrideConfig({
+    init: function () {
+        return gutenInstance.config;
+    }
+});
+
+gutenInstance.init();
+</pre>
+            
+            <h3>Registering and Overriding Modules</h3>
+            <div>There are six core modules that are composed by a seventh module, any of which can be replaced easily.</div>
+
+        </textarea>
+        
+        
+<!--        SECOND Text Area-->
+        <br />
+        <br />
+        <h2>A second instance with the same configuration</h2>
+        <br />
+        <textarea class="gutentyp-ify" id="test2">
+            <h1>Exit Strategy</h1>
+            <p>We just call it a sausage. We just call it a sausage. I don't understand the question, and I won't respond to it.</p>
+            <h2>Forget-Me-Now</h2>
+            <p>First place chick is hot, but has an attitude, doesn't date magicians. Say goodbye to these, because it's the last time! I'm afraid I just blue myself. Across from where? Whoa, this guy's straight? It's called 'taking advantage.' It's what gets you ahead in life.</p>
+            <ul>
+            <li>There's so many poorly chosen words in that sentence.</li>
+            <li>Guy's a pro.</li>
+            <li>No&hellip; but I'd like to be asked!</li>
+            </ul>
+            <h3>Top Banana</h3>
+            <p>I hear the jury's still out on science. I hear the jury's still out on science. Whoa, this guy's straight? But I bought a yearbook ad from you, doesn't that mean anything anymore? Whoa, this guy's straight?</p>
+            <h4>Mr. F</h4>
+            <p>As you may or may not know, Lindsay and I have hit a bit of a rough patch. As you may or may not know, Lindsay and I have hit a bit of a rough patch. I've opened a door here that I regret. Did you enjoy your meal, Mom? You drank it fast enough. Whoa, this guy's straight? No&hellip; but I'd like to be asked!</p>
+            <ol>
+            <li>No, I did not kill Kitty. However, I am going to oblige and answer the nice officer's questions because I am an honest man with no secrets to hide.</li>
+            <li>Michael!</li>
+            <li>He'll want to use your yacht, and I don't want this thing smelling like fish.</li>
+            <li>Whoa, this guy's straight?</li>
+            </ol>
+            <h5>Meat the Veals</h5>
+            <p>No, I did not kill Kitty. However, I am going to oblige and answer the nice officer's questions because I am an honest man with no secrets to hide. Michael! Michael! Michael! No, I did not kill Kitty. However, I am going to oblige and answer the nice officer's questions because I am an honest man with no secrets to hide. That's what it said on 'Ask Jeeves.'</p>
+        </textarea>
+
+        
+<!--        THIRD Text Area-->
+        <br />
+        <br />
+        <h2>A third instance with unique configuration</h2>
+        <br />
+        <textarea class="rts2" id="test3">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet sapien vitae purus ultricies lobortis id ut turpis. Phasellus pellentesque tristique nulla nec blandit. Pellentesque augue massa, fringilla ut erat non, commodo hendrerit augue. Suspendisse aliquam sapien vitae sem semper, at molestie justo pretium. Quisque pellentesque mattis iaculis. Pellentesque fermentum laoreet tincidunt. Maecenas rhoncus porta dui, ut elementum orci tincidunt sit amet.
+        </textarea>
+    </section>
+
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="../lib/hilary.js"></script>
+    <script src="../lib/nicephore.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script>
+    
     <script src="../source/config.js"></script>
     <script src="../source/dom.js"></script>
     <script src="../source/pipeline.js"></script>
     <script src="../source/components.js"></script>
     <script src="../source/toolbar.js"></script>
-    <script src="../source/core.js"></script>
+    <script src="../source/transformer.js"></script>
     <script src="../source/components.colors.js"></script>
     <script src="../source/components.headings.js"></script>
     <script src="../source/components.emphasis.js"></script>
@@ -39,16 +219,11 @@
     <script src="../source/components.blocks.js"></script>
     <script src="../source/components.link.js"></script>
     <script src="../source/components.image.js"></script>
+    <script src="../source/components.embed.js"></script>
+    <script src="../source/keyEvents.js"></script>
     <script src="../source/gutentyp.js"></script>
-    
-    <script type="text/javascript">
-        // create 2 instances of gutentyp, for different configurations
-        var rts = gutentyp();
-        
-        // initialize all textareas that match the config
-        rts.init();
-    </script>
-
+    <script src="demo.js"></script>
+    <script src="compositionRoot.js"></script>
 
 </body>
 </html>

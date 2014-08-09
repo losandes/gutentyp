@@ -16,9 +16,10 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
             pipeline,
             components,
             toolbar,
-            core,
+            transformer,
             tryResolveComponent,
-            componentsAreRegistered = false;
+            componentsAreRegistered = false,
+            withDefaultOptions;
 
         gutenContainer = hilary.createChildContainer();
 
@@ -64,7 +65,6 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
         
         self.registerComponents = function (options) {
             var i;
-            options = options || {};
             
             if (options.autoRegisterComponents === undefined) {
                 options.autoRegisterComponents = true;
@@ -91,16 +91,27 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
             
             componentsAreRegistered = true;
         };
+        
+        withDefaultOptions = function (options) {
+            options = options || {};
+            
+            if (options.observeKeyEvents === undefined) {
+                options.observeKeyEvents = false;
+            }
+            
+            return options;
+        };
 
         /*
         * initializes gutentyp
         */
         self.init = function (options) {
             var events;
+            options = withDefaultOptions(options);
             
             if (!componentsAreRegistered) {
                 self.registerComponents(options);
-                if (nicephore) {
+                if (options.observeKeyEvents && nicephore) {
                     events = gutenContainer.tryResolve('gutentyp::keyEvents');
                     
                     if (events) {
@@ -114,10 +125,10 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
                 .init(config, dom, components);
 
             // Initialize the core component
-            core = gutenContainer.resolve('gutentyp::core')
-                .init(config, dom, components, toolbar);
+            transformer = gutenContainer.resolve('gutentyp::transformer')
+                .init(config, dom, components, toolbar, options);
 
-            core.load();
+            transformer.transform();
 
             return self;
         };
@@ -162,7 +173,9 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
         * @returns gutentyp: the instance you are interacting with
         */
         self.overrideConfig = function (configOverride) {
-            return self.overrideModule('gutentyp::config', configOverride);
+            var result = self.overrideModule('gutentyp::config', configOverride);
+            config.autoCreateSelectors();
+            return result;
         };
 
         /*

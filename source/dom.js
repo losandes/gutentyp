@@ -9,6 +9,7 @@ hilary.register('gutentyp::dom', {
             makeElement,
             insertNewElementBefore,
             insertNewElementInto,
+            insertHtmlBefore,
             insertHtmlAfter,
             setText,
             insertHtml,
@@ -49,19 +50,23 @@ hilary.register('gutentyp::dom', {
             
             // For each textarea matching `config.richTextAreaSelector`
             $(config.selectors.toGutentypify).each(function (index, element) {
-                var $this = $(this);
+                var $this = $(this),
+                    editor;
 
                 if (!$this.attr('id')) {
                     $this.attr('id', 'gutentyp-' + getRandomString());
                 }
 
                 // Insert a new editable div with data-for attribute pointing to id of current textarea
-                $('<div />')
+                editor = $('<div />')
                     .addClass(config.cssClasses.editor)
                     .attr('data-for', $this.attr('id'))
                     .html($this.val())
                     .attr('contenteditable', true)
                     .insertBefore($this);
+//                $('<div />')
+//                    .addClass(config.cssClasses.toolbar)
+//                    .insertBefore(editor);
 
                 // Hide the original textarea
                 $this.removeClass(config.cssClasses.toGutentypify);
@@ -122,6 +127,10 @@ hilary.register('gutentyp::dom', {
                 makeElement(newElementType, domClass, attrPairs)
                     .appendTo($(target));
             }
+        };
+        
+        insertHtmlBefore = function (selector, html) {
+            return $(selector).before(html);
         };
         
         insertHtmlAfter = function (selector, html) {
@@ -245,7 +254,7 @@ hilary.register('gutentyp::dom', {
             var textArea = $('textarea#' + $(target).attr('data-for'));
             
             if (textArea.is('textarea')) {
-                textArea.html($(target).html());            
+                textArea.html($(target).html());
             } else {
                 textArea.val($(target).html());
             }
@@ -549,6 +558,7 @@ hilary.register('gutentyp::dom', {
             initializeRichTextAreas: initializeRichTextAreas,
             insertNewElementBefore: insertNewElementBefore,
             insertNewElementInto: insertNewElementInto,
+            insertHtmlBefore: insertHtmlBefore,
             insertHtmlAfter: insertHtmlAfter,
             setText: setText,
             insertHtml: insertHtml,
