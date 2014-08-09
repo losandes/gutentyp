@@ -1,0 +1,25 @@
+// out: ../build/dark-theme.css, compress: true, strictMath: true
+
+@import "mixins.less";
+
+.gutentyp-toolbar {
+    border: 1px solid #242424;
+    background-color: #242424;
+    border-bottom: none;
+    color: #fff;
+    
+    button {
+        color: #fff;
+        
+        &:hover {
+            background-color: #000;
+            color: yellow;
+        }
+    }
+    
+    .border-radiuses(1px, 0, 0, 1px);
+}
+
+.gutentyp-editor {
+    .border-radiuses(0, 1px, 1px, 0);
+}

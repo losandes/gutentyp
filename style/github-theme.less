@@ -1,0 +1,116 @@
+// out: ../build/github-theme.css, compress: true, strictMath: true
+
+@import "mixins.less";
+
+.gutentyp-toolbar {
+    border: 1px solid #C8C8C8;
+    background-color: #F8F8F8;
+    .border-radiuses(4px, 0, 0, 4px);
+    
+    button {
+        
+        &:first-child {
+            margin-left: 5px;
+        }
+        
+        &:hover, &:focus {
+            background-color: #fff;
+            height: 40px;
+            margin-top: 10px;
+            border: 1px solid #C8C8C8;
+            border-bottom: none;
+            box-shadow: none;
+            .border-radiuses(4px, 0, 0, 4px);
+            .transition(background-color .075s ease-in);
+            
+            i {
+                margin-top: -2px;
+            }
+        }
+        
+        i {
+            margin-top: 9px;
+        }
+    }
+    
+    .gutentyp-toolbar-group {
+        
+        label {
+            color: #333;
+        }
+        
+        button {
+            
+            background-color: transparent;
+            color: #666;
+
+            &:hover, &:focus {
+                background-color: transparent;
+                color: #4183c4;
+                margin: 0;
+                height: 50px;
+                border: none;
+                .border-radiuses(4px, 4px, 4px, 4px);
+
+                &.btn-cancel {
+                    float: right;
+                    margin-right: 10px;
+                }
+                
+                i {
+                    margin-top: 0;
+                }
+            }
+            
+            i {
+                margin-top: 0;
+            }
+        }       
+    }
+}
+
+.gutentyp-toolbar-group {
+        border: 1px solid #bfccd1;
+        background-color: #fff;
+        color: #333;
+        box-shadow: none;
+    
+        ul {
+
+            li {
+
+                button {
+                    color: #666;
+                    background-color: transparent;
+
+                    &:hover {
+                        background-color: transparent;
+                        color: #4183c4;
+                    }
+                }            
+            }        
+        } 
+}
+
+.gutentyp-editor {
+    border-top: none;
+    .border-radiuses(0, 4px, 4px, 0);
+}
+
+// popup arrows
+.gutentyp-toolbar-arrow-under {
+    background-color: #fff;
+    
+    &:after {       
+        content: " ";
+        border-color: #bfccd1 transparent transparent transparent;
+        
+    }
+}
+
+.gutentyp-toolbar-arrow-over {
+    &:before {
+        content: " ";          
+        border-color: transparent transparent #bfccd1 transparent;
+    }
+}
