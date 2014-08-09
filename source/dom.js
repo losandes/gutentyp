@@ -64,9 +64,9 @@ hilary.register('gutentyp::dom', {
                     .html($this.val())
                     .attr('contenteditable', true)
                     .insertBefore($this);
-                $('<div />')
-                    .addClass(config.cssClasses.toolbar)
-                    .insertBefore(editor);
+//                $('<div />')
+//                    .addClass(config.cssClasses.toolbar)
+//                    .insertBefore(editor);
 
                 // Hide the original textarea
                 $this.removeClass(config.cssClasses.toGutentypify);

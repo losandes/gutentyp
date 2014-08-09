@@ -129,7 +129,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, dom, componentCol
         
 // Add this back in, if we decide to not add the toolbar container when we render the editor.
 // we might be able to just add a replaceWith call here.
-//        dom.insertNewElementBefore('div', config.selectors.newEditors, config.selectors.toolbar);
+        dom.insertNewElementBefore('div', config.selectors.newEditors, config.selectors.toolbar);
 
         for (i = 0; i < components.length; i++) {
             if (components[i].group !== undefined) {
