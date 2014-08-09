@@ -16,7 +16,7 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
             pipeline,
             components,
             toolbar,
-            core,
+            transformer,
             tryResolveComponent,
             componentsAreRegistered = false;
 
@@ -114,10 +114,10 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
                 .init(config, dom, components);
 
             // Initialize the core component
-            core = gutenContainer.resolve('gutentyp::core')
+            transformer = gutenContainer.resolve('gutentyp::transformer')
                 .init(config, dom, components, toolbar);
 
-            core.load();
+            transformer.transform();
 
             return self;
         };

@@ -127,7 +127,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, dom, componentCol
             });
         };
         
-        dom.insertNewElementBefore('div', config.selectors.newEditors, config.selectors.toolbar);
+//        dom.insertNewElementBefore('div', config.selectors.newEditors, config.selectors.toolbar);
 
         for (i = 0; i < components.length; i++) {
             if (components[i].group !== undefined) {
