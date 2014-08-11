@@ -423,9 +423,26 @@ hilary.register('gutentyp::dom', {
         
         selectRange = function (selectioData) {
             try {
-                var selected, range = document.createRange();
-                range.setStart(selectioData.baseNode || selectioData.anchorNode, selectioData.baseOffset || selectioData.anchorOffset);
-                range.setEnd(selectioData.extentNode || selectioData.focusNode, selectioData.extentOffset || selectioData.focusOffset);
+                var selected, node1, node2, startNode, endNode, offset1, offset2, startOffset, endOffset, range = document.createRange();
+                node1 = selectioData.baseNode || selectioData.anchorNode;
+                node2 = selectioData.extentNode || selectioData.focusNode;
+                offset1 = selectioData.baseOffset || selectioData.anchorOffset;
+                offset2 = selectioData.extentOffset || selectioData.focusOffset;
+                
+                if (offset2 > offset1) {
+                    startNode = node1;
+                    startOffset = offset1;
+                    endNode = node2;
+                    endOffset = offset2;
+                } else {
+                    startNode = node2;
+                    startOffset = offset2;
+                    endNode = node1;
+                    endOffset = offset1;
+                }
+                
+                range.setStart(startNode, startOffset);
+                range.setEnd(endNode, endOffset);
                 selected = window.getSelection();
                 selected.removeAllRanges();
                 selected.addRange(range);

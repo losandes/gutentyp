@@ -77,7 +77,7 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
                 // replace the selected text
                 if (selected && selected.length > 0 && output) {
                     dom.replaceSelectedText(output);
-                } else if (selectionCoordinates && selectionCoordinates.isInEditor) {
+                } else if (selectionCoordinates && selectionCoordinates.isInEditor && output) {
                     dom.pasteHtml(selectionCoordinates, output);
                 } else if (output) {
                     dom.pasteHtmlAtCursor(output, false, event);
