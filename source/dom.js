@@ -24,6 +24,7 @@ hilary.register('gutentyp::dom', {
             getClosestAdjacent,
             getNext,
             getPrevious,
+            exists,
             attachEvent,
             triggerEvent,
             updateTextarea,
@@ -202,6 +203,10 @@ hilary.register('gutentyp::dom', {
         
         getPrevious = function (currentNode, targetSelector) {
             return $(currentNode).prev(targetSelector);
+        };
+        
+        exists = function (selector) {
+            return $(selector).length > 0;  
         };
 
         attachEvent = function (options) {
@@ -492,15 +497,23 @@ hilary.register('gutentyp::dom', {
         };
         
         getCoordinates = function (selector, secondarySelector, relativeTo) {
-            var element = $(selector),
-                result = element.position();
+            var btn = $(selector),
+                result = btn.offset(),
+                form,
+                buttonOffset = btn.outerWidth() / 2;
             
-            result.width = element.width();
-            result.height = element.height();
+            if (secondarySelector) {
+                form = $(secondarySelector);
+            } else {
+                form = btn;
+            }
+            
+            result.width = form.outerWidth();
+            result.height = btn.outerHeight() > 49 ? btn.outerHeight() : 50;
 
             if (secondarySelector) {
-                result.moveLeft = (result.left + (result.width / 2) - (getCoordinates(secondarySelector).width / 2));
-                result.moveTop = (result.top + result.height + 6);
+                result.moveLeft = result.left + (buttonOffset || 25) - (result.width / 2); //(result.left + result.width) / 2;  //(result.left + (result.width / 2) - (getCoordinates(secondarySelector).width / 2));
+                result.moveTop = (result.top + (buttonOffset * 2));
                 result.moveRight = (result.right + (result.width / 2) - (getCoordinates(secondarySelector).width / 2));
                 result.moveBottom = (result.bottom + result.height + 6);
             }
@@ -588,6 +601,7 @@ hilary.register('gutentyp::dom', {
             getClosestAdjacent: getClosestAdjacent,
             getNext: getNext,
             getPrevious: getPrevious,
+            exists: exists,
             attachEvent: attachEvent,
             updateTextarea: updateTextarea,
             isFunction: isFunction,
