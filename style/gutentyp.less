@@ -35,7 +35,7 @@
     &:focus {
         outline: none; 
         box-shadow: 0 2px 2px rgba(0,0,0,0.3);    
-    }
+    }    
 }
 
 .group-button () {
@@ -118,7 +118,7 @@ pre {
     
     button {
         .gutentyp-button();
-        .toolbar-button();
+        .toolbar-button();        
     }
     
     .gutentyp-form {
@@ -189,7 +189,7 @@ pre {
     left: 0;
     z-index: 2000;
     visibility: hidden;
-    border-radius: 5px;
+    .border-radius(5px);
     box-shadow: 0 1px 3px #000;
     background-color: #242424;
     color: #fff;
@@ -258,4 +258,24 @@ pre {
 //        .animate(pop-downwards, 160ms, forward, linear);
         .transitions(top .075s ease-out, left .075s ease-out);
     }
+}
+
+.gutentyp-component:after {
+    content: attr(data-title);
+    padding: 4px 8px;
+    color: #333;
+    position: absolute;
+    margin-top: 20px;
+    white-space: nowrap;
+    opacity: 0;
+    .border-radius(5px);
+    box-shadow: 0 1px 3px #000;
+    background-color: #242424;
+    color: #fff;
+    .transition(opacity 250ms ease-in);
+    
+}
+.gutentyp-component:hover:after {
+    opacity: .6;
+    .transition(opacity 3s ease-in);
 }
