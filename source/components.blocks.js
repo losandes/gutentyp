@@ -5,16 +5,16 @@ hilary.register('gutentyp::components::blocks', { init: function (components, co
     
     var code, pre, quote;
     
-//    pre = components.makeComponent({
-//        title: 'Code Block',
-//        cssClass: 'gutentyp-code-block',
-//        pipelineName: 'code::block',
-//        icon: config.icons.pre,
-//        textClass: 'sr-only',
-//        func: function (event, text) {
-//            return '<pre class="prettyprint linenums">' + text + '</pre>';
-//        }
-//    });
+    pre = components.makeComponent({
+        title: 'Code Block',
+        cssClass: 'gutentyp-code-block',
+        pipelineName: 'code::block',
+        icon: config.icons.pre,
+        textClass: 'sr-only',
+        func: function (event, text) {
+            return '<pre class="prettyprint linenums">' + (text || ' ') + '</pre>';
+        }
+    });
     
     code = components.makeComponent({
         title: 'Code',
@@ -38,5 +38,5 @@ hilary.register('gutentyp::components::blocks', { init: function (components, co
         }
     });
     
-    components.addComponent([code, quote]);
+    components.addComponent([code, pre, quote]);
 }});

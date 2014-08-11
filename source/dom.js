@@ -348,7 +348,7 @@ hilary.register('gutentyp::dom', {
                 insertHtml(gutenArea, html);
             }
             
-            pasteHtml(sel);
+            pasteHtml(sel, html, selectPastedContent);
         };
         
         // Helper function because different browsers don't always cleanly implement this feature
