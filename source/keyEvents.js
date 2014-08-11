@@ -1,8 +1,13 @@
 /*globals hilary, console, window*/
-hilary.register('gutentyp::keyEvents', { init: function (config, dom, nicephore) {
+hilary.register('gutentyp::keyEvents', { init: function (config, dom, nicephore, $) {
     "use strict";
     
     var when, waitThreshold = ((config.keyEvents && config.keyEvents.waitThreshold) || 33), waitCount = 0, observer = nicephore();
+    
+    // we only want to register events once, even when multiple configs are present
+    if (window.gutentypKeyEventsRegistered) {
+        return;
+    }
     
     when = function (assert, then) {
         if (typeof assert !== 'function' || typeof then !== 'function') {
@@ -46,4 +51,60 @@ hilary.register('gutentyp::keyEvents', { init: function (config, dom, nicephore)
             when(assert, then);
         }
     });
+    
+//    observer.observe('enter', 'keydown', function (event, keyInfo) {
+//        var isInPre = dom.hasAncestor(event.target, 'pre'),
+//            isInCode = dom.hasAncestor(event.target, 'code');
+//        
+//        if (isInPre) {
+//            return false;
+//        } else if (isInCode) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+//    });
+    
+    $(document).on('keydown', function (event) {
+        if ((event.keyCode || event.which) !== 13) {
+            return true;
+        }
+        
+        var target = event.target,
+            range = dom.getCursorCoordinates(event.target),
+            parent = $(dom.getSelectedParentNode(range)),
+            isInPre = dom.hasAncestor(target, 'pre') || parent.is('pre') || parent.parents('pre').length > 0,
+            isInCode = dom.hasAncestor(target, 'code') || parent.is('code') || parent.parents('code').length > 0,
+            code;
+        
+        if (isInPre) {
+            // add line break
+            dom.pasteHtml(range, '\r\n');
+            event.preventDefault();
+        } else if (isInCode) {
+            if (parent.is('code')) {
+                code = parent;
+            } else {
+                code = parent.parent();
+            }
+            
+            code.after('<div></div>');
+            range.startContainer = code.next()[0];
+            range.endContainer = code.next()[0];
+            range.startOffset = 0;
+            range.baseOffset = 0;
+            range.anchorOffset = 0;
+            range.endOffset = 0;
+            range.extentOffset = 0;
+            range.focusOffset = 0;
+            dom.selectRange(range);
+            event.preventDefault();
+        } else {
+            // let it happen
+            return true;
+        }
+    });
+    
+    window.gutentypKeyEventsRegistered = true;
+    
 }});

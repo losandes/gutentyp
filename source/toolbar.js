@@ -52,7 +52,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, dom, componentsMo
             buttonClass += ' ' + componentId;
         }
 
-        template = '<button type="button" class="' + buttonClass + '">'
+        template = '<button type="button" class="' + buttonClass + '" data-title="' + component.title + '">'
                             + '<i class="' + config.cssClasses.toolbarBtnIcon + ' ' + component.icon + '"></i>'
                             + '<span class="' + component.textClass + '">' + component.title + '</span>'
                         + '</button>';

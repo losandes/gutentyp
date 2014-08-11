@@ -115,7 +115,7 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
                     events = gutenContainer.tryResolve('gutentyp::keyEvents');
                     
                     if (events) {
-                        events.init(config, dom, nicephore);
+                        events.init(config, dom, nicephore, $);
                     }
                 }
             }

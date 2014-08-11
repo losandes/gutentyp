@@ -255,10 +255,9 @@ hilary.register('gutentyp::dom', {
             
             if (textArea.is('textarea')) {
                 textArea.html($(target).html());
-            } else {
-                textArea.val($(target).html());
             }
-
+            
+            textArea.val($(target).html());
             triggerEvent(textArea[0], 'change');
             return target;
         };
@@ -348,7 +347,7 @@ hilary.register('gutentyp::dom', {
                 insertHtml(gutenArea, html);
             }
             
-            pasteHtml(sel);
+            pasteHtml(sel, html, selectPastedContent);
         };
         
         // Helper function because different browsers don't always cleanly implement this feature
@@ -596,6 +595,7 @@ hilary.register('gutentyp::dom', {
             isArray: isArray,
             hasAncestor: hasAncestor,
             getSelectedText: getSelectedText,
+            getSelectedParentNode: getSelectedParentNode,
             replaceSelectedText: replaceSelectedText,
             pasteHtmlAtCursor: pasteHtmlAtCursor,
             pasteHtml: pasteHtml,
