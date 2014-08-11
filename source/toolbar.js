@@ -98,7 +98,8 @@ hilary.register('gutentyp::toolbar', { init: function (config, dom, componentsMo
             primarySelector: currentGroup.toggleSelector,
             eventType: 'click',
             eventHandler: function (event) {
-                var btnCoords = dom.getCoordinates(event.target, currentGroup.menuSelector),
+                var btn = dom.getClosest(event.target, 'button'),
+                    btnCoords = dom.getCoordinates(btn, currentGroup.menuSelector),
                     style;
 
                 // set the coordinates

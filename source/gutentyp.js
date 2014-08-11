@@ -129,6 +129,11 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
                 .init(config, dom, components, toolbar, options);
 
             transformer.transform();
+            
+            pipeline.registerPipelineEvent.registerAfterAnyHandler(function (event, selected, formData) {
+                dom.triggerEvent(event, 'blur');
+                dom.triggerEvent(event, 'change');
+            });
 
             return self;
         };

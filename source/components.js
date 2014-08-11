@@ -104,7 +104,17 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
         }
         
         if (definition.form && !self.displayHandler) {
-            self.displayHandler = function () { return makeForm(self, definition.form); };
+            self.displayHandler = function () { 
+                var formObject = makeForm(self, definition.form);
+                
+                if (!dom.exists(formObject.uniqueId)) {
+                    dom.insertNewElementInto({
+                            markup: formObject.form
+                        }, 'body');
+                }
+                
+                return formObject.button;
+            };
         }
         
         // we're done using these coordinates, get rid of them, so they aren't accidentally used 
@@ -121,8 +131,8 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
             eventType: 'click',
             eventHandler: function (event) {
                 var btn = dom.getClosest(event.target, 'button'),
-                    target = dom.getNext(btn, config.selectors.toolbarGroup),
-                    btnCoords = dom.getCoordinates(event.target, target),
+                    target = '.' + dom.getAttribute(btn, 'data-for'), //dom.getNext(btn, config.selectors.toolbarGroup),
+                    btnCoords = dom.getCoordinates(btn, target),
                     style;
 
                 // set the coordinates
@@ -183,7 +193,8 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
             validators = { names: [] },
             validation = {},
             current,
-            uniqueIds = {};
+            uniqueIds = {},
+            componentId = dom.getRandomString();
         
         for (i; i < fields.length; i++) {
             // do NOT combine uniqueId with the previous statement, it needs to be a new reference every time.
@@ -196,7 +207,7 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
             validation.validate = makeValidateFunc(validators);
         }
         
-        return makeComponentForm(component, markup, validation);
+        return makeComponentForm(component, markup, validation, componentId);
     };
     
     appendMarkup = function (field, uniqueId) {
@@ -268,7 +279,9 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
         };
     };
     
-    makeComponentForm = function (component, formMarkup, validation) {
+    makeComponentForm = function (component, formMarkup, validation, componentId) {
+        component.uniqueId = componentId || dom.getRandomString();
+        
         if (!events[component.pipelineName]) {
             attachToBtn(component);
             attachToForm(component, validation && validation.validate);
@@ -276,12 +289,16 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
             events[component.pipelineName] = true;
         }
         
-        return '<button type="button" class="' + component.cssClass + '" data-form-btn="true">'
+        var button,
+            form;
+        
+        button = '<button type="button" class="' + component.cssClass + '" data-form-btn="true" data-for="' + component.uniqueId + '">'
                     + '<i class="' + config.cssClasses.toolbarBtnIcon + ' ' + component.icon + '"></i>'
                     + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">' + component.title + '</span>'
-                + '</button>'
-                + '<div class="' + config.cssClasses.toolbarGroup + ' '
+                + '</button>';
+        form = '<div class="' + config.cssClasses.toolbarGroup + ' '
                         + config.cssClasses.toolbarArrowOver + ' '
+                        + component.uniqueId + ' '
                         + component.cssClass + '-form">'
                     + '<div class="' + config.cssClasses.form + '">'
                         + formMarkup
@@ -289,6 +306,12 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
                         + '<button class="btn btn-cancel btn-sm" type="button">Cancel</button>'
                     + '</div>'
                 + '</div>';
+        
+        return {
+            button: button,
+            form: form,
+            uniqueId: component.uniqueId
+        };
     };
 
     return {
