@@ -375,7 +375,7 @@ hilary.register("gutentyp::dom", {init:function($, config) {
     return text;
   };
   getCoordinates = function(selector, secondarySelector, relativeTo) {
-    var btn = $(selector), result = btn.offset(), form, buttonOffset = btn.outerWidth() / 2;
+    var btn = $(selector), result = btn.offset(), form, buttonOffset = btn.outerWidth() / 2, viewport = {};
     if (secondarySelector) {
       form = $(secondarySelector);
     } else {
@@ -388,6 +388,14 @@ hilary.register("gutentyp::dom", {init:function($, config) {
       result.moveTop = result.top + buttonOffset * 2;
       result.moveRight = result.right + result.width / 2 - getCoordinates(secondarySelector).width / 2;
       result.moveBottom = result.bottom + result.height + 6;
+    }
+    viewport.width = $(window).width();
+    viewport.height = $(window).height();
+    if (result.moveLeft + result.width > viewport.width) {
+      result.moveLeft = viewport.width - result.width;
+    }
+    if (result.moveTop + result.height > viewport.height) {
+      result.moveTop = viewport.height - result.height;
     }
     return result;
   };
