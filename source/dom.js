@@ -255,10 +255,9 @@ hilary.register('gutentyp::dom', {
             
             if (textArea.is('textarea')) {
                 textArea.html($(target).html());
-            } else {
-                textArea.val($(target).html());
             }
-
+            
+            textArea.val($(target).html());
             triggerEvent(textArea[0], 'change');
             return target;
         };
