@@ -415,19 +415,19 @@ hilary.register('gutentyp::dom', {
         getCursorCoordinates = function () {
             var sel = window.getSelection();
             if (sel.getRangeAt && sel.rangeCount) {
-                return $.extend({ isClone: true }, sel);
+                return $.extend({ isClone: true }, sel, sel.getRangeAt(0));
             }
             
             return false;
         };
         
-        selectRange = function (selectioData) {
+        selectRange = function (selectionData) {
             try {
                 var selected, node1, node2, startNode, endNode, offset1, offset2, startOffset, endOffset, range = document.createRange();
-                node1 = selectioData.baseNode || selectioData.anchorNode;
-                node2 = selectioData.extentNode || selectioData.focusNode;
-                offset1 = selectioData.baseOffset || selectioData.anchorOffset;
-                offset2 = selectioData.extentOffset || selectioData.focusOffset;
+                node1 = selectionData.startContainer || selectionData.baseNode || selectionData.anchorNode;
+                node2 = selectionData.endContainer || selectionData.extentNode || selectionData.focusNode;
+                offset1 = selectionData.startOffset || selectionData.baseOffset || selectionData.anchorOffset;
+                offset2 = selectionData.endOffset || selectionData.extentOffset || selectionData.focusOffset;
                 
                 if (offset2 > offset1) {
                     startNode = node1;
