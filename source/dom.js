@@ -596,6 +596,7 @@ hilary.register('gutentyp::dom', {
             isArray: isArray,
             hasAncestor: hasAncestor,
             getSelectedText: getSelectedText,
+            getSelectedParentNode: getSelectedParentNode,
             replaceSelectedText: replaceSelectedText,
             pasteHtmlAtCursor: pasteHtmlAtCursor,
             pasteHtml: pasteHtml,

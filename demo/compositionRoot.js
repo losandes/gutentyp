@@ -5,9 +5,9 @@ hilary.use([jQuery, hilary, gutentyp, hljs, document, console], function (ctx, $
     var demo = hilary.resolve('gutentyp::demo').init($, hilary, gutentyp, highlightJs, document, console);
     
     demo.registerCustomComponents();
-    demo.useCustomConfig(demo.gutenInstance2);
-    demo.useCustomToolbar(demo.gutenInstance2);
-    demo.useCustomColors(demo.gutenInstance2);
+//    demo.useCustomConfig(demo.gutenInstance2);
+//    demo.useCustomToolbar(demo.gutenInstance2);
+//    demo.useCustomColors(demo.gutenInstance2);
     
     demo.start();
     
