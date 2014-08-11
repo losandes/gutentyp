@@ -33,16 +33,16 @@ hilary.register("gutentyp::config", {init:function() {
 }});
 // Input 1
 hilary.register("gutentyp::dom", {init:function($, config) {
-  var initializeRichTextAreas, makeElement, insertNewElementBefore, insertNewElementInto, insertHtmlAfter, setText, insertHtml, addClass, removeClass, toggleClass, addAttribute, getAttribute, getOrSetValue, clearForm, getClosest, getClosestAdjacent, getNext, getPrevious, attachEvent, updateTextarea, isFunction, isObject, isArray, hasAncestor, getSelectedText, replaceSelectedText, pasteHtmlAtCursor, pasteHtml, selectRange, getSelectedParentNode, selectionIsInEditor, getCursorCoordinates, getRandomString, 
-  getCoordinates, setStyle, closestForm, formToJson;
+  var initializeRichTextAreas, makeElement, insertNewElementBefore, insertNewElementInto, insertHtmlBefore, insertHtmlAfter, setText, insertHtml, addClass, removeClass, toggleClass, addAttribute, getAttribute, getOrSetValue, clearForm, getClosest, getClosestAdjacent, getNext, getPrevious, attachEvent, triggerEvent, updateTextarea, isFunction, isObject, isArray, hasAncestor, getSelectedText, replaceSelectedText, pasteHtmlAtCursor, pasteHtml, selectRange, getSelectedParentNode, selectionIsInEditor, 
+  getCursorCoordinates, getRandomString, getCoordinates, setStyle, closestForm, formToJson;
   initializeRichTextAreas = function() {
     var allAreas = [];
     $(config.selectors.toGutentypify).each(function(index, element) {
-      var $this = $(this);
+      var $this = $(this), editor;
       if (!$this.attr("id")) {
         $this.attr("id", "gutentyp-" + getRandomString());
       }
-      $("<div />").addClass(config.cssClasses.editor).attr("data-for", $this.attr("id")).html($this.val()).attr("contenteditable", true).insertBefore($this);
+      editor = $("<div />").addClass(config.cssClasses.editor).attr("data-for", $this.attr("id")).html($this.val()).attr("contenteditable", true).insertBefore($this);
       $this.removeClass(config.cssClasses.toGutentypify);
       $this.addClass(config.cssClasses.hidden);
       $this.addClass(config.cssClasses.gutentypified);
@@ -84,6 +84,9 @@ hilary.register("gutentyp::dom", {init:function($, config) {
     } else {
       makeElement(newElementType, domClass, attrPairs).appendTo($(target));
     }
+  };
+  insertHtmlBefore = function(selector, html) {
+    return $(selector).before(html);
   };
   insertHtmlAfter = function(selector, html) {
     return $(selector).after(html);
@@ -155,8 +158,32 @@ hilary.register("gutentyp::dom", {init:function($, config) {
     }
     return addClass($this, config.cssClasses.hasEvents);
   };
+  triggerEvent = function(domElement, eventName) {
+    var event;
+    if (domElement instanceof $) {
+      domElement = domElement[0];
+    }
+    if (document.createEvent) {
+      event = document.createEvent("HTMLEvents");
+      event.initEvent(eventName, true, true);
+      event.eventName = eventName;
+      domElement.dispatchEvent(event);
+    } else {
+      event = document.createEventObject();
+      event.eventType = eventName;
+      event.eventName = eventName;
+      domElement.fireEvent("on" + event.eventType, event);
+    }
+    $(domElement).trigger(eventName);
+  };
   updateTextarea = function(target) {
-    return $("textarea#" + $(target).attr("data-for")).html($(target).html());
+    var textArea = $("textarea#" + $(target).attr("data-for"));
+    if (textArea.is("textarea")) {
+      textArea.html($(target).html());
+    }
+    textArea.val($(target).html());
+    triggerEvent(textArea[0], "change");
+    return target;
   };
   isFunction = function(obj) {
     return $.isFunction(obj);
@@ -233,7 +260,7 @@ hilary.register("gutentyp::dom", {init:function($, config) {
       gutenArea = getClosestAdjacent(getClosest(event.target, config.selectors.toolbar), config.selectors.editor).first();
       insertHtml(gutenArea, html);
     }
-    pasteHtml(sel);
+    pasteHtml(sel, html, selectPastedContent);
   };
   pasteHtml = function(sel, html, selectPastedContent) {
     var range, el, frag, node, lastNode, firstNode, originalRange;
@@ -284,15 +311,30 @@ hilary.register("gutentyp::dom", {init:function($, config) {
   getCursorCoordinates = function() {
     var sel = window.getSelection();
     if (sel.getRangeAt && sel.rangeCount) {
-      return $.extend({isClone:true}, sel);
+      return $.extend({isClone:true}, sel, sel.getRangeAt(0));
     }
     return false;
   };
-  selectRange = function(selectioData) {
+  selectRange = function(selectionData) {
     try {
-      var selected, range = document.createRange();
-      range.setStart(selectioData.baseNode || selectioData.anchorNode, selectioData.baseOffset || selectioData.anchorOffset);
-      range.setEnd(selectioData.extentNode || selectioData.focusNode, selectioData.extentOffset || selectioData.focusOffset);
+      var selected, node1, node2, startNode, endNode, offset1, offset2, startOffset, endOffset, range = document.createRange();
+      node1 = selectionData.startContainer || selectionData.baseNode || selectionData.anchorNode;
+      node2 = selectionData.endContainer || selectionData.extentNode || selectionData.focusNode;
+      offset1 = selectionData.startOffset || selectionData.baseOffset || selectionData.anchorOffset;
+      offset2 = selectionData.endOffset || selectionData.extentOffset || selectionData.focusOffset;
+      if (offset2 > offset1) {
+        startNode = node1;
+        startOffset = offset1;
+        endNode = node2;
+        endOffset = offset2;
+      } else {
+        startNode = node2;
+        startOffset = offset2;
+        endNode = node1;
+        endOffset = offset1;
+      }
+      range.setStart(startNode, startOffset);
+      range.setEnd(endNode, endOffset);
       selected = window.getSelection();
       selected.removeAllRanges();
       selected.addRange(range);
@@ -388,8 +430,9 @@ hilary.register("gutentyp::dom", {init:function($, config) {
     });
     return data;
   };
-  return{makeElement:makeElement, initializeRichTextAreas:initializeRichTextAreas, insertNewElementBefore:insertNewElementBefore, insertNewElementInto:insertNewElementInto, insertHtmlAfter:insertHtmlAfter, setText:setText, insertHtml:insertHtml, addClass:addClass, removeClass:removeClass, toggleClass:toggleClass, getAttribute:getAttribute, getOrSetValue:getOrSetValue, clearForm:clearForm, getClosest:getClosest, getClosestAdjacent:getClosestAdjacent, getNext:getNext, getPrevious:getPrevious, attachEvent:attachEvent, 
-  updateTextarea:updateTextarea, isFunction:isFunction, isObject:isObject, isArray:isArray, hasAncestor:hasAncestor, getSelectedText:getSelectedText, replaceSelectedText:replaceSelectedText, pasteHtmlAtCursor:pasteHtmlAtCursor, pasteHtml:pasteHtml, selectRange:selectRange, selectionIsInEditor:selectionIsInEditor, getCursorCoordinates:getCursorCoordinates, getRandomString:getRandomString, getCoordinates:getCoordinates, setStyle:setStyle, formToJson:formToJson};
+  return{makeElement:makeElement, initializeRichTextAreas:initializeRichTextAreas, insertNewElementBefore:insertNewElementBefore, insertNewElementInto:insertNewElementInto, insertHtmlBefore:insertHtmlBefore, insertHtmlAfter:insertHtmlAfter, setText:setText, insertHtml:insertHtml, addClass:addClass, removeClass:removeClass, toggleClass:toggleClass, getAttribute:getAttribute, getOrSetValue:getOrSetValue, clearForm:clearForm, getClosest:getClosest, getClosestAdjacent:getClosestAdjacent, getNext:getNext, 
+  getPrevious:getPrevious, attachEvent:attachEvent, updateTextarea:updateTextarea, isFunction:isFunction, isObject:isObject, isArray:isArray, hasAncestor:hasAncestor, getSelectedText:getSelectedText, getSelectedParentNode:getSelectedParentNode, replaceSelectedText:replaceSelectedText, pasteHtmlAtCursor:pasteHtmlAtCursor, pasteHtml:pasteHtml, selectRange:selectRange, selectionIsInEditor:selectionIsInEditor, getCursorCoordinates:getCursorCoordinates, getRandomString:getRandomString, getCoordinates:getCoordinates, 
+  setStyle:setStyle, formToJson:formToJson};
 }});
 // Input 2
 hilary.register("gutentyp::pipeline", {init:function(config, dom) {
@@ -462,11 +505,11 @@ hilary.register("gutentyp::components", {init:function(config, dom, componentPip
         componentPipeline[beforeThis](event, selected, formData);
       }
       if (dom.isFunction(definition.func)) {
-        output = definition.func(event, selected || selectionCoordinates.text, formData);
+        output = definition.func(event, selected || selectionCoordinates && selectionCoordinates.text, formData);
         if (selected && selected.length > 0 && output) {
           dom.replaceSelectedText(output);
         } else {
-          if (selectionCoordinates && selectionCoordinates.isInEditor) {
+          if (selectionCoordinates && selectionCoordinates.isInEditor && output) {
             dom.pasteHtml(selectionCoordinates, output);
           } else {
             if (output) {
@@ -547,7 +590,7 @@ hilary.register("gutentyp::components", {init:function(config, dom, componentPip
       return "";
     }
     if (field.validation && field.validation.message) {
-      alertCss = "alert alert-warning " + config.cssClasses.hidden + " " + uniqueId;
+      alertCss = "alert " + config.cssClasses.hidden + " " + uniqueId;
       if (field.validation.cssClass) {
         alertCss += " " + field.validation.cssClass;
       }
@@ -599,70 +642,17 @@ hilary.register("gutentyp::components", {init:function(config, dom, componentPip
     return'<button type="button" class="' + component.cssClass + '" data-form-btn="true">' + '<i class="' + config.cssClasses.toolbarBtnIcon + " " + component.icon + '"></i>' + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">' + component.title + "</span>" + "</button>" + '<div class="' + config.cssClasses.toolbarGroup + " " + config.cssClasses.toolbarArrowOver + " " + component.cssClass + '-form">' + '<div class="' + config.cssClasses.form + '">' + formMarkup + '<button class="btn btn-success btn-sm" type="button">Add</button>' + 
     '<button class="btn btn-cancel btn-sm" type="button">Cancel</button>' + "</div>" + "</div>";
   };
-  return{components:components, makeComponent:componentFactory, makeComponentForm:makeComponentForm, addComponent:addComponent};
+  return{getComponents:function() {
+    return components;
+  }, makeComponent:componentFactory, makeComponentForm:makeComponentForm, addComponent:addComponent};
 }});
 // Input 4
-hilary.register("gutentyp::toolbar", {init:function(config, dom, componentCollection) {
-  var build = function() {
-    var components = componentCollection.components, i, formatEventSelector, buttonTemplate, groups = {}, addWithDisplayHandler, addWithGroup, addGroup, add;
-    formatEventSelector = function(component) {
-      return config.selectors.toolbar + " ." + component.cssClass + ":not(" + config.selectors.hasEvents + ")";
-    };
-    buttonTemplate = function(component, componentId) {
-      var buttonClass, template;
-      buttonClass = "gutentyp-component " + component.cssClass;
-      if (componentId) {
-        buttonClass += " " + componentId;
-      }
-      template = '<button type="button" class="' + buttonClass + '">' + '<i class="' + config.cssClasses.toolbarBtnIcon + " " + component.icon + '"></i>' + '<span class="' + component.textClass + '">' + component.title + "</span>" + "</button>";
-      return template;
-    };
-    add = function(component) {
-      dom.insertNewElementInto({markup:buttonTemplate(component)}, config.selectors.newToolbars);
-      dom.attachEvent({primarySelector:formatEventSelector(component), eventType:"click", eventHandler:component.execute});
-    };
-    addWithDisplayHandler = function(component) {
-      dom.insertHtml(config.selectors.newToolbars, component.displayHandler());
-      dom.attachEvent({primarySelector:formatEventSelector(component), eventType:"click", eventHandler:component.execute});
-    };
-    addGroup = function(component) {
-      var currentGroup = groups[component.group.name] = {components:[component]};
-      currentGroup.toggleId = dom.getRandomString();
-      currentGroup.menuId = dom.getRandomString();
-      currentGroup.toggleSelector = "." + currentGroup.toggleId;
-      currentGroup.menuSelector = "." + currentGroup.menuId;
-      dom.insertNewElementInto({markup:buttonTemplate(component.group, currentGroup.toggleId)}, config.selectors.newToolbars);
-      dom.insertNewElementInto({markup:'<div class="' + currentGroup.menuId + " gutentyp-toolbar-group gutentyp-toolbar-arrow-" + (component.group.arrow || "over") + '"><ul></ul></div>'}, config.selectors.newToolbars);
-      dom.attachEvent({primarySelector:currentGroup.toggleSelector, eventType:"click", eventHandler:function(event) {
-        var btnCoords = dom.getCoordinates(event.target, currentGroup.menuSelector), style;
-        style = "left: " + btnCoords.moveLeft + "px";
-        style += "; top: " + btnCoords.moveTop + "px";
-        dom.setStyle(currentGroup.menuSelector, style);
-        dom.toggleClass(".gutentyp-toolbar-group.active:not(" + currentGroup.menuSelector + ")", "active");
-        dom.toggleClass(currentGroup.menuSelector, "active");
-      }});
-      return currentGroup;
-    };
-    addWithGroup = function(component) {
-      var componentId = dom.getRandomString(), componentSelector = "." + componentId, currentGroup, execWrapper;
-      if (!groups[component.group.name]) {
-        currentGroup = addGroup(component);
-      } else {
-        currentGroup = groups[component.group.name];
-        groups[component.group.name].components.push(component);
-      }
-      if (component.displayHandler) {
-        dom.insertNewElementInto({markup:"<li>" + component.displayHandler(componentId) + "</li>"}, currentGroup.menuSelector + " ul");
-      } else {
-        dom.insertNewElementInto({markup:"<li>" + buttonTemplate(component, componentId) + "</li>"}, currentGroup.menuSelector + " ul");
-      }
-      execWrapper = function(event, input) {
-        component.execute(event, input);
-        dom.toggleClass(currentGroup.menuSelector, "active");
-      };
-      dom.attachEvent({primarySelector:componentSelector, eventType:"click", eventHandler:execWrapper});
-    };
+hilary.register("gutentyp::toolbar", {init:function(config, dom, componentsModule) {
+  var build, components = componentsModule.getComponents(), i, formatEventSelector, buttonTemplate, groups = {}, addToolbarContainer, addToolbarButtons, markDomAsProcessed, addWithDisplayHandler, addWithGroup, addGroup, add;
+  addToolbarContainer = function() {
     dom.insertNewElementBefore("div", config.selectors.newEditors, config.selectors.toolbar);
+  };
+  addToolbarButtons = function() {
     for (i = 0;i < components.length;i++) {
       if (components[i].group !== undefined) {
         addWithGroup(components[i]);
@@ -674,39 +664,115 @@ hilary.register("gutentyp::toolbar", {init:function(config, dom, componentCollec
         }
       }
     }
+  };
+  markDomAsProcessed = function() {
     dom.addClass(config.selectors.newEditors, config.cssClasses.hasToolbar);
     dom.addClass(config.selectors.newToolbars, config.cssClasses.hasComponents);
+  };
+  formatEventSelector = function(component) {
+    return config.selectors.toolbar + " ." + component.cssClass + ":not(" + config.selectors.hasEvents + ")";
+  };
+  buttonTemplate = function(component, componentId) {
+    var buttonClass, template;
+    buttonClass = "gutentyp-component " + component.cssClass;
+    if (componentId) {
+      buttonClass += " " + componentId;
+    }
+    template = '<button type="button" class="' + buttonClass + '" data-title="' + component.title + '">' + '<i class="' + config.cssClasses.toolbarBtnIcon + " " + component.icon + '"></i>' + '<span class="' + component.textClass + '">' + component.title + "</span>" + "</button>";
+    return template;
+  };
+  add = function(component) {
+    dom.insertNewElementInto({markup:buttonTemplate(component)}, config.selectors.newToolbars);
+    dom.attachEvent({primarySelector:formatEventSelector(component), eventType:"click", eventHandler:component.execute});
+  };
+  addWithDisplayHandler = function(component) {
+    dom.insertHtml(config.selectors.newToolbars, component.displayHandler());
+    dom.attachEvent({primarySelector:formatEventSelector(component), eventType:"click", eventHandler:component.execute});
+  };
+  addGroup = function(component) {
+    var currentGroup = groups[component.group.name] = {components:[component]};
+    currentGroup.toggleId = dom.getRandomString();
+    currentGroup.menuId = dom.getRandomString();
+    currentGroup.toggleSelector = "." + currentGroup.toggleId;
+    currentGroup.menuSelector = "." + currentGroup.menuId;
+    dom.insertNewElementInto({markup:buttonTemplate(component.group, currentGroup.toggleId)}, config.selectors.newToolbars);
+    dom.insertNewElementInto({markup:'<div class="' + currentGroup.menuId + " gutentyp-toolbar-group gutentyp-toolbar-arrow-" + (component.group.arrow || "over") + '"><ul></ul></div>'}, "body");
+    dom.attachEvent({primarySelector:currentGroup.toggleSelector, eventType:"click", eventHandler:function(event) {
+      var btnCoords = dom.getCoordinates(event.target, currentGroup.menuSelector), style;
+      style = "left: " + btnCoords.moveLeft + "px";
+      style += "; top: " + btnCoords.moveTop + "px";
+      dom.setStyle(currentGroup.menuSelector, style);
+      dom.toggleClass(".gutentyp-toolbar-group.active:not(" + currentGroup.menuSelector + ")", "active");
+      dom.toggleClass(currentGroup.menuSelector, "active");
+    }});
+    return currentGroup;
+  };
+  addWithGroup = function(component) {
+    var componentId = dom.getRandomString(), componentSelector = "." + componentId, currentGroup, execWrapper;
+    if (!groups[component.group.name]) {
+      currentGroup = addGroup(component);
+    } else {
+      currentGroup = groups[component.group.name];
+      groups[component.group.name].components.push(component);
+    }
+    if (component.displayHandler) {
+      dom.insertNewElementInto({markup:"<li>" + component.displayHandler(componentId) + "</li>"}, currentGroup.menuSelector + " ul");
+    } else {
+      dom.insertNewElementInto({markup:"<li>" + buttonTemplate(component, componentId) + "</li>"}, currentGroup.menuSelector + " ul");
+    }
+    execWrapper = function(event, input) {
+      component.execute(event, input);
+      dom.toggleClass(currentGroup.menuSelector, "active");
+    };
+    dom.attachEvent({primarySelector:componentSelector, eventType:"click", eventHandler:execWrapper});
+  };
+  build = function() {
+    addToolbarContainer();
+    addToolbarButtons();
+    markDomAsProcessed();
     return;
   };
   return{build:build};
 }});
 // Input 5
-hilary.register("gutentyp::core", {init:function(config, dom, components, toolbarBuilder) {
-  var loadGutenCore = function() {
+hilary.register("gutentyp::transformer", {init:function(config, dom, components, toolbar, options) {
+  options = options || {};
+  var transform = function() {
     var areaIds = dom.initializeRichTextAreas();
-    toolbarBuilder.build();
-    dom.attachEvent({primarySelector:config.selectors.eventlessEditors, eventType:"blur", eventHandler:function(event) {
-      dom.updateTextarea(event.target);
+    if (options.lazyToolbars) {
+      dom.attachEvent({primarySelector:document, secondarySelector:config.selectors.editors, eventType:"focusin", eventHandler:function(event) {
+        toolbar.build();
+      }});
+    } else {
+      toolbar.build();
+    }
+    dom.attachEvent({primarySelector:config.selectors.eventlessEditors, eventType:"blur,change", eventHandler:function(event) {
+      if (event.target) {
+        dom.updateTextarea(event.target);
+      }
     }});
     dom.addClass(config.selectors.editor, config.cssClasses.hasEvents);
   };
-  return{load:loadGutenCore};
+  return{transform:transform};
 }});
 // Input 6
 hilary.register("gutentyp::components::blocks", {init:function(components, config) {
   var code, pre, quote;
+  pre = components.makeComponent({title:"Code Block", cssClass:"gutentyp-code-block", pipelineName:"code::block", icon:config.icons.pre, textClass:"sr-only", func:function(event, text) {
+    return'<pre class="prettyprint linenums">' + (text || " ") + "</pre>";
+  }});
   code = components.makeComponent({title:"Code", cssClass:"gutentyp-code", pipelineName:"code", icon:config.icons.code, textClass:"sr-only", func:function(event, text) {
     return "<code>" + text + "</code>";
   }});
   quote = components.makeComponent({title:"Quote", cssClass:"gutentyp-quote", pipelineName:"quote", icon:config.icons.blockquote, textClass:"sr-only", func:function(event, text) {
     return "<blockquote>" + text + "</blockquote>";
   }});
-  components.addComponent([code, quote]);
+  components.addComponent([code, pre, quote]);
 }});
 // Input 7
 hilary.register("gutentyp::components::colors", {init:function(components, config) {
-  var addColor, colors = config.colors, i = 0, group;
-  group = components.makeComponent({title:"Colors", cssClass:"gutentyp-colors", pipelineName:"colors", icon:"color-block color-label", textClass:"sr-only"});
+  var addColor, colors = config.colors, i = 0, group, colorBlockCss = "gutentyp-component-color-block", colorLabelCss = "gutentyp-component-color-label";
+  group = components.makeComponent({title:"Colors", cssClass:"gutentyp-colors", pipelineName:"colors", icon:colorBlockCss + " " + colorLabelCss, textClass:"sr-only"});
   group.name = "colors";
   group.arrow = "over";
   addColor = function(color) {
@@ -714,7 +780,7 @@ hilary.register("gutentyp::components::colors", {init:function(components, confi
       document.execCommand("forecolor", false, color.value);
       return false;
     }, displayHandler:function(domId) {
-      return'<button type="button" class="' + domId + '"><span class="color-block" style="background-color: ' + color.value + '"></span></button>';
+      return'<button type="button" class="' + domId + '"><span class="' + colorBlockCss + '" style="background-color: ' + color.value + '"></span></button>';
     }, group:group}));
   };
   for (i;i < colors.length;i++) {
@@ -889,7 +955,7 @@ hilary.register("gutentyp::components::embed", {init:function(components, config
 hilary.use([hilary, jQuery, window, nicephore], function(hilarysInnerContainer, hilary, $, window, nicephore) {
   var gutentyp;
   gutentyp = function() {
-    var self = {}, prep, gutenContainer, config, dom, pipeline, components, toolbar, core, tryResolveComponent, componentsAreRegistered = false;
+    var self = {}, prep, gutenContainer, config, dom, pipeline, components, toolbar, transformer, tryResolveComponent, componentsAreRegistered = false, withDefaultOptions;
     gutenContainer = hilary.createChildContainer();
     tryResolveComponent = function(moduleName) {
       var modul = gutenContainer.tryResolve(moduleName);
@@ -908,7 +974,6 @@ hilary.use([hilary, jQuery, window, nicephore], function(hilarysInnerContainer, 
     prep();
     self.registerComponents = function(options) {
       var i;
-      options = options || {};
       if (options.autoRegisterComponents === undefined) {
         options.autoRegisterComponents = true;
       }
@@ -930,20 +995,28 @@ hilary.use([hilary, jQuery, window, nicephore], function(hilarysInnerContainer, 
       }
       componentsAreRegistered = true;
     };
+    withDefaultOptions = function(options) {
+      options = options || {};
+      if (options.observeKeyEvents === undefined) {
+        options.observeKeyEvents = false;
+      }
+      return options;
+    };
     self.init = function(options) {
       var events;
+      options = withDefaultOptions(options);
       if (!componentsAreRegistered) {
         self.registerComponents(options);
-        if (nicephore) {
+        if (options.observeKeyEvents && nicephore) {
           events = gutenContainer.tryResolve("gutentyp::keyEvents");
           if (events) {
-            events.init(config, dom, nicephore);
+            events.init(config, dom, nicephore, $);
           }
         }
       }
       toolbar = gutenContainer.resolve("gutentyp::toolbar").init(config, dom, components);
-      core = gutenContainer.resolve("gutentyp::core").init(config, dom, components, toolbar);
-      core.load();
+      transformer = gutenContainer.resolve("gutentyp::transformer").init(config, dom, components, toolbar, options);
+      transformer.transform();
       return self;
     };
     self.registerComponent = function(component) {
@@ -961,7 +1034,9 @@ hilary.use([hilary, jQuery, window, nicephore], function(hilarysInnerContainer, 
       return self;
     };
     self.overrideConfig = function(configOverride) {
-      return self.overrideModule("gutentyp::config", configOverride);
+      var result = self.overrideModule("gutentyp::config", configOverride);
+      config.autoCreateSelectors();
+      return result;
     };
     self.overridedom = function(domOverride) {
       return self.overrideModule("gutentyp::dom", domOverride);
