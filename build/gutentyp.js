@@ -15,8 +15,8 @@ hilary.register("gutentyp::config", {init:function() {
   config.colors.push({title:"Purple", name:"purple", value:"#a952cd"});
   config.icons = {code:"fa fa-code", pre:"fa fa-file-code-o", blockquote:"fa fa-quote-left", bold:"fa fa-bold", italic:"fa fa-italic", underline:"fa fa-underline", strikethrough:"fa fa-strikethrough", header:"fa fa-header", image:"fa fa-image", alignLeft:"fa fa-align-left", alignCenter:"fa fa-align-center", alignRight:"fa fa-align-right", alignJustify:"fa fa-align-justify", indent:"fa fa-indent", outdent:"fa fa-outdent", link:"fa fa-link", unorderedList:"fa fa-list-ul", orderedList:"fa fa-list-ol", 
   embed:"fa fa-play-circle-o"};
-  config.cssClasses = {toGutentypify:"gutentyp-ify", gutentypified:"gutentyp-ified", hasEvents:"has-events", hasToolbar:"has-toolbar", hasComponents:"has-components", container:"gutentyp", editor:"gutentyp-editor", textarea:"gutentyp-textarea", toolbar:"gutentyp-toolbar", toolbarBtn:"gutentyp-toolbar-btn", toolbarBtnText:"gutentyp-toolbar-btn-text", toolbarBtnIcon:"gutentyp-toolbar-btn-icon", toolbarGroup:"gutentyp-toolbar-group", toolbarArrowOver:"gutentyp-toolbar-arrow-over", hidden:"gutentyp-hidden", 
-  form:"gutentyp-form"};
+  config.cssClasses = {toGutentypify:"gutentyp-ify", gutentypified:"gutentyp-ified", hasEvents:"has-events", hasToolbar:"has-toolbar", hasComponents:"has-components", container:"gutentyp", editor:"gutentyp-editor", textarea:"gutentyp-textarea", toolbar:"gutentyp-toolbar", toolbarBtn:"gutentyp-toolbar-btn", toolbarBtnText:"gutentyp-toolbar-btn-text", toolbarBtnIcon:"gutentyp-toolbar-btn-icon", toolbarGroup:"gutentyp-toolbar-group", toolbarComponents:"gutentyp-toolbar-components", toolbarForms:"gutentyp-toolbar-forms", 
+  toolbarArrowOver:"gutentyp-toolbar-arrow-over", hidden:"gutentyp-hidden", form:"gutentyp-form"};
   config.autoCreateSelectors = function() {
     var i;
     config.selectors = {};
@@ -28,6 +28,8 @@ hilary.register("gutentyp::config", {init:function() {
     config.selectors.newEditors = config.selectors.editor + ":not(" + config.selectors.hasToolbar + ")";
     config.selectors.eventlessEditors = config.selectors.editor + ":not(" + config.selectors.hasEvents + ")";
     config.selectors.newToolbars = config.selectors.toolbar + ":not(" + config.selectors.hasComponents + ")";
+    config.selectors.newToolbarsFormsContainer = config.selectors.newToolbars + " " + config.selectors.toolbarForms;
+    config.selectors.newToolbarsComponentsContainer = config.selectors.newToolbars + " " + config.selectors.toolbarComponents;
   };
   config.autoCreateSelectors();
   return config;
@@ -589,8 +591,16 @@ hilary.register("gutentyp::components", {init:function(config, dom, componentPip
     if (definition.form && !self.displayHandler) {
       self.displayHandler = function() {
         var formObject = makeForm(self, definition.form);
-        if (!dom.exists(formObject.uniqueId)) {
+        if (!dom.exists(formObject.uniqueId) && !config.attachFormsTo) {
           dom.insertNewElementInto({markup:formObject.form}, "body");
+        } else {
+          if (!dom.exists(formObject.uniqueId) && config.attachFormsTo === "toolbar") {
+            return{button:formObject.button, form:formObject.form};
+          } else {
+            if (!dom.exists(formObject.uniqueId)) {
+              dom.insertNewElementInto({markup:formObject.form}, config.attachFormsTo);
+            }
+          }
         }
         return formObject.button;
       };
@@ -600,10 +610,14 @@ hilary.register("gutentyp::components", {init:function(config, dom, componentPip
   };
   attachToBtn = function(component) {
     dom.attachEvent({primarySelector:document, secondarySelector:"." + component.cssClass, eventType:"click", eventHandler:function(event) {
-      var btn = dom.getClosest(event.target, "button"), target = "." + dom.getAttribute(btn, "data-for"), btnCoords = dom.getCoordinates(btn, target), style;
-      style = "left: " + btnCoords.moveLeft + "px";
-      style += "; top: " + btnCoords.moveTop + "px";
-      dom.setStyle(target, style);
+      var btn = dom.getClosest(event.target, "button"), target = "." + dom.getAttribute(btn, "data-for"), btnCoords, style;
+      if (config.attachFormsTo !== "toolbar") {
+        btnCoords = dom.getCoordinates(btn, target);
+        style = "left: " + btnCoords.moveLeft + "px";
+        style += "; top: " + btnCoords.moveTop + "px";
+        dom.setStyle(target, style);
+      }
+      dom.toggleClass(".gutentyp-toolbar-group.active:not(." + component.uniqueId + ")", "active");
       dom.toggleClass(target, "active");
     }});
   };
@@ -699,7 +713,7 @@ hilary.register("gutentyp::components", {init:function(config, dom, componentPip
     }
     var button, form;
     button = '<button type="button" class="' + component.cssClass + '" data-form-btn="true" data-for="' + component.uniqueId + '">' + '<i class="' + config.cssClasses.toolbarBtnIcon + " " + component.icon + '"></i>' + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">' + component.title + "</span>" + "</button>";
-    form = '<div class="' + config.cssClasses.toolbarGroup + " " + config.cssClasses.toolbarArrowOver + " " + component.uniqueId + " " + component.cssClass + '-form">' + '<div class="' + config.cssClasses.form + '">' + formMarkup + '<button class="btn btn-success btn-sm" type="button">Add</button>' + '<button class="btn btn-cancel btn-sm" type="button">Cancel</button>' + "</div>" + "</div>";
+    form = '<div class="clearfix ' + config.cssClasses.toolbarGroup + " " + config.cssClasses.toolbarArrowOver + " " + component.uniqueId + " " + component.cssClass + '-form">' + '<div class="' + config.cssClasses.form + '">' + formMarkup + '<button class="btn btn-success btn-sm" type="button">Add</button>' + '<button class="btn btn-cancel btn-sm" type="button">Cancel</button>' + "</div>" + "</div>";
     return{button:button, form:form, uniqueId:component.uniqueId};
   };
   return{getComponents:function() {
@@ -711,6 +725,8 @@ hilary.register("gutentyp::toolbar", {init:function(config, dom, componentsModul
   var build, components = componentsModule.getComponents(), i, formatEventSelector, buttonTemplate, groups = {}, addToolbarContainer, addToolbarButtons, markDomAsProcessed, addWithDisplayHandler, addWithGroup, addGroup, add;
   addToolbarContainer = function() {
     dom.insertNewElementBefore("div", config.selectors.newEditors, config.selectors.toolbar);
+    dom.insertHtml(config.selectors.newToolbars, '<div class="' + config.cssClasses.toolbarComponents + '"></div>');
+    dom.insertHtml(config.selectors.newToolbars, '<div class="' + config.cssClasses.toolbarForms + '"></div>');
   };
   addToolbarButtons = function() {
     for (i = 0;i < components.length;i++) {
@@ -742,11 +758,17 @@ hilary.register("gutentyp::toolbar", {init:function(config, dom, componentsModul
     return template;
   };
   add = function(component) {
-    dom.insertNewElementInto({markup:buttonTemplate(component)}, config.selectors.newToolbars);
+    dom.insertNewElementInto({markup:buttonTemplate(component)}, config.selectors.newToolbarsComponentsContainer);
     dom.attachEvent({primarySelector:formatEventSelector(component), eventType:"click", eventHandler:component.execute});
   };
   addWithDisplayHandler = function(component) {
-    dom.insertHtml(config.selectors.newToolbars, component.displayHandler());
+    var handlerResult = component.displayHandler();
+    if (typeof handlerResult === "string") {
+      dom.insertHtml(config.selectors.newToolbarsComponentsContainer, handlerResult);
+    } else {
+      dom.insertHtml(config.selectors.newToolbarsComponentsContainer, handlerResult.button);
+      dom.insertHtml(config.selectors.newToolbarsFormsContainer, handlerResult.form);
+    }
     dom.attachEvent({primarySelector:formatEventSelector(component), eventType:"click", eventHandler:component.execute});
   };
   addGroup = function(component) {
@@ -755,7 +777,7 @@ hilary.register("gutentyp::toolbar", {init:function(config, dom, componentsModul
     currentGroup.menuId = dom.getRandomString();
     currentGroup.toggleSelector = "." + currentGroup.toggleId;
     currentGroup.menuSelector = "." + currentGroup.menuId;
-    dom.insertNewElementInto({markup:buttonTemplate(component.group, currentGroup.toggleId)}, config.selectors.newToolbars);
+    dom.insertNewElementInto({markup:buttonTemplate(component.group, currentGroup.toggleId)}, config.selectors.newToolbarsComponentsContainer);
     dom.insertNewElementInto({markup:'<div class="' + currentGroup.menuId + " gutentyp-toolbar-group gutentyp-toolbar-arrow-" + (component.group.arrow || "over") + '"><ul></ul></div>'}, "body");
     dom.attachEvent({primarySelector:currentGroup.toggleSelector, eventType:"click", eventHandler:function(event) {
       var btn = dom.getClosest(event.target, "button"), btnCoords = dom.getCoordinates(btn, currentGroup.menuSelector), style;
