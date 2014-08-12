@@ -104,13 +104,22 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
         }
         
         if (definition.form && !self.displayHandler) {
-            self.displayHandler = function () { 
+            self.displayHandler = function () {
                 var formObject = makeForm(self, definition.form);
                 
-                if (!dom.exists(formObject.uniqueId)) {
+                if (!dom.exists(formObject.uniqueId) && !config.attachFormsTo) {
                     dom.insertNewElementInto({
-                            markup: formObject.form
-                        }, 'body');
+                        markup: formObject.form
+                    }, 'body');
+                } else if (!dom.exists(formObject.uniqueId) && config.attachFormsTo === 'toolbar') {
+                    return {
+                        button: formObject.button,
+                        form: formObject.form
+                    };
+                } else if (!dom.exists(formObject.uniqueId)) {
+                    dom.insertNewElementInto({
+                        markup: formObject.form
+                    }, config.attachFormsTo);
                 }
                 
                 return formObject.button;
@@ -132,15 +141,19 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
             eventHandler: function (event) {
                 var btn = dom.getClosest(event.target, 'button'),
                     target = '.' + dom.getAttribute(btn, 'data-for'), //dom.getNext(btn, config.selectors.toolbarGroup),
-                    btnCoords = dom.getCoordinates(btn, target),
+                    btnCoords,
                     style;
+                
+                if (config.attachFormsTo !== 'toolbar') {
+                    // set the coordinates
+                    btnCoords = dom.getCoordinates(btn, target);
+                    style = 'left: ' + btnCoords.moveLeft + 'px';
+                    style += '; top: ' + btnCoords.moveTop + 'px';
+                    dom.setStyle(target, style);
+                }
 
-                // set the coordinates
-                style = 'left: ' + btnCoords.moveLeft + 'px';
-                style += '; top: ' + btnCoords.moveTop + 'px';
-                dom.setStyle(target, style);
-
-                // show or hid this toolbar
+                dom.toggleClass('.gutentyp-toolbar-group.active:not(.' + component.uniqueId + ')', 'active');
+                // show or hide this toolbar
                 dom.toggleClass(target, 'active');
             }
         });
@@ -304,6 +317,7 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
                         + formMarkup
                         + '<button class="btn btn-success btn-sm" type="button">Add</button>'
                         + '<button class="btn btn-cancel btn-sm" type="button">Cancel</button>'
+                        + '<div class="clearfix">&nbsp;</div>'
                     + '</div>'
                 + '</div>';
         

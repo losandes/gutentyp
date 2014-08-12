@@ -20,6 +20,8 @@ hilary.register('gutentyp::toolbar', { init: function (config, dom, componentsMo
     
     addToolbarContainer = function () {
         dom.insertNewElementBefore('div', config.selectors.newEditors, config.selectors.toolbar);
+        dom.insertHtml(config.selectors.newToolbars, '<div class="' + config.cssClasses.toolbarComponents + '"></div>');
+        dom.insertHtml(config.selectors.newToolbars, '<div class="' + config.cssClasses.toolbarForms + '"></div>');
     };
     
     addToolbarButtons = function () {
@@ -62,7 +64,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, dom, componentsMo
     add = function (component) {
         dom.insertNewElementInto({
             markup: buttonTemplate(component)
-        }, config.selectors.newToolbars);
+        }, config.selectors.newToolbarsComponentsContainer);
         dom.attachEvent({
             primarySelector: formatEventSelector(component),
             eventType: 'click',
@@ -71,7 +73,16 @@ hilary.register('gutentyp::toolbar', { init: function (config, dom, componentsMo
     };
 
     addWithDisplayHandler = function (component) {
-        dom.insertHtml(config.selectors.newToolbars, component.displayHandler());
+        var handlerResult = component.displayHandler();
+        
+        if (typeof handlerResult === 'string') {
+            dom.insertHtml(config.selectors.newToolbarsComponentsContainer, handlerResult);
+        } else {
+            dom.insertHtml(config.selectors.newToolbarsComponentsContainer, handlerResult.button);
+            dom.insertHtml(config.selectors.newToolbarsFormsContainer, handlerResult.form);
+        }
+        
+        
         dom.attachEvent({
             primarySelector: formatEventSelector(component),
             eventType: 'click',
@@ -88,7 +99,7 @@ hilary.register('gutentyp::toolbar', { init: function (config, dom, componentsMo
 
         dom.insertNewElementInto({
             markup: buttonTemplate(component.group, currentGroup.toggleId)
-        }, config.selectors.newToolbars);
+        }, config.selectors.newToolbarsComponentsContainer);
         dom.insertNewElementInto({
             markup: '<div class="' + currentGroup.menuId + ' gutentyp-toolbar-group gutentyp-toolbar-arrow-' + (component.group.arrow || 'over') + '"><ul></ul></div>'
         }, 'body'); //config.selectors.newToolbars);
