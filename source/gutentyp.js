@@ -126,14 +126,9 @@ hilary.use([hilary, jQuery, window, nicephore], function (hilarysInnerContainer,
 
             // Initialize the core component
             transformer = gutenContainer.resolve('gutentyp::transformer')
-                .init(config, dom, components, toolbar, options);
+                .init(config, dom, components, toolbar, pipeline, options);
 
             transformer.transform();
-            
-            pipeline.registerPipelineEvent.registerAfterAnyHandler(function (event, selected, formData) {
-                dom.triggerEvent(event, 'blur');
-                dom.triggerEvent(event, 'change');
-            });
 
             return self;
         };

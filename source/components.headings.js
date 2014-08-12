@@ -21,6 +21,7 @@ hilary.register('gutentyp::components::headings', { init: function (components, 
         cssClass: 'gutentyp-h1',
         pipelineName: 'h1',
         func: function (event, text) {
+            text = text || 'Lorem ipsum';
             return '<h1>' + text + '</h1>';
         },
         group: group
@@ -31,6 +32,7 @@ hilary.register('gutentyp::components::headings', { init: function (components, 
         cssClass: 'gutentyp-h2',
         pipelineName: 'h2',
         func: function (event, text) {
+            text = text || 'Lorem ipsum';
             return '<h2>' + text + '</h2>';
         },
         group: group
@@ -41,6 +43,7 @@ hilary.register('gutentyp::components::headings', { init: function (components, 
         cssClass: 'gutentyp-h3',
         pipelineName: 'h3',
         func: function (event, text) {
+            text = text || 'Lorem ipsum';
             return '<h3>' + text + '</h3>';
         },
         group: group
@@ -51,6 +54,7 @@ hilary.register('gutentyp::components::headings', { init: function (components, 
         cssClass: 'gutentyp-h4',
         pipelineName: 'h4',
         func: function (event, text) {
+            text = text || 'Lorem ipsum';
             return '<h4>' + text + '</h4>';
         },
         group: group
@@ -61,6 +65,7 @@ hilary.register('gutentyp::components::headings', { init: function (components, 
         cssClass: 'gutentyp-h5',
         pipelineName: 'h5',
         func: function (event, text) {
+            text = text || 'Lorem ipsum';
             return '<h5>' + text + '</h5>';
         },
         group: group
@@ -71,6 +76,7 @@ hilary.register('gutentyp::components::headings', { init: function (components, 
         cssClass: 'gutentyp-h6',
         pipelineName: 'h6',
         func: function (event, text) {
+            text = text || 'Lorem ipsum';
             return '<h6>' + text + '</h6>';
         },
         group: group

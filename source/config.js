@@ -58,6 +58,7 @@ hilary.register('gutentyp::config', { init: function () {
         hasEvents: 'has-events',
         hasToolbar: 'has-toolbar',
         hasComponents: 'has-components',
+        container: 'gutentyp',
         editor: 'gutentyp-editor',
         textarea: 'gutentyp-textarea',
         toolbar: 'gutentyp-toolbar',
