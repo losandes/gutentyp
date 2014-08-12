@@ -66,6 +66,8 @@ hilary.register('gutentyp::config', { init: function () {
         toolbarBtnText: 'gutentyp-toolbar-btn-text',
         toolbarBtnIcon: 'gutentyp-toolbar-btn-icon',
         toolbarGroup: 'gutentyp-toolbar-group',
+        toolbarComponents: 'gutentyp-toolbar-components',
+        toolbarForms: 'gutentyp-toolbar-forms',
         toolbarArrowOver: 'gutentyp-toolbar-arrow-over',
         hidden: 'gutentyp-hidden',
         form: 'gutentyp-form'
@@ -86,6 +88,8 @@ hilary.register('gutentyp::config', { init: function () {
         config.selectors.newEditors = config.selectors.editor + ':not(' + config.selectors.hasToolbar + ')';
         config.selectors.eventlessEditors = config.selectors.editor + ':not(' + config.selectors.hasEvents + ')';
         config.selectors.newToolbars = config.selectors.toolbar + ':not(' + config.selectors.hasComponents + ')';
+        config.selectors.newToolbarsFormsContainer = config.selectors.newToolbars + ' ' + config.selectors.toolbarForms;
+        config.selectors.newToolbarsComponentsContainer = config.selectors.newToolbars + ' ' + config.selectors.toolbarComponents;
     };
     
     config.autoCreateSelectors();
