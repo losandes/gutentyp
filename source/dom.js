@@ -22,11 +22,13 @@ hilary.register('gutentyp::dom', {
             clearForm,
             getClosest,
             getClosestAdjacent,
+            getEditor,
             getNext,
             getPrevious,
             exists,
             attachEvent,
             triggerEvent,
+            addChangeEventsToEditables,
             updateTextarea,
             isFunction,
             isObject,
@@ -52,7 +54,14 @@ hilary.register('gutentyp::dom', {
             // For each textarea matching `config.richTextAreaSelector`
             $(config.selectors.toGutentypify).each(function (index, element) {
                 var $this = $(this),
+                    container,
                     editor;
+                
+                container = $('<div />')
+                    .addClass(config.cssClasses.container)
+                    .insertBefore($this);
+                
+                container.html($this);
 
                 if (!$this.attr('id')) {
                     $this.attr('id', 'gutentyp-' + getRandomString());
@@ -197,6 +206,16 @@ hilary.register('gutentyp::dom', {
             return $(currentNode).siblings(targetSelector);
         };
         
+        getEditor = function (currentNode) {
+            var node = $(currentNode),
+                container,
+                editor;
+            
+            container = node.parents(config.selectors.gutentyp);
+            editor = container.find(config.selectors.editor);
+            return editor ? editor[0] : null;
+        };
+        
         getNext = function (currentNode, targetSelector) {
             return $(currentNode).next(targetSelector);
         };
@@ -206,7 +225,7 @@ hilary.register('gutentyp::dom', {
         };
         
         exists = function (selector) {
-            return $(selector).length > 0;  
+            return $(selector).length > 0;
         };
 
         attachEvent = function (options) {
@@ -238,22 +257,50 @@ hilary.register('gutentyp::dom', {
             }
 
             if (document.createEvent) {
-
                 event = document.createEvent("HTMLEvents");
                 event.initEvent(eventName, true, true);
                 event.eventName = eventName;
-                domElement.dispatchEvent(event);
-            } else {
-
+            } else if (document.createEventObject) {
                 event = document.createEventObject();
                 event.eventType = eventName;
                 event.eventName = eventName;
-                domElement.fireEvent("on" + event.eventType, event);
             }
             
-            $(domElement).trigger(eventName);
+            if (domElement.dispatchEvent) {
+                domElement.dispatchEvent(event);
+            } else if (domElement.fireEvent) {
+                domElement.fireEvent("on" + event.eventType, event);
+            } else {
+                $(domElement).trigger(eventName);
+            }
         };
 
+        addChangeEventsToEditables = function (handler, alwaysUpdate) {
+            if (!document.querySelectorAll || typeof handler !== 'function') {
+                return;
+            }
+
+            var i = 0,
+                elements = document.querySelectorAll('[contenteditable=true]');
+
+            for (i; i < elements.length; i++) {
+                if (typeof elements[i].onblur === 'function') {
+                    continue;
+                }
+
+                elements[i].onfocus = function () {
+                    this.data_orig = this.innerHTML;
+                };
+
+                elements[i].onblur = function () {
+                    if (alwaysUpdate || this.innerHTML !== this.data_orig) {
+                        handler(this);
+                        this.data_orig = this.innerHTML;
+                    }
+                };
+
+            }
+        };
 
         updateTextarea = function (target) {
             var textArea = $('textarea#' + $(target).attr('data-for'));
@@ -311,8 +358,8 @@ hilary.register('gutentyp::dom', {
             }
         };
         
-        replaceSelectedText = function (replacementText) {
-            var range, div, frag, child;
+        replaceSelectedText = function (replacementText, selectPastedContent) {
+            var selected, range, div, frag, child;
             if (window.getSelection && window.getSelection().getRangeAt) {
                 range = window.getSelection().getRangeAt(0);
                 range.deleteContents();
@@ -419,6 +466,24 @@ hilary.register('gutentyp::dom', {
                 }
             }
         };
+        
+//        selectAfterPaste = function () {
+//            if (lastNode) {
+//                range = range.cloneRange();
+//                range.setStartAfter(lastNode);
+//                if (selectPastedContent) {
+//                    range.setStartBefore(firstNode);
+//                } else {
+//                    range.collapse(true);
+//                }
+//                sel.removeAllRanges();
+//                sel.addRange(range);
+//            } else if () {
+//                range = sel.createRange();
+//                range.setEndPoint("StartToStart", originalRange);
+//                range.select();            
+//            }
+//        };
         
         getCursorCoordinates = function () {
             var sel = window.getSelection();
@@ -615,10 +680,13 @@ hilary.register('gutentyp::dom', {
             clearForm: clearForm,
             getClosest: getClosest,
             getClosestAdjacent: getClosestAdjacent,
+            getEditor: getEditor,
             getNext: getNext,
             getPrevious: getPrevious,
             exists: exists,
             attachEvent: attachEvent,
+            triggerEvent: triggerEvent,
+            addChangeEventsToEditables: addChangeEventsToEditables,
             updateTextarea: updateTextarea,
             isFunction: isFunction,
             isObject: isObject,
