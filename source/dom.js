@@ -38,6 +38,7 @@ hilary.register('gutentyp::dom', {
             replaceSelectedText,
             pasteHtmlAtCursor,
             pasteHtml,
+            preserveSelection,
             selectRange,
             getSelectedParentNode,
             selectionIsInEditor,
@@ -359,22 +360,10 @@ hilary.register('gutentyp::dom', {
         };
         
         replaceSelectedText = function (replacementText, selectPastedContent) {
-            var selected, range, div, frag, child;
-            if (window.getSelection && window.getSelection().getRangeAt) {
-                range = window.getSelection().getRangeAt(0);
-                range.deleteContents();
-                div = document.createElement("div");
-                div.innerHTML = replacementText;
-                frag = document.createDocumentFragment();
-                
-                while ((child = div.firstChild)) {
-                    frag.appendChild(child);
-                }
-                
-                range.insertNode(frag);
-            } else if (document.selection && document.selection.createRange) {
-                range = document.selection.createRange();
-                range.pasteHTML(replacementText);
+            if (window.getSelection) {
+                return pasteHtml(window.getSelection(), replacementText, selectPastedContent);
+            } else if (document.selection) {
+                return pasteHtml(document.selection, replacementText, selectPastedContent);
             }
         };
         
@@ -442,17 +431,7 @@ hilary.register('gutentyp::dom', {
                     range.insertNode(frag);
 
                     // Preserve the selection
-                    if (lastNode) {
-                        range = range.cloneRange();
-                        range.setStartAfter(lastNode);
-                        if (selectPastedContent) {
-                            range.setStartBefore(firstNode);
-                        } else {
-                            range.collapse(true);
-                        }
-                        sel.removeAllRanges();
-                        sel.addRange(range);
-                    }
+                    preserveSelection(firstNode, lastNode, range, null, sel, selectPastedContent);
                 }
             } else if (sel.type !== "Control") {
                 // IE < 9
@@ -460,30 +439,28 @@ hilary.register('gutentyp::dom', {
                 originalRange.collapse(true);
                 sel.createRange().pasteHTML(html);
                 if (selectPastedContent) {
-                    range = sel.createRange();
-                    range.setEndPoint("StartToStart", originalRange);
-                    range.select();
+                    preserveSelection(null, null, range, originalRange, sel, selectPastedContent);
                 }
             }
         };
         
-//        selectAfterPaste = function () {
-//            if (lastNode) {
-//                range = range.cloneRange();
-//                range.setStartAfter(lastNode);
-//                if (selectPastedContent) {
-//                    range.setStartBefore(firstNode);
-//                } else {
-//                    range.collapse(true);
-//                }
-//                sel.removeAllRanges();
-//                sel.addRange(range);
-//            } else if () {
-//                range = sel.createRange();
-//                range.setEndPoint("StartToStart", originalRange);
-//                range.select();            
-//            }
-//        };
+        preserveSelection = function (firstNode, lastNode, range, originalRange, sel, selectPastedContent) {
+            if (lastNode) {
+                range = range.cloneRange();
+                range.setStartAfter(lastNode);
+                if (selectPastedContent) {
+                    range.setStartBefore(firstNode);
+                } else {
+                    range.collapse(true);
+                }
+                sel.removeAllRanges();
+                sel.addRange(range);
+            } else if (originalRange) {
+                range = sel.createRange();
+                range.setEndPoint("StartToStart", originalRange);
+                range.select();            
+            }
+        };
         
         getCursorCoordinates = function () {
             var sel = window.getSelection();
