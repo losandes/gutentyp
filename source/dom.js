@@ -522,16 +522,16 @@ hilary.register('gutentyp::dom', {
                 result.moveTop = (result.top + (buttonOffset * 2));
                 result.moveRight = (result.right + (result.width / 2) - (getCoordinates(secondarySelector).width / 2));
                 result.moveBottom = (result.bottom + result.height + 6);
-            }
 
-            viewport.width = $(window).width();
-            viewport.height = $(window).height();
+                viewport.width = document.body.clientWidth;
+                viewport.height = document.body.clientHeight;
 
-            if (result.moveLeft + result.width > viewport.width) {
-                result.moveLeft = (viewport.width - result.width);
-            }
-            if (result.moveTop + result.height > viewport.height) {
-                result.moveTop = (viewport.height - result.height);
+                if (result.moveLeft + form.outerWidth() > viewport.width) {
+                    result.moveLeft = viewport.width - form.outerWidth();
+                }
+                if (result.moveTop + form.outerHeight() > viewport.height) {
+                    result.moveTop = viewport.height - form.outerHeight() > 0 ? viewport.height - form.outerHeight() : 0;
+                }
             }
 
             return result;
