@@ -20,6 +20,15 @@
     background: linear-gradient(@position, @startColorHex, fade(@endColorHex, @endColorAlpha));
 }
 
+.unselectable()
+{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 .animate (@name: pop-upwards, @duration: 160ms, @direction: forward, @ease: linear) {
     -webkit-animation: @name @duration @direction @ease;
        -moz-animation: @name @duration @direction @ease;
