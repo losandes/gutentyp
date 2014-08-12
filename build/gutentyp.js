@@ -425,14 +425,14 @@ hilary.register("gutentyp::dom", {init:function($, config) {
       result.moveTop = result.top + buttonOffset * 2;
       result.moveRight = result.right + result.width / 2 - getCoordinates(secondarySelector).width / 2;
       result.moveBottom = result.bottom + result.height + 6;
-      viewport.width = document.body.clientWidth;
-      viewport.height = document.body.clientHeight;
-      if (result.moveLeft + form.outerWidth() > viewport.width) {
-        result.moveLeft = viewport.width - form.outerWidth();
-      }
-      if (result.moveTop + form.outerHeight() > viewport.height) {
-        result.moveTop = viewport.height - form.outerHeight() > 0 ? viewport.height - form.outerHeight() : 0;
-      }
+    }
+    viewport.width = window.innerWidth;
+    viewport.height = window.innerHeight;
+    if (result.moveLeft + form.outerWidth() > viewport.width) {
+      result.moveLeft = viewport.width - form.outerWidth();
+    }
+    if (result.moveTop + form.outerHeight() > viewport.height) {
+      result.moveTop = viewport.height - form.outerHeight() > 0 ? viewport.height - form.outerHeight() : 0;
     }
     return result;
   };
