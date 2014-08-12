@@ -309,7 +309,7 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
                     + '<i class="' + config.cssClasses.toolbarBtnIcon + ' ' + component.icon + '"></i>'
                     + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">' + component.title + '</span>'
                 + '</button>';
-        form = '<div class="' + config.cssClasses.toolbarGroup + ' '
+        form = '<div class="clearfix ' + config.cssClasses.toolbarGroup + ' '
                         + config.cssClasses.toolbarArrowOver + ' '
                         + component.uniqueId + ' '
                         + component.cssClass + '-form">'
@@ -317,7 +317,6 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
                         + formMarkup
                         + '<button class="btn btn-success btn-sm" type="button">Add</button>'
                         + '<button class="btn btn-cancel btn-sm" type="button">Cancel</button>'
-                        + '<div class="clearfix">&nbsp;</div>'
                     + '</div>'
                 + '</div>';
         
