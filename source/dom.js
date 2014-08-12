@@ -364,6 +364,10 @@ hilary.register('gutentyp::dom', {
                 return false;
             }
             
+            if (selectPastedContent === undefined) {
+                selectPastedContent = true;
+            }
+            
             if (sel.isClone && window.getSelection) {
                 // if the coordinates are a clone of the range object, then we need to 
                 selectRange(sel);
