@@ -1,0 +1,130 @@
+<html>
+<head>
+    <title>Gutentyp Demo</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css" />
+<!--    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/monokai.min.css" />-->
+<!--    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/monokai_sublime.min.css" />-->
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/github.min.css" />
+    <link rel="stylesheet" href="../build/gutentyp.css" />
+    <link rel="stylesheet" href="booktemplate.css" />
+<!--    <link rel="stylesheet" href="../build/gutentyp-toolbar-forms.css" />-->
+    <style>
+        body {
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #333;
+            background-color: #fff;        
+        }
+        .main {
+            margin: auto;
+            width: 888px;
+        }
+        .themes {
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    
+    <section class="main">
+        <div class="themes">
+            <select class="theme-picker">
+                <option value="default">light theme</option>
+                <option value="github">github theme</option>
+                <option value="acatar">acatar theme</option>
+                <option value="dark">dark theme</option>
+            </select>
+        </div>
+        
+        <h1>Gutentyp</h1>
+        <br />
+
+        <textarea class="gutentyp-ify" id="test">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="book-component details">
+                        <figure class='book'>
+
+                        <!-- Front -->
+
+                            <ul class='hardcover_front'>
+                                <li>
+                                    <div class="coverDesign yellow">
+                                        <span class="ribbon">NEW</span>
+                                        <h1>LESS</h1>
+                                        <p>is more</p>
+                                    </div>
+                                </li>
+                                <li></li>
+                            </ul>
+                        <!-- Pages -->
+
+                            <ul class='page'>
+                                <li></li>
+                                <li>
+                                    <a class="btn" data-bind="href: book.detailsLink">READ MORE</a>
+                                </li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        <!-- Back -->
+
+                            <ul class='hardcover_back'>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                            <ul class='book_spine'>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </figure>
+                    </div>                
+                </div>
+                <div class="col-md-9">
+                    <h1>Templates are easy in Gutentyp</h1>
+                    <p>You can start with editable templates to leverage Gutentyp more like a Presentation editor.</p>
+                    <p>Look, I can take you as far as Anchorhead. You can get a transport there to Mos Eisley or wherever you're going. I have traced the Rebel spies to her. Now she is my only link to finding their secret base. I'm surprised you had the courage to take the responsibility yourself.</p>
+                    <ul>
+                        <li>Your eyes can deceive you. Don't trust them.</li>
+                        <li>As you wish.</li>
+                        <li>I don't know what you're talking about. I am a member of the Imperial Senate on a diplomatic mission to Alderaan--</li>
+                        <li>Partially, but it also obeys your commands.</li>
+                        <li>Look, I ain't in this for your revolution, and I'm not in it for you, Princess. I expect to be well paid. I'm in it for the money.</li>
+                    </ul>
+                </div>
+            </div>
+        </textarea>
+    </section>
+
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="../lib/hilary.js"></script>
+    <script src="../lib/nicephore.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script>
+    
+    <script src="../source/config.js"></script>
+    <script src="../source/dom.js"></script>
+    <script src="../source/pipeline.js"></script>
+    <script src="../source/components.js"></script>
+    <script src="../source/toolbar.js"></script>
+    <script src="../source/transformer.js"></script>
+    <script src="../source/components.colors.js"></script>
+    <script src="../source/components.headings.js"></script>
+    <script src="../source/components.emphasis.js"></script>
+    <script src="../source/components.justification.js"></script>
+    <script src="../source/components.lists.js"></script>
+    <script src="../source/components.blocks.js"></script>
+    <script src="../source/components.link.js"></script>
+    <script src="../source/components.image.js"></script>
+    <script src="../source/components.embed.js"></script>
+    <script src="../source/keyEvents.js"></script>
+    <script src="../source/gutentyp.js"></script>
+    <script src="demo.js"></script>
+    <script src="compositionRoot.js"></script>
+
+</body>
+</html>

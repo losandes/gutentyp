@@ -305,7 +305,7 @@ hilary.register('gutentyp::components', { init: function (config, dom, component
         var button,
             form;
         
-        button = '<button type="button" class="' + component.cssClass + '" data-form-btn="true" data-for="' + component.uniqueId + '">'
+        button = '<button type="button" class="gutentyp-component ' + component.cssClass + '" data-form-btn="true" data-for="' + component.uniqueId + '" data-title="' + component.title + '">'
                     + '<i class="' + config.cssClasses.toolbarBtnIcon + ' ' + component.icon + '"></i>'
                     + '<span class="' + config.cssClasses.toolbarBtnText + ' sr-only">' + component.title + '</span>'
                 + '</button>';

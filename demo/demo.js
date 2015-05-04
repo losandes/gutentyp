@@ -182,7 +182,7 @@ hilary.register('gutentyp::demo', { init: function ($, hilary, gutentyp, highlig
         $('head [data-theme="true"]').remove();
         
         if (theme !== 'default') {
-            style = '<link rel="stylesheet" href="../build/' + theme + '-theme.css" data-theme="true" />';
+            style = '<link rel="stylesheet" href="../build/gutentyp-' + theme + '-theme.css" data-theme="true" />';
             $('head').append(style);
         }
     };
@@ -198,9 +198,9 @@ hilary.register('gutentyp::demo', { init: function ($, hilary, gutentyp, highlig
     };
     
     start = function () {
-//        var _config = gutenInstance1.config;
-//        _config.attachFormsTo = 'toolbar';
-//        gutenInstance1.overrideConfig({ init: function () { return _config; }});
+        var _config = gutenInstance1.config;
+        _config.attachFormsTo = 'toolbar';
+        gutenInstance1.overrideConfig({ init: function () { return _config; }});
         
         gutenInstance1.init({
             observeKeyEvents: true,
